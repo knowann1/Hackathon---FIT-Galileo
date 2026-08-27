@@ -255,6 +255,7 @@ REGLAS:
    Si no existe información suficiente,
    utiliza la fecha actual de hoy.
        Nota: usa la fecha actual del mundo, el presente año, el presente mes y el presente dia si el usuario indicara: compre x ayer, antier o al algo, rectifica que la fecha sea la adecuada
+       estamos en agosto de 2026
 
 
 8. transaction_type:
