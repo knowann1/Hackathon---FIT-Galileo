@@ -243,7 +243,7 @@ REGLAS:
    - crédito
    - otro
 
-   Si no se menciona, utiliza null.
+   Si no se menciona, utiliza efectivo.
 
 7. expense_date:
    Si el usuario menciona una fecha,
@@ -253,7 +253,9 @@ REGLAS:
    disponible para el sistema.
 
    Si no existe información suficiente,
-   utiliza null.
+   utiliza la fecha actual de hoy.
+       Nota: usa la fecha actual del mundo, el presente año, el presente mes y el presente dia si el usuario indicara: compre x ayer, antier o al algo, rectifica que la fecha sea la adecuada
+
 
 8. transaction_type:
 
