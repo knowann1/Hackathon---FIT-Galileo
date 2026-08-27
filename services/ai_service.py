@@ -2,7 +2,7 @@ import os
 import re
 from openai import OpenAI
 
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OPENAI_API_KEY = "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"
 OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
 
 client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
