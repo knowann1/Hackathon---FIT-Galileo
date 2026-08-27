@@ -1,4 +1,3 @@
-
 import os
 import json
 import base64
@@ -260,7 +259,15 @@ que no puedan determinarse.
         # ----------------------------------------------------
 
         result['source'] = 'ai_receipt_analysis'
-
+        if result.get('total') is not None:
+            result['amount'] = result['total']
+        else:
+            result['amount'] = None
+        
+        # Una factura/recibo normalmente representa un gasto
+        if not result.get('transaction_type'):
+            result['transaction_type'] = 'expense'
+        
         return result
 
     except Exception as e:
@@ -275,4 +282,3 @@ que no puedan determinarse.
             'error': str(e),
             'source': 'ai_receipt_error'
         }
-```
