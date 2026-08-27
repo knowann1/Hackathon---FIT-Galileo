@@ -1190,11 +1190,12 @@ Devuelve únicamente JSON:
     ]
 }}
 
-Genera entre 4 y 8 insights
-cuando exista suficiente información.
+Genera bastantes insights para que el usuario tenga feedback general y profundo de sus gastos e ingresos
+No importa que haya poca informacion en la db del usuario, coloca datos relevantes.
+Coloca consejos financieros especigicops y generales relacionados al usuario
 
-Si existen pocos datos,
-genera menos.
+
+
 
 Ordena los insights por importancia.
 
