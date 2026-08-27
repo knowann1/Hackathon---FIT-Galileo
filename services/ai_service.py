@@ -1,4 +1,3 @@
-
 import os
 import json
 import re
@@ -15,9 +14,56 @@ from models import Expense
 # ============================================================
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+OPENAI_MODEL = os.getenv(
+    "OPENAI_MODEL",
+    "gpt-4o-mini"
+)
 
-client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
+client = (
+    OpenAI(api_key=OPENAI_API_KEY)
+    if OPENAI_API_KEY
+    else None
+)
+
+
+# ============================================================
+# UTILIDADES
+# ============================================================
+
+def _extract_json(text: str):
+
+    if not text:
+        return None
+
+    try:
+        return json.loads(text)
+    except Exception:
+        pass
+
+    start = text.find("{")
+    end = text.rfind("}")
+
+    if start != -1 and end != -1:
+
+        try:
+            return json.loads(
+                text[start:end + 1]
+            )
+        except Exception:
+            pass
+
+    return None
+
+
+def _safe_float(value):
+
+    try:
+        return float(value or 0)
+    except (
+        ValueError,
+        TypeError
+    ):
+        return 0.0
 
 
 # ============================================================
@@ -34,12 +80,11 @@ def parse_expense_text(text: str) -> dict:
         try:
 
             prompt = f"""
-Eres un asistente especializado en registrar transacciones
-financieras personales.
+Eres un asistente especializado en registrar
+transacciones financieras personales.
 
-Analiza el siguiente texto y extrae la información financiera.
+Analiza el siguiente texto:
 
-TEXTO:
 {text}
 
 Devuelve ÚNICAMENTE JSON válido:
@@ -66,7 +111,7 @@ REGLAS:
 - expense_date: formato YYYY-MM-DD.
 - transaction_type: "expense" o "income".
 - No inventes información.
-- Si no conoces un dato utiliza null.
+- Si un dato no aparece utiliza null.
 """
 
             response = client.responses.create(
@@ -74,16 +119,26 @@ REGLAS:
                 input=prompt
             )
 
-            output_text = response.output_text.strip()
+            output_text = (
+                response.output_text.strip()
+            )
 
-            start = output_text.find("{")
-            end = output_text.rfind("}")
+            result = _extract_json(
+                output_text
+            )
 
-            if start != -1 and end != -1:
+            if result:
 
-                return json.loads(
-                    output_text[start:end + 1]
+                result.setdefault(
+                    "transaction_type",
+                    "expense"
                 )
+
+                result[
+                    "proposal_source"
+                ] = "openai"
+
+                return result
 
         except Exception as e:
 
@@ -97,7 +152,7 @@ REGLAS:
 
 
 # ============================================================
-# FALLBACK
+# FALLBACK PARA TEXTO
 # ============================================================
 
 def _expense_fallback(text: str) -> dict:
@@ -114,7 +169,10 @@ def _expense_fallback(text: str) -> dict:
         try:
 
             amount = float(
-                match.group(1).replace(",", ".")
+                match.group(1).replace(
+                    ",",
+                    "."
+                )
             )
 
         except Exception:
@@ -125,6 +183,30 @@ def _expense_fallback(text: str) -> dict:
 
     category = None
     payment_method = None
+    transaction_type = "expense"
+
+    # ========================================================
+    # TIPO
+    # ========================================================
+
+    if any(
+        word in lower_text
+        for word in [
+            "recibí",
+            "recibi",
+            "ingreso",
+            "me pagaron",
+            "salario",
+            "gané",
+            "gane"
+        ]
+    ):
+
+        transaction_type = "income"
+
+    # ========================================================
+    # CATEGORÍA
+    # ========================================================
 
     if any(
         word in lower_text
@@ -157,11 +239,16 @@ def _expense_fallback(text: str) -> dict:
             "restaurante",
             "pizza",
             "comida",
-            "cafe"
+            "cafe",
+            "café"
         ]
     ):
 
         category = "Alimentación"
+
+    # ========================================================
+    # MÉTODO DE PAGO
+    # ========================================================
 
     if "tarjeta" in lower_text:
 
@@ -170,6 +257,10 @@ def _expense_fallback(text: str) -> dict:
     elif "efectivo" in lower_text:
 
         payment_method = "Efectivo"
+
+    elif "transferencia" in lower_text:
+
+        payment_method = "Transferencia"
 
     return {
 
@@ -187,32 +278,57 @@ def _expense_fallback(text: str) -> dict:
 
         "expense_date": None,
 
-        "transaction_type": "expense",
+        "transaction_type":
+            transaction_type,
 
-        "proposal_source": "fallback"
+        "proposal_source":
+            "fallback"
 
     }
 
 
 # ============================================================
-# OBTENER INFORMACIÓN FINANCIERA DEL USUARIO
+# CONTEXTO FINANCIERO DEL USUARIO
 # ============================================================
 
 def get_user_financial_context(user_id):
 
     expenses = (
         Expense.query
-        .filter_by(user_id=user_id)
-        .order_by(Expense.expense_date.desc())
+        .filter_by(
+            user_id=user_id
+        )
+        .order_by(
+            Expense.expense_date.desc()
+        )
         .all()
     )
+
+    # ========================================================
+    # SIN TRANSACCIONES
+    # ========================================================
 
     if not expenses:
 
         return {
+
             "total_transactions": 0,
-            "message": "El usuario todavía no tiene transacciones registradas."
+
+            "total_income": 0,
+
+            "total_expenses": 0,
+
+            "balance": 0,
+
+            "message":
+                "El usuario todavía no tiene "
+                "transacciones registradas."
+
         }
+
+    # ========================================================
+    # FECHAS
+    # ========================================================
 
     today = datetime.utcnow().date()
 
@@ -224,8 +340,17 @@ def get_user_financial_context(user_id):
         - timedelta(days=1)
     )
 
-    previous_month = previous_month_date.month
-    previous_year = previous_month_date.year
+    previous_month = (
+        previous_month_date.month
+    )
+
+    previous_year = (
+        previous_month_date.year
+    )
+
+    # ========================================================
+    # TOTALES
+    # ========================================================
 
     total_income = 0
     total_expenses = 0
@@ -236,13 +361,29 @@ def get_user_financial_context(user_id):
     previous_month_income = 0
     previous_month_expenses = 0
 
+    # ========================================================
+    # AGRUPACIONES
+    # ========================================================
+
     expenses_by_category = {}
+    income_by_category = {}
+
+    expenses_by_payment_method = {}
+    expenses_by_merchant = {}
+
+    expense_transactions = []
+    income_transactions = []
+
     recent_transactions = []
+
+    # ========================================================
+    # PROCESAR TRANSACCIONES
+    # ========================================================
 
     for expense in expenses:
 
-        amount = float(
-            expense.amount or 0
+        amount = _safe_float(
+            expense.amount
         )
 
         transaction_type = (
@@ -250,101 +391,195 @@ def get_user_financial_context(user_id):
             or "expense"
         )
 
-        expense_date = expense.expense_date
+        expense_date = (
+            expense.expense_date
+        )
 
-        # --------------------------------------------
+        # ====================================================
         # INGRESOS
-        # --------------------------------------------
+        # ====================================================
 
         if transaction_type == "income":
 
             total_income += amount
 
-            if expense_date:
-
-                if (
-                    expense_date.month == current_month
-                    and expense_date.year == current_year
-                ):
-
-                    current_month_income += amount
-
-                elif (
-                    expense_date.month == previous_month
-                    and expense_date.year == previous_year
-                ):
-
-                    previous_month_income += amount
-
-        # --------------------------------------------
-        # GASTOS
-        # --------------------------------------------
-
-        else:
-
-            total_expenses += amount
+            income_transactions.append(
+                amount
+            )
 
             category = (
                 expense.category
                 or "Sin categoría"
             )
 
-            expenses_by_category[category] = (
-                expenses_by_category.get(
+            income_by_category[
+                category
+            ] = (
+                income_by_category.get(
                     category,
                     0
-                ) + amount
+                )
+                + amount
             )
 
             if expense_date:
 
                 if (
-                    expense_date.month == current_month
-                    and expense_date.year == current_year
+                    expense_date.month
+                    == current_month
+                    and
+                    expense_date.year
+                    == current_year
                 ):
 
-                    current_month_expenses += amount
+                    current_month_income += (
+                        amount
+                    )
 
                 elif (
-                    expense_date.month == previous_month
-                    and expense_date.year == previous_year
+                    expense_date.month
+                    == previous_month
+                    and
+                    expense_date.year
+                    == previous_year
                 ):
 
-                    previous_month_expenses += amount
+                    previous_month_income += (
+                        amount
+                    )
 
-        # --------------------------------------------
+        # ====================================================
+        # EGRESOS
+        # ====================================================
+
+        else:
+
+            total_expenses += amount
+
+            expense_transactions.append(
+                amount
+            )
+
+            category = (
+                expense.category
+                or "Sin categoría"
+            )
+
+            expenses_by_category[
+                category
+            ] = (
+                expenses_by_category.get(
+                    category,
+                    0
+                )
+                + amount
+            )
+
+            payment_method = (
+                expense.payment_method
+                or "No especificado"
+            )
+
+            expenses_by_payment_method[
+                payment_method
+            ] = (
+                expenses_by_payment_method.get(
+                    payment_method,
+                    0
+                )
+                + amount
+            )
+
+            merchant = (
+                expense.merchant
+                or "Comercio no especificado"
+            )
+
+            expenses_by_merchant[
+                merchant
+            ] = (
+                expenses_by_merchant.get(
+                    merchant,
+                    0
+                )
+                + amount
+            )
+
+            if expense_date:
+
+                if (
+                    expense_date.month
+                    == current_month
+                    and
+                    expense_date.year
+                    == current_year
+                ):
+
+                    current_month_expenses += (
+                        amount
+                    )
+
+                elif (
+                    expense_date.month
+                    == previous_month
+                    and
+                    expense_date.year
+                    == previous_year
+                ):
+
+                    previous_month_expenses += (
+                        amount
+                    )
+
+        # ====================================================
         # TRANSACCIONES RECIENTES
-        # --------------------------------------------
+        # ====================================================
 
-        if len(recent_transactions) < 20:
+        if len(
+            recent_transactions
+        ) < 20:
 
             recent_transactions.append({
 
-                "date": (
-                    expense_date.isoformat()
-                    if expense_date
-                    else None
-                ),
+                "date":
+                    (
+                        expense_date.isoformat()
+                        if expense_date
+                        else None
+                    ),
 
-                "type": transaction_type,
+                "type":
+                    transaction_type,
 
-                "amount": amount,
+                "amount":
+                    round(
+                        amount,
+                        2
+                    ),
 
-                "currency": expense.currency,
+                "currency":
+                    (
+                        expense.currency
+                        or "GTQ"
+                    ),
 
-                "merchant": expense.merchant,
+                "merchant":
+                    expense.merchant,
 
-                "category": expense.category,
+                "category":
+                    expense.category,
 
-                "description": expense.description,
+                "description":
+                    expense.description,
 
-                "payment_method": expense.payment_method
+                "payment_method":
+                    expense.payment_method
 
             })
 
-    # --------------------------------------------
-    # BALANCES
-    # --------------------------------------------
+    # ========================================================
+    # BALANCE
+    # ========================================================
 
     balance = (
         total_income
@@ -356,9 +591,74 @@ def get_user_financial_context(user_id):
         - current_month_expenses
     )
 
-    # --------------------------------------------
-    # CATEGORÍAS PRINCIPALES
-    # --------------------------------------------
+    # ========================================================
+    # PORCENTAJES
+    # ========================================================
+
+    if total_income > 0:
+
+        spending_ratio = (
+            total_expenses
+            / total_income
+        ) * 100
+
+        savings_ratio = (
+            balance
+            / total_income
+        ) * 100
+
+    else:
+
+        spending_ratio = None
+        savings_ratio = None
+
+    # ========================================================
+    # PROMEDIOS
+    # ========================================================
+
+    if expense_transactions:
+
+        average_expense = (
+            sum(
+                expense_transactions
+            )
+            / len(
+                expense_transactions
+            )
+        )
+
+    else:
+
+        average_expense = 0
+
+    if income_transactions:
+
+        average_income = (
+            sum(
+                income_transactions
+            )
+            / len(
+                income_transactions
+            )
+        )
+
+    else:
+
+        average_income = 0
+
+    # ========================================================
+    # GASTO MÁS GRANDE
+    # ========================================================
+
+    largest_expense = (
+        max(expense_transactions)
+        if expense_transactions
+        else 0
+    )
+
+    # ========================================================
+    # CATEGORÍAS
+    # ========================================================
 
     top_categories = sorted(
         expenses_by_category.items(),
@@ -366,69 +666,304 @@ def get_user_financial_context(user_id):
         reverse=True
     )[:10]
 
+    # ========================================================
+    # COMERCIOS
+    # ========================================================
+
+    top_merchants = sorted(
+        expenses_by_merchant.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )[:10]
+
+    # ========================================================
+    # MÉTODOS DE PAGO
+    # ========================================================
+
+    payment_methods = sorted(
+        expenses_by_payment_method.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )
+
+    # ========================================================
+    # CAMBIO DE GASTOS
+    # ========================================================
+
+    if previous_month_expenses > 0:
+
+        expense_change_percentage = (
+            (
+                current_month_expenses
+                - previous_month_expenses
+            )
+            / previous_month_expenses
+        ) * 100
+
+    else:
+
+        expense_change_percentage = None
+
+    # ========================================================
+    # CAMBIO DE INGRESOS
+    # ========================================================
+
+    if previous_month_income > 0:
+
+        income_change_percentage = (
+            (
+                current_month_income
+                - previous_month_income
+            )
+            / previous_month_income
+        ) * 100
+
+    else:
+
+        income_change_percentage = None
+
+    # ========================================================
+    # CATEGORÍA PRINCIPAL
+    # ========================================================
+
+    if top_categories:
+
+        top_category = {
+
+            "name":
+                top_categories[0][0],
+
+            "amount":
+                round(
+                    top_categories[0][1],
+                    2
+                )
+
+        }
+
+    else:
+
+        top_category = None
+
+    # ========================================================
+    # PORCENTAJE POR CATEGORÍA
+    # ========================================================
+
+    category_percentages = {}
+
+    for category, amount in top_categories:
+
+        if total_expenses > 0:
+
+            percentage = (
+                amount
+                / total_expenses
+            ) * 100
+
+        else:
+
+            percentage = 0
+
+        category_percentages[
+            category
+        ] = {
+
+            "amount":
+                round(
+                    amount,
+                    2
+                ),
+
+            "percentage":
+                round(
+                    percentage,
+                    2
+                )
+
+        }
+
+    # ========================================================
+    # RESULTADO
+    # ========================================================
+
     return {
 
-        "total_transactions": len(expenses),
+        "total_transactions":
+            len(expenses),
 
-        "total_income": round(
-            total_income,
-            2
-        ),
-
-        "total_expenses": round(
-            total_expenses,
-            2
-        ),
-
-        "balance": round(
-            balance,
-            2
-        ),
-
-        "current_month": {
-
-            "income": round(
-                current_month_income,
+        "total_income":
+            round(
+                total_income,
                 2
             ),
 
-            "expenses": round(
-                current_month_expenses,
+        "total_expenses":
+            round(
+                total_expenses,
                 2
             ),
 
-            "balance": round(
-                current_balance,
-                2
-            )
-
-        },
-
-        "previous_month": {
-
-            "income": round(
-                previous_month_income,
+        "balance":
+            round(
+                balance,
                 2
             ),
 
-            "expenses": round(
-                previous_month_expenses,
-                2
-            )
+        "spending_ratio":
+            (
+                round(
+                    spending_ratio,
+                    2
+                )
+                if spending_ratio is not None
+                else None
+            ),
 
-        },
+        "savings_ratio":
+            (
+                round(
+                    savings_ratio,
+                    2
+                )
+                if savings_ratio is not None
+                else None
+            ),
+
+        "average_expense":
+            round(
+                average_expense,
+                2
+            ),
+
+        "average_income":
+            round(
+                average_income,
+                2
+            ),
+
+        "largest_expense":
+            round(
+                largest_expense,
+                2
+            ),
+
+        "top_category":
+            top_category,
+
+        "category_percentages":
+            category_percentages,
 
         "expenses_by_category": {
 
-            category: round(
-                amount,
-                2
-            )
+            category:
+                round(
+                    amount,
+                    2
+                )
 
             for category, amount
             in top_categories
 
         },
+
+        "income_by_category": {
+
+            category:
+                round(
+                    amount,
+                    2
+                )
+
+            for category, amount
+            in income_by_category.items()
+
+        },
+
+        "top_merchants": {
+
+            merchant:
+                round(
+                    amount,
+                    2
+                )
+
+            for merchant, amount
+            in top_merchants
+
+        },
+
+        "payment_methods": {
+
+            method:
+                round(
+                    amount,
+                    2
+                )
+
+            for method, amount
+            in payment_methods
+
+        },
+
+        "current_month": {
+
+            "income":
+                round(
+                    current_month_income,
+                    2
+                ),
+
+            "expenses":
+                round(
+                    current_month_expenses,
+                    2
+                ),
+
+            "balance":
+                round(
+                    current_balance,
+                    2
+                )
+
+        },
+
+        "previous_month": {
+
+            "income":
+                round(
+                    previous_month_income,
+                    2
+                ),
+
+            "expenses":
+                round(
+                    previous_month_expenses,
+                    2
+                )
+
+        },
+
+        "expense_change_percentage":
+            (
+                round(
+                    expense_change_percentage,
+                    2
+                )
+                if expense_change_percentage
+                is not None
+                else None
+            ),
+
+        "income_change_percentage":
+            (
+                round(
+                    income_change_percentage,
+                    2
+                )
+                if income_change_percentage
+                is not None
+                else None
+            ),
 
         "recent_transactions":
             recent_transactions
@@ -437,13 +972,15 @@ def get_user_financial_context(user_id):
 
 
 # ============================================================
-# RECOMENDACIONES FINANCIERAS
+# ANÁLISIS FINANCIERO CON IA
 # ============================================================
 
 def analyze_finances_with_ai(user_id):
 
-    context = get_user_financial_context(
-        user_id
+    context = (
+        get_user_financial_context(
+            user_id
+        )
     )
 
     if not client:
@@ -452,7 +989,8 @@ def analyze_finances_with_ai(user_id):
 
             "insights": [],
 
-            "financial_context": context,
+            "financial_context":
+                context,
 
             "error":
                 "OPENAI_API_KEY no está configurada."
@@ -462,12 +1000,12 @@ def analyze_finances_with_ai(user_id):
     try:
 
         prompt = f"""
-Actúa como un administrador financiero personal.
+Eres un asistente de finanzas personales.
 
-Analiza exclusivamente los datos financieros reales
-proporcionados del usuario.
+Analiza los datos financieros REALES
+del usuario.
 
-DATOS FINANCIEROS:
+DATOS:
 
 {json.dumps(
     context,
@@ -475,39 +1013,209 @@ DATOS FINANCIEROS:
     indent=2
 )}
 
-Genera recomendaciones financieras PERSONALIZADAS.
+Tu objetivo NO es simplemente decir
+cuál es la categoría donde más gasta.
 
-Analiza:
+Debes proporcionar un análisis financiero
+personalizado.
 
-1. Nivel de gastos.
-2. Categorías donde más dinero gasta.
-3. Cambios respecto al mes anterior.
-4. Balance entre ingresos y gastos.
-5. Posibles oportunidades de ahorro.
-6. Comportamientos que debería vigilar.
-7. Consejos prácticos para mejorar sus finanzas.
+============================================================
+ANALIZA
+============================================================
 
-NO inventes datos.
+1. INGRESOS VS GASTOS
 
-NO asumas información que no aparece.
+Determina si el usuario gasta:
 
-Si no existe suficiente información para realizar
-una recomendación, indícalo claramente.
+- menos que sus ingresos
+- aproximadamente lo mismo
+- más que sus ingresos
 
-Devuelve ÚNICAMENTE JSON:
+Explica qué significa.
+
+------------------------------------------------------------
+
+2. BALANCE
+
+Analiza el balance general y el balance
+del mes actual.
+
+------------------------------------------------------------
+
+3. CAPACIDAD DE AHORRO
+
+Utiliza:
+
+- savings_ratio
+- balance
+- ingresos
+- gastos
+
+Si existe capacidad de ahorro,
+propón una estrategia razonable.
+
+------------------------------------------------------------
+
+4. CATEGORÍAS
+
+Identifica las categorías principales.
+
+Analiza qué porcentaje representan
+del total de gastos.
+
+No asumas que gastar más en una categoría
+significa necesariamente que sea un problema.
+
+------------------------------------------------------------
+
+5. GASTO PROMEDIO
+
+Analiza el gasto promedio.
+
+Compáralo con el gasto más grande.
+
+------------------------------------------------------------
+
+6. GASTOS GRANDES
+
+Si existe un gasto considerablemente
+superior al promedio, indícalo.
+
+------------------------------------------------------------
+
+7. COMERCIOS
+
+Analiza si existe concentración de gastos
+en determinados comercios.
+
+------------------------------------------------------------
+
+8. MÉTODOS DE PAGO
+
+Analiza los métodos de pago cuando
+existan suficientes datos.
+
+No asumas que utilizar tarjeta es malo.
+
+------------------------------------------------------------
+
+9. EVOLUCIÓN
+
+Compara:
+
+- ingresos actuales
+- ingresos anteriores
+- gastos actuales
+- gastos anteriores
+
+Calcula e interpreta los cambios.
+
+------------------------------------------------------------
+
+10. ALERTAS
+
+Genera alertas solamente cuando
+los datos las justifiquen.
+
+Ejemplos:
+
+- gastos superiores a ingresos
+- balance negativo
+- crecimiento importante de gastos
+- concentración importante de gastos
+
+------------------------------------------------------------
+
+11. AHORRO
+
+Busca oportunidades concretas
+para ahorrar.
+
+Evita consejos genéricos.
+
+------------------------------------------------------------
+
+12. EDUCACIÓN FINANCIERA
+
+Cuando sea útil, explica conceptos
+de forma sencilla.
+
+------------------------------------------------------------
+
+13. CONSEJOS PERSONALIZADOS
+
+Los consejos deben relacionarse
+directamente con los datos.
+
+------------------------------------------------------------
+
+14. POCAS TRANSACCIONES
+
+Si existen menos de 10 transacciones,
+reconoce que el análisis es limitado.
+
+No inventes patrones.
+
+Puedes recomendar registrar más
+transacciones para obtener mejores
+predicciones.
+
+============================================================
+TIPOS
+============================================================
+
+Utiliza únicamente:
+
+success
+info
+warning
+alert
+saving
+
+============================================================
+FORMATO
+============================================================
+
+Devuelve únicamente JSON:
 
 {{
     "insights": [
         {{
-            "type": "info",
-            "title": "Título",
-            "description": "Análisis personalizado",
-            "recommendation": "Consejo práctico"
+            "type": "warning",
+            "title": "Título corto",
+            "description": "Explicación basada en datos.",
+            "recommendation": "Consejo práctico.",
+            "priority": 1
         }}
     ]
 }}
 
-Puedes generar entre 3 y 7 recomendaciones.
+Genera entre 4 y 8 insights
+cuando exista suficiente información.
+
+Si existen pocos datos,
+genera menos.
+
+Ordena los insights por importancia.
+
+============================================================
+REGLAS
+============================================================
+
+- No inventes información.
+- No inventes transacciones.
+- No inventes ingresos.
+- No inventes gastos.
+- No inventes fechas.
+- No inventes hábitos.
+- Utiliza solamente los datos proporcionados.
+- Puedes realizar cálculos matemáticos.
+- Sé claro.
+- Sé profesional.
+- Responde en español.
+- No juzgues al usuario.
+- No presentes consejos como órdenes.
+- Explica por qué cada recomendación es relevante.
 """
 
         response = client.responses.create(
@@ -515,18 +1223,35 @@ Puedes generar entre 3 y 7 recomendaciones.
             input=prompt
         )
 
-        output_text = response.output_text.strip()
+        output_text = (
+            response.output_text.strip()
+        )
 
-        start = output_text.find("{")
-        end = output_text.rfind("}")
+        result = _extract_json(
+            output_text
+        )
 
-        if start != -1 and end != -1:
+        if result:
 
-            result = json.loads(
-                output_text[start:end + 1]
+            insights = result.get(
+                "insights",
+                []
             )
 
-            result["financial_context"] = context
+            insights.sort(
+                key=lambda x: x.get(
+                    "priority",
+                    999
+                )
+            )
+
+            result["insights"] = (
+                insights
+            )
+
+            result[
+                "financial_context"
+            ] = context
 
             return result
 
@@ -534,9 +1259,11 @@ Puedes generar entre 3 y 7 recomendaciones.
 
             "insights": [],
 
-            "financial_context": context,
+            "financial_context":
+                context,
 
-            "raw": output_text
+            "raw":
+                output_text
 
         }
 
@@ -552,9 +1279,11 @@ Puedes generar entre 3 y 7 recomendaciones.
 
             "insights": [],
 
-            "financial_context": context,
+            "financial_context":
+                context,
 
-            "error": str(e)
+            "error":
+                str(e)
 
         }
 
@@ -572,15 +1301,20 @@ def ask_financial_ai(
     if not question:
 
         return {
+
             "answer":
                 "Escribe una pregunta financiera."
+
         }
 
     if not client:
 
         return {
+
             "answer":
-                "El servicio de inteligencia financiera no está configurado."
+                "El servicio de inteligencia financiera "
+                "no está configurado."
+
         }
 
     try:
@@ -595,10 +1329,6 @@ def ask_financial_ai(
             conversation_history
             or []
         )
-
-        # --------------------------------------------
-        # Limitar historial
-        # --------------------------------------------
 
         history = history[-10:]
 
@@ -620,17 +1350,16 @@ def ask_financial_ai(
                 f"{role}: {content}\n"
             )
 
-        # --------------------------------------------
-        # PROMPT
-        # --------------------------------------------
-
         prompt = f"""
-Eres el administrador financiero personal del usuario.
+Eres el administrador financiero
+personal del usuario.
 
-Tu función es ayudar al usuario a comprender y mejorar
-sus finanzas utilizando sus datos financieros reales.
+Utiliza los datos financieros reales
+proporcionados por PostgreSQL.
 
-DATOS DEL USUARIO:
+============================================================
+DATOS FINANCIEROS
+============================================================
 
 {json.dumps(
     financial_context,
@@ -638,37 +1367,46 @@ DATOS DEL USUARIO:
     indent=2
 )}
 
-HISTORIAL RECIENTE DEL CHAT:
+============================================================
+HISTORIAL DEL CHAT
+============================================================
 
 {conversation_text}
 
-NUEVA PREGUNTA:
+============================================================
+PREGUNTA DEL USUARIO
+============================================================
 
 {question}
 
-INSTRUCCIONES:
+============================================================
+INSTRUCCIONES
+============================================================
 
 - Responde en español.
-- Sé claro, natural y útil.
-- Personaliza la respuesta utilizando los datos financieros.
-- Utiliza los datos de PostgreSQL proporcionados.
-- No inventes ingresos, gastos, fechas, categorías ni cantidades.
-- Si el usuario pregunta sobre una transacción concreta,
-  utiliza únicamente las transacciones proporcionadas.
-- Si no tienes suficiente información, dilo.
-- Puedes calcular porcentajes, diferencias, promedios
-  y balances utilizando los datos disponibles.
-- Explica los cálculos importantes de manera sencilla.
-- Da consejos financieros prácticos y relacionados
-  directamente con la situación del usuario.
-- Recuerda el contexto de los mensajes anteriores.
-- Si el usuario hace una pregunta relacionada con algo
-  mencionado anteriormente, utiliza ese contexto.
-- Mantén el papel de administrador financiero personal.
+- Sé claro.
+- Sé natural.
+- Personaliza la respuesta.
+- Utiliza los datos de PostgreSQL.
+- No inventes información.
+- No inventes transacciones.
+- No inventes cantidades.
+- No inventes fechas.
+- Puedes hacer cálculos.
+- Explica cálculos importantes.
+- Da consejos prácticos.
+- Si existen pocos registros, dilo.
+- Si no existe suficiente información,
+  indícalo claramente.
+- No juzgues al usuario.
 - No tomes decisiones por el usuario.
-- Presenta recomendaciones, no órdenes.
+- Presenta recomendaciones.
+- Mantén el contexto de la conversación.
+- Si el usuario pregunta por una transacción,
+  utiliza únicamente las transacciones disponibles.
 
-La respuesta debe ser conversacional y fácil de entender.
+Tu objetivo es ayudar al usuario a comprender
+sus finanzas y tomar mejores decisiones.
 """
 
         response = client.responses.create(
@@ -682,7 +1420,8 @@ La respuesta debe ser conversacional y fácil de entender.
 
         return {
 
-            "answer": answer,
+            "answer":
+                answer,
 
             "financial_context":
                 financial_context
@@ -700,10 +1439,11 @@ La respuesta debe ser conversacional y fácil de entender.
         return {
 
             "answer":
-                "Ocurrió un problema al procesar tu pregunta. "
-                "Intenta nuevamente más tarde.",
+                "Ocurrió un problema al procesar "
+                "tu pregunta. Intenta nuevamente.",
 
-            "error": str(e)
+            "error":
+                str(e)
 
         }
 
@@ -737,7 +1477,9 @@ def simulate_savings(
 
     for month in months:
 
-        projections[str(month)] = round(
+        projections[
+            str(month)
+        ] = round(
             amount * month,
             2
         )
@@ -751,5 +1493,3 @@ def simulate_savings(
             projections
 
     }
-
-
