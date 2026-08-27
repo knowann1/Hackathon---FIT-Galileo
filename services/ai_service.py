@@ -1,181 +1,755 @@
+```python
 import os
+import json
 import re
+from datetime import datetime, timedelta
+
 from openai import OpenAI
 
-OPENAI_API_KEY = "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"
-OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
+from extensions import db
+from models import Expense
+
+
+# ============================================================
+# CONFIGURACIÓN OPENAI
+# ============================================================
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 
+# ============================================================
+# PARSEAR TEXTO DE GASTO
+# ============================================================
+
 def parse_expense_text(text: str) -> dict:
-    """
-    Sends the text to OpenAI to extract a structured expense proposal.
-    Returns a dictionary proposal but does NOT save to DB.
-    If OpenAI is not configured, fall back to a simple heuristic.
-    """
+
     if not text:
         return {}
 
-    # Try calling OpenAI structured response if available
     if client:
+
         try:
-            prompt = f"Extrae en JSON la información de este gasto en Guatemala (quetzales/Q): \n\n'{text}'\n\nCampos: amount, currency, merchant, description, category, payment_method, expense_date. Si no aparece un campo, usar null. Devuelve SOLO JSON."
-            resp = client.responses.create(
-                model=OPENAI_MODEL,
-                input=prompt,
-            )
-            # The new SDK returns content in different places; try to parse.
-            # Attempt to find JSON in output_text
-            output_text = ''
-            try:
-                for item in resp.output:
-                    if hasattr(item, 'content'):
-                        output_text += item.content if isinstance(item.content, str) else str(item.content)
-                    elif isinstance(item, dict):
-                        output_text += str(item)
-            except Exception:
-                output_text = str(resp)
-            # Extract JSON-like substring
-            m = re.search(r"\{[\s\S]*\}", output_text)
-            if m:
-                import json
-                try:
-                    return json.loads(m.group(0))
-                except Exception:
-                    # fallback: return raw text
-                    return {'raw': output_text}
-            return {'raw': output_text}
-        except Exception as e:
-            # Do not crash — fallback to heuristic
-            print('OpenAI parse error:', e)
 
-    # Heuristic fallback
-    amount = None
-    currency = 'GTQ'
-    merchant = None
-    payment_method = None
-    date = None
-    category = None
-    description = None
+            prompt = f"""
+Eres un asistente especializado en registrar transacciones
+financieras personales.
 
-    lower_text = text.lower()
+Analiza el siguiente texto y extrae la información financiera.
 
-    # amount detection (numbers)
-    m = re.search(r"(\d+[\.,]?\d*)\s*(quetzales|Q|gtq|GTQ)?", text)
-    if m:
-        try:
-            amount = float(m.group(1).replace(',', '.'))
-        except Exception:
-            amount = None
+TEXTO:
+{text}
 
-    # date detection
-    for pattern in [r"(\d{4}-\d{2}-\d{2})", r"(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})", r"(\d{1,2}\s+de\s+[A-Za-z]+\s+de\s+\d{4})"]:
-        m_date = re.search(pattern, text, flags=re.IGNORECASE)
-        if m_date:
-            date = m_date.group(1).strip()
-            break
+Devuelve ÚNICAMENTE JSON válido:
 
-    # merchant heuristic: proper nouns
-    m2 = re.search(r"(?:en|en la|en el|en los|en las)\s+([A-Za-z0-9áéíóúüñÁÉÍÓÚÜÑ\s]+?)(?=\s+(?:por\s+Q|por\s+\d|con\s+|el\s+\d{1,2}|$))", text, flags=re.IGNORECASE)
-    if m2:
-        merchant = m2.group(1).strip()
-    if not merchant:
-        for keyword in ['walmart', 'puma', 'pizza hut', 'cafeteria', 'super', 'farmacia', 'ferreteria', 'bodega', 'taco', 'mercado']:
-            if keyword in lower_text:
-                merchant = keyword.title()
-                break
+{{
+    "amount": null,
+    "currency": "GTQ",
+    "merchant": null,
+    "description": null,
+    "category": null,
+    "payment_method": null,
+    "expense_date": null,
+    "transaction_type": "expense"
+}}
 
-    if 'tarjeta' in lower_text:
-        payment_method = 'Tarjeta de crédito/debito'
-    if 'efectivo' in lower_text:
-        payment_method = 'Efectivo'
-    if 'gasolina' in lower_text:
-        category = 'Transporte'
-    if 'walmart' in lower_text or 'super' in lower_text:
-        category = 'Supermercado'
+REGLAS:
 
-    if not description:
-        if merchant:
-            description = f"Compra en {merchant}"
-        elif amount is not None:
-            description = 'Gasto detectado'
-        else:
-            description = 'Gasto registrado'
+- amount: monto de la transacción.
+- currency: moneda.
+- merchant: comercio o establecimiento.
+- description: descripción breve.
+- category: categoría financiera.
+- payment_method: método de pago.
+- expense_date: formato YYYY-MM-DD.
+- transaction_type: "expense" o "income".
+- No inventes información.
+- Si no conoces un dato utiliza null.
+"""
 
-    return {
-        'amount': amount,
-        'currency': currency,
-        'merchant': merchant,
-        'description': description,
-        'category': category,
-        'payment_method': payment_method,
-        'expense_date': date,
-        'proposal_source': 'heuristic'
-    }
-
-
-def analyze_finances_with_ai(summary: dict) -> dict:
-    """
-    Given a numeric summary (prepared by Python), optionally call OpenAI to produce
-    human-readable insights and recommendations. If OpenAI is not configured, return
-    a simple interpretation based on the summary.
-    """
-    if not summary:
-        return {'insights': []}
-
-    # If OpenAI is available, send the summary and ask for JSON insights
-    if client:
-        try:
-            import json
-            prompt = (
-                "Tienes el siguiente resumen financiero (en JSON). Genera una lista JSON llamada 'insights' "
-                "con objetos que contengan: type (warning/info/alert), title, description y recommendation. "
-                "No inventes datos, usa únicamente lo que esté en el resumen. Responde solo JSON.\n\n"
-                f"Resumen:\n{json.dumps(summary, ensure_ascii=False, indent=2)}\n"
-            )
-            resp = client.responses.create(
+            response = client.responses.create(
                 model=OPENAI_MODEL,
                 input=prompt
             )
-            output_text = str(resp)
-            m = re.search(r"\{[\s\S]*\}", output_text)
-            if m:
-                try:
-                    return json.loads(m.group(0))
-                except Exception:
-                    return {'raw': output_text}
-            return {'raw': output_text}
+
+            output_text = response.output_text.strip()
+
+            start = output_text.find("{")
+            end = output_text.rfind("}")
+
+            if start != -1 and end != -1:
+
+                return json.loads(
+                    output_text[start:end + 1]
+                )
+
         except Exception as e:
-            print('OpenAI analyze error:', e)
 
-    # Fallback: basic textual insights
-    insights = []
-    if summary.get('expense_growth_percentage') and summary['expense_growth_percentage'] > 0:
-        insights.append({
-            'type': 'info',
-            'title': 'Variación de gastos',
-            'description': f"Tus gastos variaron {summary['expense_growth_percentage']}% respecto al mes anterior.",
-            'recommendation': 'Revisa categorías con mayor crecimiento y ajusta presupuestos.'
-        })
-    if summary.get('expense_by_category'):
-        top = sorted(summary['expense_by_category'].items(), key=lambda x: x[1], reverse=True)[:3]
-        top_str = ', '.join([f"{k} (Q{v})" for k, v in top])
-        insights.append({
-            'type': 'info',
-            'title': 'Principales categorías',
-            'description': f"Las categorías principales son: {top_str}.",
-            'recommendation': 'Considera establecer límites semanales en estas categorías.'
-        })
-    return {'insights': insights}
+            print(
+                "OpenAI parse expense error:",
+                type(e).__name__,
+                str(e)
+            )
+
+    return _expense_fallback(text)
 
 
-def simulate_savings(amount: float, months=[1,6,12,24]) -> dict:
-    months = sorted(list(set(int(m) for m in months)))
-    result = {}
-    for m in months:
-        result[str(m)] = round(amount * m, 2)
+# ============================================================
+# FALLBACK
+# ============================================================
+
+def _expense_fallback(text: str) -> dict:
+
+    amount = None
+
+    match = re.search(
+        r"(\d+(?:[.,]\d+)?)",
+        text
+    )
+
+    if match:
+
+        try:
+
+            amount = float(
+                match.group(1).replace(",", ".")
+            )
+
+        except Exception:
+
+            amount = None
+
+    lower_text = text.lower()
+
+    category = None
+    payment_method = None
+
+    if any(
+        word in lower_text
+        for word in [
+            "walmart",
+            "supermercado",
+            "super",
+            "despensa"
+        ]
+    ):
+
+        category = "Supermercado"
+
+    elif any(
+        word in lower_text
+        for word in [
+            "gasolina",
+            "uber",
+            "taxi",
+            "bus",
+            "transporte"
+        ]
+    ):
+
+        category = "Transporte"
+
+    elif any(
+        word in lower_text
+        for word in [
+            "restaurante",
+            "pizza",
+            "comida",
+            "cafe"
+        ]
+    ):
+
+        category = "Alimentación"
+
+    if "tarjeta" in lower_text:
+
+        payment_method = "Tarjeta"
+
+    elif "efectivo" in lower_text:
+
+        payment_method = "Efectivo"
+
     return {
-        'monthly_amount': float(amount),
-        'projections': result
+
+        "amount": amount,
+
+        "currency": "GTQ",
+
+        "merchant": None,
+
+        "description": text,
+
+        "category": category,
+
+        "payment_method": payment_method,
+
+        "expense_date": None,
+
+        "transaction_type": "expense",
+
+        "proposal_source": "fallback"
+
     }
+
+
+# ============================================================
+# OBTENER INFORMACIÓN FINANCIERA DEL USUARIO
+# ============================================================
+
+def get_user_financial_context(user_id):
+
+    expenses = (
+        Expense.query
+        .filter_by(user_id=user_id)
+        .order_by(Expense.expense_date.desc())
+        .all()
+    )
+
+    if not expenses:
+
+        return {
+            "total_transactions": 0,
+            "message": "El usuario todavía no tiene transacciones registradas."
+        }
+
+    today = datetime.utcnow().date()
+
+    current_month = today.month
+    current_year = today.year
+
+    previous_month_date = (
+        today.replace(day=1)
+        - timedelta(days=1)
+    )
+
+    previous_month = previous_month_date.month
+    previous_year = previous_month_date.year
+
+    total_income = 0
+    total_expenses = 0
+
+    current_month_income = 0
+    current_month_expenses = 0
+
+    previous_month_income = 0
+    previous_month_expenses = 0
+
+    expenses_by_category = {}
+    recent_transactions = []
+
+    for expense in expenses:
+
+        amount = float(
+            expense.amount or 0
+        )
+
+        transaction_type = (
+            expense.transaction_type
+            or "expense"
+        )
+
+        expense_date = expense.expense_date
+
+        # --------------------------------------------
+        # INGRESOS
+        # --------------------------------------------
+
+        if transaction_type == "income":
+
+            total_income += amount
+
+            if expense_date:
+
+                if (
+                    expense_date.month == current_month
+                    and expense_date.year == current_year
+                ):
+
+                    current_month_income += amount
+
+                elif (
+                    expense_date.month == previous_month
+                    and expense_date.year == previous_year
+                ):
+
+                    previous_month_income += amount
+
+        # --------------------------------------------
+        # GASTOS
+        # --------------------------------------------
+
+        else:
+
+            total_expenses += amount
+
+            category = (
+                expense.category
+                or "Sin categoría"
+            )
+
+            expenses_by_category[category] = (
+                expenses_by_category.get(
+                    category,
+                    0
+                ) + amount
+            )
+
+            if expense_date:
+
+                if (
+                    expense_date.month == current_month
+                    and expense_date.year == current_year
+                ):
+
+                    current_month_expenses += amount
+
+                elif (
+                    expense_date.month == previous_month
+                    and expense_date.year == previous_year
+                ):
+
+                    previous_month_expenses += amount
+
+        # --------------------------------------------
+        # TRANSACCIONES RECIENTES
+        # --------------------------------------------
+
+        if len(recent_transactions) < 20:
+
+            recent_transactions.append({
+
+                "date": (
+                    expense_date.isoformat()
+                    if expense_date
+                    else None
+                ),
+
+                "type": transaction_type,
+
+                "amount": amount,
+
+                "currency": expense.currency,
+
+                "merchant": expense.merchant,
+
+                "category": expense.category,
+
+                "description": expense.description,
+
+                "payment_method": expense.payment_method
+
+            })
+
+    # --------------------------------------------
+    # BALANCES
+    # --------------------------------------------
+
+    balance = (
+        total_income
+        - total_expenses
+    )
+
+    current_balance = (
+        current_month_income
+        - current_month_expenses
+    )
+
+    # --------------------------------------------
+    # CATEGORÍAS PRINCIPALES
+    # --------------------------------------------
+
+    top_categories = sorted(
+        expenses_by_category.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )[:10]
+
+    return {
+
+        "total_transactions": len(expenses),
+
+        "total_income": round(
+            total_income,
+            2
+        ),
+
+        "total_expenses": round(
+            total_expenses,
+            2
+        ),
+
+        "balance": round(
+            balance,
+            2
+        ),
+
+        "current_month": {
+
+            "income": round(
+                current_month_income,
+                2
+            ),
+
+            "expenses": round(
+                current_month_expenses,
+                2
+            ),
+
+            "balance": round(
+                current_balance,
+                2
+            )
+
+        },
+
+        "previous_month": {
+
+            "income": round(
+                previous_month_income,
+                2
+            ),
+
+            "expenses": round(
+                previous_month_expenses,
+                2
+            )
+
+        },
+
+        "expenses_by_category": {
+
+            category: round(
+                amount,
+                2
+            )
+
+            for category, amount
+            in top_categories
+
+        },
+
+        "recent_transactions":
+            recent_transactions
+
+    }
+
+
+# ============================================================
+# RECOMENDACIONES FINANCIERAS
+# ============================================================
+
+def analyze_finances_with_ai(user_id):
+
+    context = get_user_financial_context(
+        user_id
+    )
+
+    if not client:
+
+        return {
+
+            "insights": [],
+
+            "financial_context": context,
+
+            "error":
+                "OPENAI_API_KEY no está configurada."
+
+        }
+
+    try:
+
+        prompt = f"""
+Actúa como un administrador financiero personal.
+
+Analiza exclusivamente los datos financieros reales
+proporcionados del usuario.
+
+DATOS FINANCIEROS:
+
+{json.dumps(
+    context,
+    ensure_ascii=False,
+    indent=2
+)}
+
+Genera recomendaciones financieras PERSONALIZADAS.
+
+Analiza:
+
+1. Nivel de gastos.
+2. Categorías donde más dinero gasta.
+3. Cambios respecto al mes anterior.
+4. Balance entre ingresos y gastos.
+5. Posibles oportunidades de ahorro.
+6. Comportamientos que debería vigilar.
+7. Consejos prácticos para mejorar sus finanzas.
+
+NO inventes datos.
+
+NO asumas información que no aparece.
+
+Si no existe suficiente información para realizar
+una recomendación, indícalo claramente.
+
+Devuelve ÚNICAMENTE JSON:
+
+{{
+    "insights": [
+        {{
+            "type": "info",
+            "title": "Título",
+            "description": "Análisis personalizado",
+            "recommendation": "Consejo práctico"
+        }}
+    ]
+}}
+
+Puedes generar entre 3 y 7 recomendaciones.
+"""
+
+        response = client.responses.create(
+            model=OPENAI_MODEL,
+            input=prompt
+        )
+
+        output_text = response.output_text.strip()
+
+        start = output_text.find("{")
+        end = output_text.rfind("}")
+
+        if start != -1 and end != -1:
+
+            result = json.loads(
+                output_text[start:end + 1]
+            )
+
+            result["financial_context"] = context
+
+            return result
+
+        return {
+
+            "insights": [],
+
+            "financial_context": context,
+
+            "raw": output_text
+
+        }
+
+    except Exception as e:
+
+        print(
+            "Financial AI error:",
+            type(e).__name__,
+            str(e)
+        )
+
+        return {
+
+            "insights": [],
+
+            "financial_context": context,
+
+            "error": str(e)
+
+        }
+
+
+# ============================================================
+# CHAT FINANCIERO PERSONAL
+# ============================================================
+
+def ask_financial_ai(
+    user_id,
+    question,
+    conversation_history=None
+):
+
+    if not question:
+
+        return {
+            "answer":
+                "Escribe una pregunta financiera."
+        }
+
+    if not client:
+
+        return {
+            "answer":
+                "El servicio de inteligencia financiera no está configurado."
+        }
+
+    try:
+
+        financial_context = (
+            get_user_financial_context(
+                user_id
+            )
+        )
+
+        history = (
+            conversation_history
+            or []
+        )
+
+        # --------------------------------------------
+        # Limitar historial
+        # --------------------------------------------
+
+        history = history[-10:]
+
+        conversation_text = ""
+
+        for message in history:
+
+            role = message.get(
+                "role",
+                "user"
+            )
+
+            content = message.get(
+                "content",
+                ""
+            )
+
+            conversation_text += (
+                f"{role}: {content}\n"
+            )
+
+        # --------------------------------------------
+        # PROMPT
+        # --------------------------------------------
+
+        prompt = f"""
+Eres el administrador financiero personal del usuario.
+
+Tu función es ayudar al usuario a comprender y mejorar
+sus finanzas utilizando sus datos financieros reales.
+
+DATOS DEL USUARIO:
+
+{json.dumps(
+    financial_context,
+    ensure_ascii=False,
+    indent=2
+)}
+
+HISTORIAL RECIENTE DEL CHAT:
+
+{conversation_text}
+
+NUEVA PREGUNTA:
+
+{question}
+
+INSTRUCCIONES:
+
+- Responde en español.
+- Sé claro, natural y útil.
+- Personaliza la respuesta utilizando los datos financieros.
+- Utiliza los datos de PostgreSQL proporcionados.
+- No inventes ingresos, gastos, fechas, categorías ni cantidades.
+- Si el usuario pregunta sobre una transacción concreta,
+  utiliza únicamente las transacciones proporcionadas.
+- Si no tienes suficiente información, dilo.
+- Puedes calcular porcentajes, diferencias, promedios
+  y balances utilizando los datos disponibles.
+- Explica los cálculos importantes de manera sencilla.
+- Da consejos financieros prácticos y relacionados
+  directamente con la situación del usuario.
+- Recuerda el contexto de los mensajes anteriores.
+- Si el usuario hace una pregunta relacionada con algo
+  mencionado anteriormente, utiliza ese contexto.
+- Mantén el papel de administrador financiero personal.
+- No tomes decisiones por el usuario.
+- Presenta recomendaciones, no órdenes.
+
+La respuesta debe ser conversacional y fácil de entender.
+"""
+
+        response = client.responses.create(
+            model=OPENAI_MODEL,
+            input=prompt
+        )
+
+        answer = (
+            response.output_text.strip()
+        )
+
+        return {
+
+            "answer": answer,
+
+            "financial_context":
+                financial_context
+
+        }
+
+    except Exception as e:
+
+        print(
+            "Financial chat error:",
+            type(e).__name__,
+            str(e)
+        )
+
+        return {
+
+            "answer":
+                "Ocurrió un problema al procesar tu pregunta. "
+                "Intenta nuevamente más tarde.",
+
+            "error": str(e)
+
+        }
+
+
+# ============================================================
+# SIMULACIÓN DE AHORRO
+# ============================================================
+
+def simulate_savings(
+    amount: float,
+    months=None
+):
+
+    if months is None:
+
+        months = [
+            1,
+            6,
+            12,
+            24
+        ]
+
+    months = sorted(
+        set(
+            int(m)
+            for m in months
+        )
+    )
+
+    projections = {}
+
+    for month in months:
+
+        projections[str(month)] = round(
+            amount * month,
+            2
+        )
+
+    return {
+
+        "monthly_amount":
+            float(amount),
+
+        "projections":
+            projections
+
+    }
+```
+
