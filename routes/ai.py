@@ -1,6 +1,5 @@
-import os
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash
-from services.ai_service import parse_expense_text, analyze_finances_with_ai, simulate_savings
+from services.ai_service import ask_financial_question, parse_expense_text, analyze_finances_with_ai, simulate_savings
 from services.financial_analyzer import summarize_user_finances
 from flask_login import login_required, current_user
 from extensions import db
@@ -46,42 +45,9 @@ def chat_message():
         return jsonify({'reply': 'Escribe una pregunta para la IA.'}), 400
 
     summary = summarize_user_finances(current_user.id)
-    try:
-        import os
-        from openai import OpenAI
-        api_key = os.getenv('OPENAI_API_KEY')
-        model = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
-        if api_key:
-            client = OpenAI(api_key=api_key)
-            prompt = (
-                "Eres un asistente financiero útil en español para una persona en Guatemala. "
-                "Responde a la pregunta usando este resumen financiero del usuario. "
-                "Sé claro, práctico y breve.\n\n"
-                f"Resumen:\n{summary}\n\nPregunta:\n{question}"
-            )
-            response = client.responses.create(model=model, input=prompt)
-            output_text = str(response)
-            match = re.search(r"\{[\s\S]*\}", output_text)
-            if match:
-                parsed = {}
-                try:
-                    import json
-                    parsed = json.loads(match.group(0))
-                    if isinstance(parsed, dict) and 'reply' in parsed:
-                        return jsonify({'reply': parsed['reply']})
-                except Exception:
-                    pass
-            if hasattr(response, 'output_text') and response.output_text:
-                return jsonify({'reply': response.output_text})
-            if hasattr(response, 'output'):
-                text = ''
-                for item in response.output:
-                    if hasattr(item, 'content'):
-                        text += str(item.content)
-                if text:
-                    return jsonify({'reply': text})
-    except Exception as exc:
-        print('Chat AI error:', exc)
+    ai_reply = ask_financial_question(current_user.id, question)
+    if ai_reply:
+        return jsonify({'reply': ai_reply})
 
     return jsonify({'reply': _fallback_chat_reply(question, summary)})
 

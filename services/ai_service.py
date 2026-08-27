@@ -1,11 +1,142 @@
+import json
 import os
 import re
 from openai import OpenAI
 
-OPENAI_API_KEY = "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"
+from models import Budget, Expense, FinancialGoal
+
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
 
 client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
+
+
+def _extract_response_text(response) -> str:
+    """Extract plain text from OpenAI Responses API objects across SDK versions."""
+    if response is None:
+        return ''
+
+    output_text = getattr(response, 'output_text', None)
+    if output_text:
+        return str(output_text).strip()
+
+    output = getattr(response, 'output', None)
+    if output:
+        parts = []
+
+        def walk(node):
+            if isinstance(node, dict):
+                for key, value in node.items():
+                    if key in {'text', 'value'} and isinstance(value, str):
+                        parts.append(value)
+                    elif key == 'content':
+                        walk(value)
+                    else:
+                        walk(value)
+                return
+            if isinstance(node, list):
+                for item in node:
+                    walk(item)
+                return
+            if hasattr(node, 'text'):
+                text = getattr(node, 'text')
+                if isinstance(text, str):
+                    parts.append(text)
+                else:
+                    walk(text)
+            if hasattr(node, 'content'):
+                walk(getattr(node, 'content'))
+
+        walk(output)
+        text = '\n'.join(part.strip() for part in parts if part and part.strip())
+        if text:
+            return text
+
+    text = str(response)
+    return text.strip() if text and text != 'Response()' else ''
+
+
+def build_user_financial_context(user_id: int) -> dict:
+    """Build a concise but detailed dataset with the user's actual financial information."""
+    from services.financial_analyzer import summarize_user_finances
+
+    summary = summarize_user_finances(user_id)
+    recent_expenses = Expense.query.filter_by(user_id=user_id).order_by(Expense.expense_date.desc()).limit(20).all()
+    recent_incomes = Expense.query.filter_by(user_id=user_id, transaction_type='income').order_by(Expense.expense_date.desc()).limit(20).all()
+    budgets = Budget.query.filter_by(user_id=user_id).all()
+    goals = FinancialGoal.query.filter_by(user_id=user_id).all()
+
+    return {
+        'summary': summary,
+        'recent_expenses': [
+            {
+                'date': (e.expense_date.isoformat() if e.expense_date else None),
+                'amount': float(e.amount or 0),
+                'category': e.category,
+                'merchant': e.merchant,
+                'description': e.description,
+                'payment_method': e.payment_method,
+                'transaction_type': e.transaction_type,
+            }
+            for e in recent_expenses
+        ],
+        'recent_incomes': [
+            {
+                'date': (i.expense_date.isoformat() if i.expense_date else None),
+                'amount': float(i.amount or 0),
+                'source': i.merchant or i.description,
+                'description': i.description,
+            }
+            for i in recent_incomes
+        ],
+        'budgets': [
+            {
+                'category': b.category,
+                'amount': float(b.amount or 0),
+                'month': b.month,
+                'year': b.year,
+            }
+            for b in budgets
+        ],
+        'goals': [
+            {
+                'name': g.name,
+                'target_amount': float(g.target_amount or 0),
+                'current_amount': float(g.current_amount or 0),
+                'target_date': g.target_date.isoformat() if g.target_date else None,
+            }
+            for g in goals
+        ],
+    }
+
+
+def ask_financial_question(user_id: int, question: str) -> str | None:
+    """Send the user's actual financial context to the AI and ask the direct question."""
+    if not question or not client:
+        return None
+
+    context = build_user_financial_context(user_id)
+    prompt = (
+        'Eres un analista financiero experto y debes responder usando únicamente la información financiera del usuario. '
+        'Analiza la base de datos financiera del usuario, identifica patrones, riesgos, oportunidades y recomendaciones prácticas. '
+        'Escribe en español, claro, útil y profesional. Si faltan datos, dilo con honestidad y sugiere qué falta revisar.\n\n'
+        f'CONTEXTO DEL USUARIO:\n{json.dumps(context, ensure_ascii=False, indent=2)}\n\n'
+        f'PREGUNTA DEL USUARIO:\n{question}\n\n'
+        'Responde con un análisis concreto basado en los datos disponibles y no inventes información.'
+    )
+
+    try:
+        response = client.responses.create(
+            model=OPENAI_MODEL,
+            input=prompt,
+        )
+        text = _extract_response_text(response)
+        if text:
+            return text
+    except Exception as exc:
+        print('OpenAI chat analysis error:', exc)
+
+    return None
 
 
 def parse_expense_text(text: str) -> dict:
