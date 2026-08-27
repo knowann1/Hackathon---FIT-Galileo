@@ -28,7 +28,7 @@ def _fallback_chat_reply(question: str, summary: dict) -> str:
         return "Para ahorrar mejor, revisa tus categorías principales y establece un presupuesto semanal para transporte y alimentación."
     if 'ingreso' in q or 'ingresos' in q:
         return "Puedo ayudarte a comparar tus ingresos y gastos, pero primero necesito que registres los movimientos relevantes en el panel."
-    return "Puedo ayudarte a revisar tus gastos, presupuestos y metas de ahorro. Pregúntame por tendencias, categorías o cómo optimizar tu presupuesto."
+    return "Error interno: intenta de nuevo o mas tarde."
 
 
 @ai_bp.route('/chat', methods=['GET'])
