@@ -78,6 +78,9 @@ def confirm_voice():
                 expense_date = datetime.strptime(date_str, '%Y-%m-%d').date()
             except Exception:
                 expense_date = None
+
+
+                
     if amount is None:
         flash('Monto inválido, no se guardó', 'danger')
         return redirect(url_for('voice.record_voice'))
