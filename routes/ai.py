@@ -294,6 +294,7 @@ def chat_message():
         client = OpenAI(
             api_key=api_key
         )
+        client = OpenAI(api_key=api_key)
 
         # ----------------------------------------------------
         # 5. Instrucciones permanentes del asistente
@@ -448,14 +449,14 @@ personalizada y fácil de entender.
         })
 
     except Exception as exc:
-
-        print('Chat AI error:', exc)
-
+        print("====================================")
+        print("CHAT AI ERROR")
+        print("Tipo:", type(exc).__name__)
+        print("Error:", str(exc))
+        print("====================================")
+    
         return jsonify({
-            'reply': (
-                'Ocurrió un problema al procesar tu pregunta. '
-                'Intenta nuevamente más tarde.'
-            )
+            'reply': f'Error: {type(exc).__name__}: {str(exc)}'
         }), 500
 
 
