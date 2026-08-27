@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: financial-ai-web
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:create_app"
+    instanceType: standard
+    envVars:
+      - key: DATABASE_URL
+      - key: SECRET_KEY
+      - key: OPENAI_API_KEY
+      - key: OPENAI_MODEL
+databases:
+  - name: financial-ai-db
+    plan: starter

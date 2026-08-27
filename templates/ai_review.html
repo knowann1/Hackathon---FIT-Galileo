@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Información detectada por IA</h3>
+{% if proposal %}
+  <pre>{{ proposal | tojson(indent=2) }}</pre>
+  <form method="post" action="{{ url_for('ai.confirm_expense') }}">
+    <input type="hidden" name="amount" value="{{ proposal.amount if proposal.get('amount') is none else proposal.get('amount') }}">
+    <input type="hidden" name="currency" value="{{ proposal.currency or proposal.get('currency','GTQ') }}">
+    <input type="hidden" name="merchant" value="{{ proposal.merchant or proposal.get('merchant','') }}">
+    <input type="hidden" name="description" value="{{ proposal.description or proposal.get('description','') }}">
+    <input type="hidden" name="category" value="{{ proposal.category or proposal.get('category','') }}">
+    <input type="hidden" name="payment_method" value="{{ proposal.payment_method or proposal.get('payment_method','') }}">
+    <input type="hidden" name="expense_date" value="{{ proposal.expense_date or proposal.get('expense_date','') }}">
+    <input type="hidden" name="ai_confidence" value="{{ proposal.ai_confidence or proposal.get('confidence','') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn btn-success">Confirmar</button>
+    <a class="btn btn-secondary" href="/expenses/new">Editar</a>
+    <a class="btn btn-link" href="/dashboard">Cancelar</a>
+  </form>
+{% else %}
+  <p>No se detectó propuesta.</p>
+{% endif %}
+{% endblock %}
