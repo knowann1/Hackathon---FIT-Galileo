@@ -280,11 +280,7 @@ def chat_message():
         # 3. Obtener configuración de OpenAI
         # ----------------------------------------------------
 
-        api_key =  "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"
-            return jsonify({
-                'reply': (
-                    'La IA no está configurada correctamente. '
-                    'Falta la variable OPENAI_API_KEY.'
+        api_key = "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"
                 )
             }), 500
 
