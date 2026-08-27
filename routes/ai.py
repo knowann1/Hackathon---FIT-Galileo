@@ -52,7 +52,7 @@ def chat_message():
         api_key = os.getenv('OPENAI_API_KEY')
         model = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
         if api_key:
-            client = OpenAI(api_key=api_key)
+            client = OpenAI(api_key="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")
             prompt = (
                 "Eres un asistente financiero útil en español para una persona en Guatemala. "
                 "Responde a la pregunta usando este resumen financiero del usuario. "
