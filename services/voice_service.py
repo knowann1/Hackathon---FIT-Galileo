@@ -1,4 +1,4 @@
-```python
+
 import os
 import json
 
@@ -492,4 +492,4 @@ financieros correspondientes.
             'proposal': {},
             'error': str(exc)
         }
-```
+
