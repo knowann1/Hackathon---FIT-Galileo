@@ -283,7 +283,7 @@ def chat_message():
 
         api_key = os.getenv("OPENAI_API_KEY")
            
-        )
+        
 
         # ----------------------------------------------------
         # 4. Crear cliente OpenAI
