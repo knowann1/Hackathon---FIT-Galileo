@@ -1,162 +1,626 @@
 {% extends 'base.html' %}
+
 {% block content %}
+
 <h3>Registro por voz</h3>
+
 {% if result %}
-  {% set proposal = result.proposal or {} %}
+
+{% set proposal = result.proposal or {} %}
+
   <div class="card shadow-sm mb-4">
     <div class="card-body">
-      <h4>Gasto detectado</h4>
-      <div class="row g-3">
-        {% set fields = [
-          ('Monto', proposal.amount if proposal.get('amount') is not none else None),
-          ('Moneda', proposal.currency or proposal.get('currency') or 'GTQ'),
-          ('Comercio', proposal.merchant or proposal.get('merchant')),
-          ('Fecha', proposal.expense_date or proposal.get('expense_date')),
-          ('Categoría', proposal.category or proposal.get('category')),
-          ('Método de pago', proposal.payment_method or proposal.get('payment_method')),
-          ('Descripción', proposal.description or proposal.get('description'))
-        ] %}
-        {% for label, value in fields %}
-          {% if value is not none and value != '' %}
-            <div class="col-md-6">
-              <div class="border rounded p-3 h-100">
-                <small class="text-muted d-block">{{ label }}</small>
-                <strong>{{ value }}</strong>
-              </div>
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
+
+```
+  <h4>Gasto detectado</h4>
+
+  {% if result.transcript %}
+    <div class="alert alert-info">
+      <strong>Transcripción:</strong>
+      <p class="mb-0">{{ result.transcript }}</p>
     </div>
+  {% endif %}
+
+  <div class="row g-3">
+
+    {% set fields = [
+      ('Monto', proposal.amount if proposal.get('amount') is not none else None),
+      ('Moneda', proposal.currency or proposal.get('currency') or 'GTQ'),
+      ('Comercio', proposal.merchant or proposal.get('merchant')),
+      ('Fecha', proposal.expense_date or proposal.get('expense_date')),
+      ('Categoría', proposal.category or proposal.get('category')),
+      ('Método de pago', proposal.payment_method or proposal.get('payment_method')),
+      ('Descripción', proposal.description or proposal.get('description'))
+    ] %}
+
+    {% for label, value in fields %}
+
+      {% if value is not none and value != '' %}
+
+        <div class="col-md-6">
+
+          <div class="border rounded p-3 h-100">
+
+            <small class="text-muted d-block">
+              {{ label }}
+            </small>
+
+            <strong>
+              {{ value }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      {% endif %}
+
+    {% endfor %}
+
   </div>
 
-  <form method="post" action="{{ url_for('voice.confirm_voice') }}">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</div>
+```
 
-    <div class="row g-3">
-      <div class="col-md-4">
-        <label class="form-label">Tipo</label>
-        <select name="transaction_type" class="form-select">
-          <option value="expense" {% if (proposal.transaction_type or proposal.get('transaction_type','expense')) == 'expense' %}selected{% endif %}>Egreso</option>
-          <option value="income" {% if (proposal.transaction_type or proposal.get('transaction_type','')) == 'income' %}selected{% endif %}>Ingreso</option>
-        </select>
-      </div>
-      <div class="col-md-4">
-        <label class="form-label">Monto</label>
-        <input type="number" step="0.01" class="form-control" name="amount" value="{{ proposal.amount if proposal.get('amount') is not none else proposal.get('amount','') }}">
-      </div>
-      <div class="col-md-4">
-        <label class="form-label">Moneda</label>
-        <input class="form-control" name="currency" value="{{ proposal.currency or proposal.get('currency','GTQ') }}">
-      </div>
-      <div class="col-md-6">
-        <label class="form-label">Comercio</label>
-        <input class="form-control" name="merchant" value="{{ proposal.merchant or proposal.get('merchant','') }}">
-      </div>
-      <div class="col-md-6">
-        <label class="form-label">Fecha</label>
-        <input type="date" class="form-control" name="expense_date" value="{{ proposal.expense_date or proposal.get('expense_date','') }}">
-      </div>
-      <div class="col-12">
-        <label class="form-label">Descripción</label>
-        <input class="form-control" name="description" value="{{ proposal.description or proposal.get('description','') }}">
-      </div>
-    </div>
+  </div>
 
-    <div class="mb-3 mt-3">
-      <label class="form-label">Categoría</label>
-      <select name="category" class="form-select">
-        {% for c in categories %}
-          <option value="{{c}}" {% if (proposal.category or proposal.get('category','')) == c %}selected{% endif %}>{{c}}</option>
-        {% endfor %}
-      </select>
-    </div>
+  <!-- ===================================================== -->
 
-    <div class="mb-3">
-      <label class="form-label">Método de pago</label>
-      <select name="payment_method" class="form-select">
-        {% for p in payment_methods %}
-          <option value="{{p}}" {% if (proposal.payment_method or proposal.get('payment_method','')) == p %}selected{% endif %}>{{p}}</option>
-        {% endfor %}
-      </select>
-    </div>
+  <!-- CONFIRMAR TRANSACCIÓN -->
 
-    <div class="d-flex gap-2">
-      <button class="btn btn-success">Confirmar</button>
-      <a class="btn btn-secondary" href="/expenses/new">Editar</a>
-      <a href="/voice/record" class="btn btn-link">Cancelar</a>
-    </div>
+  <!-- ===================================================== -->
+
+  <form
+    method="post"
+    action="{{ url_for('voice.confirm_voice') }}"
+  >
+
+```
+<!-- CSRF -->
+<input
+  type="hidden"
+  name="csrf_token"
+  value="{{ csrf_token() }}"
+>
+
+<div class="row g-3">
+
+  <!-- TIPO -->
+
+  <div class="col-md-4">
+
+    <label class="form-label">
+      Tipo
+    </label>
+
+    <select
+      name="transaction_type"
+      class="form-select"
+    >
+
+      <option
+        value="expense"
+        {% if (proposal.transaction_type or proposal.get('transaction_type','expense')) == 'expense' %}
+          selected
+        {% endif %}
+      >
+        Egreso
+      </option>
+
+      <option
+        value="income"
+        {% if (proposal.transaction_type or proposal.get('transaction_type','')) == 'income' %}
+          selected
+        {% endif %}
+      >
+        Ingreso
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <!-- MONTO -->
+
+  <div class="col-md-4">
+
+    <label class="form-label">
+      Monto
+    </label>
+
+    <input
+      type="number"
+      step="0.01"
+      class="form-control"
+      name="amount"
+      value="{{ proposal.amount if proposal.get('amount') is not none else '' }}"
+      required
+    >
+
+  </div>
+
+
+  <!-- MONEDA -->
+
+  <div class="col-md-4">
+
+    <label class="form-label">
+      Moneda
+    </label>
+
+    <input
+      class="form-control"
+      name="currency"
+      value="{{ proposal.currency or proposal.get('currency','GTQ') }}"
+    >
+
+  </div>
+
+
+  <!-- COMERCIO -->
+
+  <div class="col-md-6">
+
+    <label class="form-label">
+      Comercio
+    </label>
+
+    <input
+      class="form-control"
+      name="merchant"
+      value="{{ proposal.merchant or proposal.get('merchant','') }}"
+    >
+
+  </div>
+
+
+  <!-- FECHA -->
+
+  <div class="col-md-6">
+
+    <label class="form-label">
+      Fecha
+    </label>
+
+    <input
+      type="date"
+      class="form-control"
+      name="expense_date"
+      value="{{ proposal.expense_date or proposal.get('expense_date','') }}"
+    >
+
+  </div>
+
+
+  <!-- DESCRIPCIÓN -->
+
+  <div class="col-12">
+
+    <label class="form-label">
+      Descripción
+    </label>
+
+    <input
+      class="form-control"
+      name="description"
+      value="{{ proposal.description or proposal.get('description','') }}"
+    >
+
+  </div>
+
+</div>
+
+
+<!-- CATEGORÍA -->
+
+<div class="mb-3 mt-3">
+
+  <label class="form-label">
+    Categoría
+  </label>
+
+  <select
+    name="category"
+    class="form-select"
+  >
+
+    {% for c in categories %}
+
+      <option
+        value="{{ c }}"
+        {% if (proposal.category or proposal.get('category','')) == c %}
+          selected
+        {% endif %}
+      >
+        {{ c }}
+      </option>
+
+    {% endfor %}
+
+  </select>
+
+</div>
+
+
+<!-- MÉTODO DE PAGO -->
+
+<div class="mb-3">
+
+  <label class="form-label">
+    Método de pago
+  </label>
+
+  <select
+    name="payment_method"
+    class="form-select"
+  >
+
+    {% for p in payment_methods %}
+
+      <option
+        value="{{ p }}"
+        {% if (proposal.payment_method or proposal.get('payment_method','')) == p %}
+          selected
+        {% endif %}
+      >
+        {{ p }}
+      </option>
+
+    {% endfor %}
+
+  </select>
+
+</div>
+
+
+<!-- BOTONES -->
+
+<div class="d-flex gap-2">
+
+  <button
+    type="submit"
+    class="btn btn-success"
+  >
+    Confirmar
+  </button>
+
+  <a
+    class="btn btn-secondary"
+    href="/expenses/new"
+  >
+    Editar
+  </a>
+
+  <a
+    href="{{ url_for('voice.record_voice') }}"
+    class="btn btn-link"
+  >
+    Cancelar
+  </a>
+
+</div>
+```
+
   </form>
+
 {% else %}
-  <form id="voice-form" method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-      <label class="form-label">Archivo de audio o grabación del micrófono</label>
-      <div class="d-flex flex-wrap gap-2 mb-2">
-        <button type="button" id="start-recording" class="btn btn-outline-primary">Grabar con micrófono</button>
-        <button type="button" id="stop-recording" class="btn btn-outline-danger" disabled>Detener</button>
-      </div>
-      <audio id="voice-preview" controls class="d-none mb-2"></audio>
-      <input id="audio-file" type="file" name="audio" class="form-control" accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm" required>
-      <small class="text-muted">Puedes grabar desde el micrófono del dispositivo o subir un archivo de audio.</small>
-    </div>
-    <button class="btn btn-primary" type="submit">Subir y analizar</button>
+
+  <!-- ===================================================== -->
+
+  <!-- SUBIR / GRABAR AUDIO -->
+
+  <!-- ===================================================== -->
+
+  <form
+    id="voice-form"
+    method="post"
+    action="{{ url_for('voice.record_voice') }}"
+    enctype="multipart/form-data"
+  >
+
+```
+<!-- IMPORTANTE: TOKEN CSRF -->
+
+<input
+  type="hidden"
+  name="csrf_token"
+  value="{{ csrf_token() }}"
+>
+
+
+<div class="mb-3">
+
+  <label class="form-label">
+    Archivo de audio o grabación del micrófono
+  </label>
+
+
+  <div class="d-flex flex-wrap gap-2 mb-2">
+
+    <button
+      type="button"
+      id="start-recording"
+      class="btn btn-outline-primary"
+    >
+      Grabar con micrófono
+    </button>
+
+    <button
+      type="button"
+      id="stop-recording"
+      class="btn btn-outline-danger"
+      disabled
+    >
+      Detener
+    </button>
+
+  </div>
+
+
+  <audio
+    id="voice-preview"
+    controls
+    class="d-none mb-2"
+  ></audio>
+
+
+  <input
+    id="audio-file"
+    type="file"
+    name="audio"
+    class="form-control"
+    accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm"
+    required
+  >
+
+
+  <small class="text-muted">
+    Puedes grabar desde el micrófono del dispositivo
+    o subir un archivo de audio.
+  </small>
+
+</div>
+
+
+<button
+  class="btn btn-primary"
+  type="submit"
+  id="analyze-button"
+>
+  Subir y analizar
+</button>
+```
+
   </form>
+
+  <!-- ===================================================== -->
+
+  <!-- JAVASCRIPT -->
+
+  <!-- ===================================================== -->
 
   <script>
-    const audioFile = document.getElementById('audio-file');
-    const voicePreview = document.getElementById('voice-preview');
-    const startBtn = document.getElementById('start-recording');
-    const stopBtn = document.getElementById('stop-recording');
+
+    const audioFile =
+      document.getElementById('audio-file');
+
+    const voicePreview =
+      document.getElementById('voice-preview');
+
+    const startBtn =
+      document.getElementById('start-recording');
+
+    const stopBtn =
+      document.getElementById('stop-recording');
+
+    const voiceForm =
+      document.getElementById('voice-form');
+
+    const analyzeButton =
+      document.getElementById('analyze-button');
 
     let recorder = null;
+
     let chunks = [];
+
     let stream = null;
 
+    // =====================================================
+    // GRABAR AUDIO
+    // =====================================================
+
     async function startRecording() {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert('Tu navegador no permite acceder al micrófono. Puedes subir un archivo de audio manualmente.');
+
+      if (
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia
+      ) {
+
+        alert(
+          'Tu navegador no permite acceder al micrófono. ' +
+          'Puedes subir un archivo de audio manualmente.'
+        );
+
         return;
       }
 
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        recorder = new MediaRecorder(stream, { mimeType: MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4' });
+
+        stream =
+          await navigator.mediaDevices.getUserMedia({
+            audio: true
+          });
+
+        const mimeType =
+          MediaRecorder.isTypeSupported('audio/webm')
+            ? 'audio/webm'
+            : 'audio/mp4';
+
+        recorder =
+          new MediaRecorder(
+            stream,
+            {
+              mimeType: mimeType
+            }
+          );
+
         chunks = [];
-        recorder.ondataavailable = (event) => {
-          if (event.data && event.data.size > 0) chunks.push(event.data);
-        };
-        recorder.onstop = () => {
-          const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
-          const file = new File([blob], 'grabacion.webm', { type: blob.type || 'audio/webm' });
-          const dt = new DataTransfer();
-          dt.items.add(file);
-          audioFile.files = dt.files;
 
-          const url = URL.createObjectURL(blob);
-          voicePreview.src = url;
-          voicePreview.classList.remove('d-none');
+        recorder.ondataavailable =
+          (event) => {
 
-          stream.getTracks().forEach((track) => track.stop());
-          stream = null;
-        };
+            if (
+              event.data &&
+              event.data.size > 0
+            ) {
+
+              chunks.push(event.data);
+
+            }
+
+          };
+
+        recorder.onstop =
+          () => {
+
+            const blob =
+              new Blob(
+                chunks,
+                {
+                  type:
+                    recorder.mimeType ||
+                    'audio/webm'
+                }
+              );
+
+            const file =
+              new File(
+                [blob],
+                'grabacion.webm',
+                {
+                  type:
+                    blob.type ||
+                    'audio/webm'
+                }
+              );
+
+            const dt =
+              new DataTransfer();
+
+            dt.items.add(file);
+
+            audioFile.files =
+              dt.files;
+
+            const url =
+              URL.createObjectURL(blob);
+
+            voicePreview.src =
+              url;
+
+            voicePreview.classList.remove(
+              'd-none'
+            );
+
+            if (stream) {
+
+              stream
+                .getTracks()
+                .forEach(
+                  track => track.stop()
+                );
+
+              stream = null;
+
+            }
+
+          };
+
         recorder.start();
+
         startBtn.disabled = true;
+
         stopBtn.disabled = false;
-      } catch (error) {
-        alert('No se pudo acceder al micrófono. Verifica los permisos del navegador y luego intenta de nuevo.');
+
       }
+
+      catch (error) {
+
+        console.error(
+          'Microphone error:',
+          error
+        );
+
+        alert(
+          'No se pudo acceder al micrófono. ' +
+          'Verifica los permisos del navegador ' +
+          'y luego intenta de nuevo.'
+        );
+
+      }
+
     }
+
+    // =====================================================
+    // DETENER GRABACIÓN
+    // =====================================================
 
     function stopRecording() {
-      if (recorder && recorder.state !== 'inactive') {
+
+      if (
+        recorder &&
+        recorder.state !== 'inactive'
+      ) {
+
         recorder.stop();
+
       }
+
       startBtn.disabled = false;
+
       stopBtn.disabled = true;
+
     }
 
-    startBtn.onclick = startRecording;
-    stopBtn.onclick = stopRecording;
+    // =====================================================
+    // EVENTOS
+    // =====================================================
+
+    startBtn.onclick =
+      startRecording;
+
+    stopBtn.onclick =
+      stopRecording;
+
+    // =====================================================
+    // MOSTRAR ESTADO AL ANALIZAR
+    // =====================================================
+
+    voiceForm.addEventListener(
+      'submit',
+      function () {
+
+        if (
+          !audioFile.files ||
+          audioFile.files.length === 0
+        ) {
+
+          return;
+
+        }
+
+        analyzeButton.disabled = true;
+
+        analyzeButton.innerText =
+          'Analizando audio...';
+
+      }
+    );
+
   </script>
+
 {% endif %}
+
 {% endblock %}
+
