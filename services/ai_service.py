@@ -1,4 +1,4 @@
-```python
+
 import os
 import json
 import re
@@ -751,5 +751,5 @@ def simulate_savings(
             projections
 
     }
-```
+
 
