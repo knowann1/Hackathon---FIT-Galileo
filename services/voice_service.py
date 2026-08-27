@@ -43,6 +43,7 @@ def transcribe_and_parse(file_path: str) -> dict:
 
         proposal:
             Datos financieros detectados por la IA.
+    Nota: usa la fecha actual del mundo, el presente año, el presente mes y el presente dia si el usuario indicara: compre x ayer, antier o al algo, rectifica que la fecha sea la adecuada
     """
 
     # --------------------------------------------------------
