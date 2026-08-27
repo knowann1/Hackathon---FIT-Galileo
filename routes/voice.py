@@ -1,4 +1,4 @@
-```python
+
 import os
 
 from flask import (
@@ -526,4 +526,4 @@ def confirm_voice():
             'expenses.list_expenses'
         )
     )
-```
+
