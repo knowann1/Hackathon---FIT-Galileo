@@ -280,9 +280,7 @@ def chat_message():
         # 3. Obtener configuración de OpenAI
         # ----------------------------------------------------
 
-        api_key =  "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"
-
-        if not api_key:
+        api_key =  "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"
             return jsonify({
                 'reply': (
                     'La IA no está configurada correctamente. '
