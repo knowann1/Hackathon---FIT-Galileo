@@ -280,7 +280,7 @@ def chat_message():
         # 3. Obtener configuración de OpenAI
         # ----------------------------------------------------
 
-        api_key = "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"
+        api_key = os.getenv("OPENAI_API_KEY")
             'OPENAI_MODEL',
             'gpt-4o-mini'
         )
