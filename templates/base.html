@@ -1,4 +1,4 @@
-<!doctype html>
+!doctype html>
 <html lang="es">
   <head>
     <meta charset="utf-8">
@@ -18,14 +18,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="/dashboard">Panel</a></li>
-            <li class="nav-item"><a class="nav-link" href="/expenses/">Gastos</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('marketnexo.index') }}">Marketnexo</a></li>
-
-            <li class="nav-item"><a class="nav-link" href="/receipts/upload">Subir factura</a></li>
-            <li class="nav-item"><a class="nav-link" href="/voice/record">Registrar por voz</a></li>
-            <li class="nav-item"><a class="nav-link" href="/api/ai/chat">NexoIA</a></li>
             {% if current_user.is_authenticated %}
+              <li class="nav-item"><a class="nav-link" href="/dashboard">Panel</a></li>
+              <li class="nav-item"><a class="nav-link" href="/expenses/">Gastos</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('marketnexo.index') }}">MarketNexo</a></li>
+              <li class="nav-item"><a class="nav-link" href="/receipts/upload">Subir factura</a></li>
+              <li class="nav-item"><a class="nav-link" href="/voice/record">Registrar por voz</a></li>
+              <li class="nav-item"><a class="nav-link" href="/api/ai/chat">NexoIA</a></li>
               <li class="nav-item"><a class="nav-link" href="#">{{ current_user.username }}</a></li>
               <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Cerrar sesión</a></li>
             {% else %}
