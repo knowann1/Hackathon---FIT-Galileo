@@ -1408,6 +1408,8 @@ INSTRUCCIONES
 
 Tu objetivo es ayudar al usuario a comprender
 sus finanzas y tomar mejores decisiones.
+Dale un toque visualmente estetico, utiliza viñetas, cursiva, negrita, signos, emogis, sin perder la formalidad, no dejando de lado el profesionalismo
+Quiero que el texto sea visualmente agradable
 """
 
         response = client.responses.create(
