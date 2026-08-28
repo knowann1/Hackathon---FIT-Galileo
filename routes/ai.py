@@ -505,90 +505,63 @@ def confirm_expense():
     methods=["POST"]
 )
 @login_required
+@ai_bp.route('/analyze-finances', methods=['POST'])
+@login_required
 def analyze_finances():
 
     try:
+        from services.financial_analyzer import (
+            summarize_user_finances,
+            detect_insights
+        )
+        from models import FinancialInsight
 
-        # ====================================================
-        # IMPORTANTE:
-        # La función recibe USER_ID,
-        # NO el summary.
-        # ====================================================
-
-        user_id = current_user.id
-
-        # ====================================================
-        # OBTENER RESUMEN
-        # ====================================================
+        # ========================================================
+        # 1. OBTENER RESUMEN FINANCIERO
+        # ========================================================
 
         summary = summarize_user_finances(
-            user_id
+            current_user.id
         )
 
-        # ====================================================
-        # INSIGHTS REGLAS
-        # ====================================================
+        # ========================================================
+        # 2. INSIGHTS BASADOS EN REGLAS
+        # ========================================================
 
         try:
-
             rule_insights = detect_insights(
-                user_id
+                current_user.id
             )
-
         except Exception as exc:
-
-            print(
-                "Rule insights error:",
-                type(exc).__name__,
-                str(exc)
-            )
-
+            print("Rule insights error:", exc)
             rule_insights = []
 
-        # ====================================================
-        # GUARDAR INSIGHTS DE REGLAS
-        # ====================================================
+        # ========================================================
+        # 3. GUARDAR INSIGHTS
+        # ========================================================
 
         for ins in rule_insights:
 
             try:
 
                 fi = FinancialInsight(
-
-                    user_id=user_id,
-
-                    insight_type=(
-                        ins.get("type")
-                        or "info"
-                    ),
-
-                    title=(
-                        ins.get("title")
-                        or "Análisis financiero"
-                    ),
-
-                    description=(
-                        ins.get("description")
-                        or ""
-                    ),
-
-                    severity=(
-                        ins.get("severity")
-                        or "low"
+                    user_id=current_user.id,
+                    insight_type=ins.get('type'),
+                    title=ins.get('title'),
+                    description=ins.get('description'),
+                    severity=ins.get(
+                        'severity',
+                        'low'
                     )
-
                 )
 
-                db.session.add(
-                    fi
-                )
+                db.session.add(fi)
 
             except Exception as exc:
 
                 print(
-                    "Error creating insight:",
-                    type(exc).__name__,
-                    str(exc)
+                    "Error creating financial insight:",
+                    exc
                 )
 
         try:
@@ -598,25 +571,21 @@ def analyze_finances():
         except Exception as exc:
 
             print(
-                "Insight commit error:",
-                type(exc).__name__,
-                str(exc)
+                "Error committing insights:",
+                exc
             )
 
             db.session.rollback()
 
-        # ====================================================
-        # IA
-        # ====================================================
-
-        # MUY IMPORTANTE:
-        # Se pasa user_id, no summary.
+        # ========================================================
+        # 4. ANÁLISIS CON IA
+        # ========================================================
 
         ai_result = analyze_finances_with_ai(
-            user_id
+            current_user.id
         )
 
-        if not ai_result:
+        if not isinstance(ai_result, dict):
 
             ai_result = {
                 "insights": []
@@ -627,9 +596,93 @@ def analyze_finances():
             []
         )
 
-        # ====================================================
-        # RESPUESTA
-        # ====================================================
+        # ========================================================
+        # 5. UNIFICAR INSIGHTS
+        # ========================================================
+
+        insights = []
+
+        # Primero los de IA
+        for insight in ai_insights:
+
+            if not isinstance(insight, dict):
+                continue
+
+            insights.append({
+
+                "type": insight.get(
+                    "type",
+                    "info"
+                ),
+
+                "title": insight.get(
+                    "title",
+                    "Recomendación financiera"
+                ),
+
+                "description": insight.get(
+                    "description",
+                    ""
+                ),
+
+                "recommendation": insight.get(
+                    "recommendation",
+                    ""
+                ),
+
+                "priority": insight.get(
+                    "priority",
+                    999
+                )
+
+            })
+
+        # Agregar insights de reglas
+        for insight in rule_insights:
+
+            if not isinstance(insight, dict):
+                continue
+
+            insights.append({
+
+                "type": insight.get(
+                    "severity",
+                    "info"
+                ),
+
+                "title": insight.get(
+                    "title",
+                    "Insight financiero"
+                ),
+
+                "description": insight.get(
+                    "description",
+                    ""
+                ),
+
+                "recommendation": insight.get(
+                    "recommendation",
+                    ""
+                ),
+
+                "priority": 1000
+
+            })
+
+        # ========================================================
+        # 6. ORDENAR
+        # ========================================================
+
+        insights.sort(
+            key=lambda x: x.get(
+                "priority",
+                999
+            )
+        )
+
+        # ========================================================
+        # 7. RESPUESTA JSON
+        # ========================================================
 
         return jsonify({
 
@@ -637,33 +690,36 @@ def analyze_finances():
 
             "summary": summary,
 
-            "rule_insights":
-                rule_insights,
+            "insights": insights,
 
-            "ai_insights":
-                ai_insights,
+            "rule_insights": rule_insights,
 
-            "insights":
-                ai_insights
+            "ai_insights": ai_insights
 
-        })
+        }), 200
 
     except Exception as exc:
 
-        print("=" * 60)
-        print("FINANCIAL ANALYSIS ERROR")
+        # ========================================================
+        # ERROR CONTROLADO
+        # ========================================================
+
+        print("====================================")
+        print("ANALYZE FINANCES ERROR")
         print("Tipo:", type(exc).__name__)
         print("Error:", str(exc))
-        print("=" * 60)
+        print("====================================")
 
         return jsonify({
 
             "success": False,
 
             "error": (
-                "No se pudo realizar "
-                "el análisis financiero."
-            )
+                f"{type(exc).__name__}: "
+                f"{str(exc)}"
+            ),
+
+            "insights": []
 
         }), 500
 
