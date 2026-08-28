@@ -8,7 +8,7 @@ from routes.dashboard import dashboard_bp
 from routes.ai import ai_bp
 from routes.receipts import receipts_bp
 from routes.voice import voice_bp
-from routes.marketnexo import marketnexo_bp
+from marketnexo import marketnexo_bp
 
 
 def create_app():
