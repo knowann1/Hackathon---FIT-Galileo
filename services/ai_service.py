@@ -1409,7 +1409,8 @@ INSTRUCCIONES
 Tu objetivo es ayudar al usuario a comprender
 sus finanzas y tomar mejores decisiones.
 Dale un toque visualmente estetico, utiliza viñetas, cursiva, negrita, signos, emogis, sin perder la formalidad, no dejando de lado el profesionalismo
-Quiero que el texto sea visualmente agradable
+Quiero que el texto sea visualmente agradable, que no genere ruido visual
+Ademas, te llamas NexoAI, tengo en cuenta por si se refieren a ti de esa forma, tambien podrian llegar a decirte chat u otra forma, pero tu nombre dado ppor tu creador es NexoAI
 """
 
         response = client.responses.create(
