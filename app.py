@@ -8,6 +8,7 @@ from routes.dashboard import dashboard_bp
 from routes.ai import ai_bp
 from routes.receipts import receipts_bp
 from routes.voice import voice_bp
+from routes.marketnexo import marketnexo_bp
 
 
 def create_app():
@@ -59,6 +60,7 @@ def create_app():
     app.register_blueprint(ai_bp, url_prefix="/api/ai")
     app.register_blueprint(receipts_bp, url_prefix="/receipts")
     app.register_blueprint(voice_bp, url_prefix="/voice")
+    app.register_blueprint(marketnexo_bp, url_prefix="/marketnexo")
 
     @app.route("/")
     def index():
