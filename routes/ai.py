@@ -1,3 +1,4 @@
+
 import os
 import json
 
@@ -26,9 +27,18 @@ from services.financial_analyzer import (
 )
 
 from extensions import db
-from models import Expense, FinancialInsight
+
+from models import (
+    Expense,
+    FinancialInsight
+)
+
 from datetime import datetime
 
+
+# ============================================================
+# BLUEPRINT
+# ============================================================
 
 ai_bp = Blueprint(
     "ai",
@@ -41,7 +51,10 @@ ai_bp = Blueprint(
 # CHATBOT
 # ============================================================
 
-@ai_bp.route("/chat", methods=["GET"])
+@ai_bp.route(
+    "/chat",
+    methods=["GET"]
+)
 @login_required
 def chat_page():
 
@@ -50,33 +63,43 @@ def chat_page():
     )
 
 
-@ai_bp.route("/chat-message", methods=["POST"])
+@ai_bp.route(
+    "/chat-message",
+    methods=["POST"]
+)
 @login_required
 def chat_message():
 
-    data = request.get_json(
-        silent=True
-    ) or {}
+    data = (
+        request.get_json(
+            silent=True
+        )
+        or {}
+    )
 
     question = (
-        data.get("message") or ""
+        data.get("message")
+        or ""
     ).strip()
 
     if not question:
 
         return jsonify({
-            "reply": "Escribe una pregunta para NexoAI."
+            "reply":
+                "Escribe una pregunta para NexoAI."
         }), 400
 
     try:
 
         # ====================================================
-        # HISTORIAL ENVIADO POR EL FRONTEND
+        # HISTORIAL
         # ====================================================
 
         conversation_history = (
             data.get("history")
-            or data.get("conversation_history")
+            or data.get(
+                "conversation_history"
+            )
             or []
         )
 
@@ -84,25 +107,33 @@ def chat_message():
             conversation_history,
             list
         ):
+
             conversation_history = []
 
         # ====================================================
-        # CONSULTAR IA
+        # IA
         # ====================================================
 
         result = ask_financial_ai(
+
             user_id=current_user.id,
+
             question=question,
-            conversation_history=conversation_history
+
+            conversation_history=(
+                conversation_history
+            )
+
         )
 
         if not result:
 
             return jsonify({
-                "reply": (
-                    "No pude procesar tu pregunta "
-                    "en este momento."
-                )
+                "reply":
+                    (
+                        "No pude procesar tu pregunta "
+                        "en este momento."
+                    )
             }), 500
 
         answer = result.get(
@@ -117,22 +148,34 @@ def chat_message():
             )
 
         return jsonify({
-            "reply": answer
+
+            "reply":
+                answer
+
         })
 
     except Exception as exc:
 
         print("=" * 60)
         print("CHAT AI ERROR")
-        print("Tipo:", type(exc).__name__)
-        print("Error:", str(exc))
+        print(
+            "Tipo:",
+            type(exc).__name__
+        )
+        print(
+            "Error:",
+            str(exc)
+        )
         print("=" * 60)
 
         return jsonify({
-            "reply": (
-                "Ocurrió un problema al procesar "
-                "tu pregunta. Intenta nuevamente."
-            )
+
+            "reply":
+                (
+                    "Ocurrió un problema al procesar "
+                    "tu pregunta. Intenta nuevamente."
+                )
+
         }), 500
 
 
@@ -140,22 +183,30 @@ def chat_message():
 # PARSEAR TEXTO
 # ============================================================
 
-@ai_bp.route("/parse-text", methods=["POST"])
+@ai_bp.route(
+    "/parse-text",
+    methods=["POST"]
+)
 @login_required
 def parse_text_endpoint():
 
-    data = request.get_json(
-        silent=True
-    ) or {}
+    data = (
+        request.get_json(
+            silent=True
+        )
+        or {}
+    )
 
     text = (
-        data.get("text") or ""
+        data.get("text")
+        or ""
     ).strip()
 
     if not text:
 
         return jsonify({
-            "error": "No text provided"
+            "error":
+                "No text provided"
         }), 400
 
     result = parse_expense_text(
@@ -163,7 +214,10 @@ def parse_text_endpoint():
     )
 
     return jsonify({
-        "proposal": result
+
+        "proposal":
+            result
+
     })
 
 
@@ -171,7 +225,10 @@ def parse_text_endpoint():
 # REVISAR PROPUESTA
 # ============================================================
 
-@ai_bp.route("/parse-text/review", methods=["POST"])
+@ai_bp.route(
+    "/parse-text/review",
+    methods=["POST"]
+)
 @login_required
 def parse_text_review():
 
@@ -188,7 +245,8 @@ def parse_text_review():
         json_data = (
             request.get_json(
                 silent=True
-            ) or {}
+            )
+            or {}
         )
 
         text = json_data.get(
@@ -203,7 +261,9 @@ def parse_text_review():
         )
 
         return redirect(
-            url_for("dashboard.index")
+            url_for(
+                "dashboard.index"
+            )
         )
 
     proposal = parse_expense_text(
@@ -211,8 +271,11 @@ def parse_text_review():
     )
 
     return render_template(
+
         "ai_review.html",
+
         proposal=proposal
+
     )
 
 
@@ -220,7 +283,10 @@ def parse_text_review():
 # CONFIRMAR EXPENSE
 # ============================================================
 
-@ai_bp.route("/confirm-expense", methods=["POST"])
+@ai_bp.route(
+    "/confirm-expense",
+    methods=["POST"]
+)
 @login_required
 def confirm_expense():
 
@@ -233,7 +299,8 @@ def confirm_expense():
         data = (
             request.get_json(
                 silent=True
-            ) or {}
+            )
+            or {}
         )
 
     # ========================================================
@@ -271,7 +338,9 @@ def confirm_expense():
         )
 
         return redirect(
-            url_for("dashboard.index")
+            url_for(
+                "dashboard.index"
+            )
         )
 
     # ========================================================
@@ -384,7 +453,9 @@ def confirm_expense():
         )
 
         return redirect(
-            url_for("dashboard.index")
+            url_for(
+                "dashboard.index"
+            )
         )
 
     if amount <= 0:
@@ -395,7 +466,9 @@ def confirm_expense():
         )
 
         return redirect(
-            url_for("dashboard.index")
+            url_for(
+                "dashboard.index"
+            )
         )
 
     # ========================================================
@@ -470,7 +543,9 @@ def confirm_expense():
         )
 
         return redirect(
-            url_for("dashboard.index")
+            url_for(
+                "dashboard.index"
+            )
         )
 
     # ========================================================
@@ -492,7 +567,9 @@ def confirm_expense():
         )
 
     return redirect(
-        url_for("expenses.list_expenses")
+        url_for(
+            "expenses.list_expenses"
+        )
     )
 
 
@@ -505,57 +582,77 @@ def confirm_expense():
     methods=["POST"]
 )
 @login_required
-@ai_bp.route('/analyze-finances', methods=['POST'])
-@login_required
 def analyze_finances():
 
     try:
-        from services.financial_analyzer import (
-            summarize_user_finances,
-            detect_insights
-        )
-        from models import FinancialInsight
 
-        # ========================================================
-        # 1. OBTENER RESUMEN FINANCIERO
-        # ========================================================
+        # ====================================================
+        # 1. RESUMEN FINANCIERO
+        # ====================================================
 
         summary = summarize_user_finances(
             current_user.id
         )
 
-        # ========================================================
+        # ====================================================
         # 2. INSIGHTS BASADOS EN REGLAS
-        # ========================================================
+        # ====================================================
 
         try:
+
             rule_insights = detect_insights(
                 current_user.id
             )
+
         except Exception as exc:
-            print("Rule insights error:", exc)
+
+            print(
+                "Rule insights error:",
+                exc
+            )
+
             rule_insights = []
 
-        # ========================================================
+        # ====================================================
         # 3. GUARDAR INSIGHTS
-        # ========================================================
+        # ====================================================
 
         for ins in rule_insights:
 
             try:
 
+                if not isinstance(
+                    ins,
+                    dict
+                ):
+                    continue
+
                 fi = FinancialInsight(
+
                     user_id=current_user.id,
-                    insight_type=ins.get('type'),
-                    title=ins.get('title'),
-                    description=ins.get('description'),
+
+                    insight_type=ins.get(
+                        "type"
+                    ),
+
+                    title=ins.get(
+                        "title"
+                    ),
+
+                    description=ins.get(
+                        "description"
+                    ),
+
                     severity=ins.get(
-                        'severity',
-                        'low'
+                        "severity",
+                        "low"
                     )
+
                 )
 
-                db.session.add(fi)
+                db.session.add(
+                    fi
+                )
 
             except Exception as exc:
 
@@ -577,15 +674,20 @@ def analyze_finances():
 
             db.session.rollback()
 
-        # ========================================================
+        # ====================================================
         # 4. ANÁLISIS CON IA
-        # ========================================================
+        # ====================================================
 
         ai_result = analyze_finances_with_ai(
+
             current_user.id
+
         )
 
-        if not isinstance(ai_result, dict):
+        if not isinstance(
+            ai_result,
+            dict
+        ):
 
             ai_result = {
                 "insights": []
@@ -596,130 +698,192 @@ def analyze_finances():
             []
         )
 
-        # ========================================================
+        if not isinstance(
+            ai_insights,
+            list
+        ):
+
+            ai_insights = []
+
+        # ====================================================
         # 5. UNIFICAR INSIGHTS
-        # ========================================================
+        # ====================================================
 
         insights = []
 
-        # Primero los de IA
+        # ----------------------------------------------------
+        # INSIGHTS DE IA
+        # ----------------------------------------------------
+
         for insight in ai_insights:
 
-            if not isinstance(insight, dict):
+            if not isinstance(
+                insight,
+                dict
+            ):
+
                 continue
 
             insights.append({
 
-                "type": insight.get(
-                    "type",
-                    "info"
-                ),
+                "type":
+                    insight.get(
+                        "type",
+                        "info"
+                    ),
 
-                "title": insight.get(
-                    "title",
-                    "Recomendación financiera"
-                ),
+                "title":
+                    insight.get(
+                        "title",
+                        "Recomendación financiera"
+                    ),
 
-                "description": insight.get(
-                    "description",
-                    ""
-                ),
+                "description":
+                    insight.get(
+                        "description",
+                        ""
+                    ),
 
-                "recommendation": insight.get(
-                    "recommendation",
-                    ""
-                ),
+                "recommendation":
+                    insight.get(
+                        "recommendation",
+                        ""
+                    ),
 
-                "priority": insight.get(
-                    "priority",
-                    999
-                )
+                "priority":
+                    insight.get(
+                        "priority",
+                        999
+                    )
 
             })
 
-        # Agregar insights de reglas
+        # ----------------------------------------------------
+        # INSIGHTS DE REGLAS
+        # ----------------------------------------------------
+
         for insight in rule_insights:
 
-            if not isinstance(insight, dict):
+            if not isinstance(
+                insight,
+                dict
+            ):
+
                 continue
 
             insights.append({
 
-                "type": insight.get(
-                    "severity",
-                    "info"
-                ),
+                "type":
+                    insight.get(
+                        "severity",
+                        "info"
+                    ),
 
-                "title": insight.get(
-                    "title",
-                    "Insight financiero"
-                ),
+                "title":
+                    insight.get(
+                        "title",
+                        "Insight financiero"
+                    ),
 
-                "description": insight.get(
-                    "description",
-                    ""
-                ),
+                "description":
+                    insight.get(
+                        "description",
+                        ""
+                    ),
 
-                "recommendation": insight.get(
-                    "recommendation",
-                    ""
-                ),
+                "recommendation":
+                    insight.get(
+                        "recommendation",
+                        ""
+                    ),
 
-                "priority": 1000
+                "priority":
+                    1000
 
             })
 
-        # ========================================================
+        # ====================================================
         # 6. ORDENAR
-        # ========================================================
+        # ====================================================
 
-        insights.sort(
-            key=lambda x: x.get(
-                "priority",
-                999
+        try:
+
+            insights.sort(
+                key=lambda x: float(
+                    x.get(
+                        "priority",
+                        999
+                    )
+                )
             )
-        )
 
-        # ========================================================
+        except (
+            ValueError,
+            TypeError
+        ):
+
+            pass
+
+        # ====================================================
         # 7. RESPUESTA JSON
-        # ========================================================
+        # ====================================================
 
         return jsonify({
 
-            "success": True,
+            "success":
+                True,
 
-            "summary": summary,
+            "summary":
+                summary,
 
-            "insights": insights,
+            "insights":
+                insights,
 
-            "rule_insights": rule_insights,
+            "rule_insights":
+                rule_insights,
 
-            "ai_insights": ai_insights
+            "ai_insights":
+                ai_insights
 
         }), 200
 
     except Exception as exc:
 
-        # ========================================================
-        # ERROR CONTROLADO
-        # ========================================================
+        # ====================================================
+        # ERROR
+        # ====================================================
 
-        print("====================================")
-        print("ANALYZE FINANCES ERROR")
-        print("Tipo:", type(exc).__name__)
-        print("Error:", str(exc))
-        print("====================================")
+        print("=" * 60)
+
+        print(
+            "ANALYZE FINANCES ERROR"
+        )
+
+        print(
+            "Tipo:",
+            type(exc).__name__
+        )
+
+        print(
+            "Error:",
+            str(exc)
+        )
+
+        print("=" * 60)
 
         return jsonify({
 
-            "success": False,
+            "success":
+                False,
 
-            "error": (
-                f"{type(exc).__name__}: "
-                f"{str(exc)}"
-            ),
+            "error":
+                (
+                    f"{type(exc).__name__}: "
+                    f"{str(exc)}"
+                ),
 
-            "insights": []
+            "insights":
+                []
 
         }), 500
 
@@ -738,7 +902,8 @@ def simulation():
     data = (
         request.get_json(
             silent=True
-        ) or {}
+        )
+        or {}
     )
 
     amount = data.get(
@@ -753,7 +918,8 @@ def simulation():
     if amount is None:
 
         return jsonify({
-            "error": "amount required"
+            "error":
+                "amount required"
         }), 400
 
     try:
@@ -768,13 +934,15 @@ def simulation():
     ):
 
         return jsonify({
-            "error": "amount must be a number"
+            "error":
+                "amount must be a number"
         }), 400
 
     if amount < 0:
 
         return jsonify({
-            "error": "amount cannot be negative"
+            "error":
+                "amount cannot be negative"
         }), 400
 
     try:
@@ -797,5 +965,12 @@ def simulation():
         )
 
         return jsonify({
-            "error": "No se pudo realizar la simulación."
+
+            "error":
+                (
+                    "No se pudo realizar "
+                    "la simulación."
+                )
+
         }), 500
+
