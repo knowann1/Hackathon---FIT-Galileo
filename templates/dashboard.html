@@ -4,79 +4,65 @@
 
 <h2>Resumen</h2>
 
-
 <!-- ============================================================
      RESUMEN FINANCIERO
      ============================================================ -->
 
 <div class="row g-3">
 
-
   <!-- Gastos -->
-
   <div class="col-md-3">
-
     <div class="card p-3 h-100">
 
       <h6>Gastos del mes</h6>
 
       <h3>
-        Q{{ summary.current_month.expenses }}
+        Q{{ summary.monthly_expenses }}
       </h3>
 
     </div>
-
   </div>
 
 
   <!-- Ingresos -->
-
   <div class="col-md-3">
-
     <div class="card p-3 h-100">
 
       <h6>Ingresos del mes</h6>
 
       <h3>
-        Q{{ summary.current_month.income }}
+        Q{{ summary.monthly_incomes }}
       </h3>
 
     </div>
-
   </div>
 
 
   <!-- Balance -->
-
   <div class="col-md-3">
-
     <div class="card p-3 h-100">
 
       <h6>Balance</h6>
 
       <h3>
-        Q{{ summary.current_month.balance }}
+        Q{{ summary.balance }}
       </h3>
 
     </div>
-
   </div>
 
 
-  <!-- Gastos mes anterior -->
-
+  <!-- Mes anterior -->
   <div class="col-md-3">
-
     <div class="card p-3 h-100">
 
-      <h6>Mes anterior</h6>
+      <h6>Mes anterior (gastos)</h6>
 
       <h3>
-        Q{{ summary.previous_month.expenses }}
+        Q{{ summary.previous_month_expenses }}
       </h3>
 
     </div>
-
   </div>
 
 </div>
@@ -95,10 +81,11 @@
 
   <div class="col-md-8">
 
-    <div class="card p-3">
+    <div class="card p-3 h-100">
 
-      <h5>Gastos por categoría</h5>
-
+      <h5>
+        Gastos por categoría
+      </h5>
 
       <div
         style="
@@ -124,18 +111,17 @@
 
   <div class="col-md-4">
 
-    <div class="card p-3">
+    <div class="card p-3 h-100">
 
       <h5>
         🤖 Recomendaciones financieras
       </h5>
 
-
       <p class="text-muted">
 
-        La inteligencia artificial analizará
-        tus ingresos, gastos, categorías,
-        presupuestos e historial financiero.
+        NexoAI analizará tus ingresos,
+        gastos, categorías, historial,
+        presupuestos y patrones financieros.
 
       </p>
 
@@ -172,8 +158,11 @@
 
           <p class="mb-0 mt-1 text-muted">
 
-            Presiona "Analizar mis finanzas"
-            para que la IA estudie tus datos.
+            Presiona
+            <strong>
+              "Analizar mis finanzas"
+            </strong>
+            para que NexoAI estudie tus datos.
 
           </p>
 
@@ -206,14 +195,11 @@ document.addEventListener(
     const categoryData =
       {{ summary.expense_by_category | tojson }};
 
-
     const labels =
       Object.keys(categoryData);
 
-
     const data =
       Object.values(categoryData);
-
 
     const ctx =
       document.getElementById(
@@ -292,12 +278,9 @@ document.addEventListener(
       const parent =
         ctx.parentElement;
 
-
       parent.innerHTML = `
 
-        <div
-          class="text-center text-muted py-5"
-        >
+        <div class="text-center text-muted py-5">
 
           <p class="mb-0">
 
@@ -314,14 +297,13 @@ document.addEventListener(
 
 
     // ==========================================================
-    // BOTÓN DE IA
+    // BOTÓN IA
     // ==========================================================
 
     const analyzeBtn =
       document.getElementById(
         "analyzeBtn"
       );
-
 
     const aiResult =
       document.getElementById(
@@ -336,21 +318,16 @@ document.addEventListener(
     }
 
 
-    // ==========================================================
-    // CLICK
-    // ==========================================================
-
     analyzeBtn.addEventListener(
       "click",
       async function () {
 
 
-        // ------------------------------------------------------
-        // Estado de carga
-        // ------------------------------------------------------
+        // ======================================================
+        // CARGANDO
+        // ======================================================
 
         analyzeBtn.disabled = true;
-
 
         analyzeBtn.innerHTML = `
 
@@ -389,9 +366,9 @@ document.addEventListener(
         try {
 
 
-          // ----------------------------------------------------
-          // Request
-          // ----------------------------------------------------
+          // ====================================================
+          // PETICIÓN
+          // ====================================================
 
           const response =
             await fetch(
@@ -403,66 +380,85 @@ document.addEventListener(
                 headers: {
 
                   "Content-Type":
+                    "application/json",
+
+                  "Accept":
                     "application/json"
 
-                }
+                },
+
+                credentials:
+                  "same-origin"
 
               }
             );
 
 
-          // ----------------------------------------------------
-          // JSON
-          // ----------------------------------------------------
+          // ====================================================
+          // LEER RESPUESTA
+          // ====================================================
 
-          const json =
-            await response.json();
+          let json = null;
+
+          try {
+
+            json =
+              await response.json();
+
+          }
+
+          catch (jsonError) {
+
+            throw new Error(
+              "El servidor no devolvió una respuesta JSON válida."
+            );
+
+          }
 
 
-          // ----------------------------------------------------
-          // Error
-          // ----------------------------------------------------
+          // ====================================================
+          // ERROR HTTP
+          // ====================================================
 
           if (!response.ok) {
 
             throw new Error(
 
-              json.error ||
-
-              "No se pudo analizar " +
-              "la información financiera."
+              json.error
+              ||
+              "No se pudo analizar la información financiera."
 
             );
 
           }
 
 
-          // ----------------------------------------------------
-          // INSIGHTS
-          //
-          // El backend ahora devuelve ai_insights.
-          // También dejamos compatibilidad con insights.
-          // ----------------------------------------------------
+          // ====================================================
+          // OBTENER INSIGHTS
+          // ====================================================
 
           const insights =
-            json.ai_insights ||
-            json.insights ||
+            json.ai_insights
+            ||
+            json.insights
+            ||
             [];
 
 
-          // ----------------------------------------------------
-          // Limpiar
-          // ----------------------------------------------------
+          // ====================================================
+          // LIMPIAR
+          // ====================================================
 
           aiResult.innerHTML = "";
 
 
-          // ----------------------------------------------------
-          // Sin resultados
-          // ----------------------------------------------------
+          // ====================================================
+          // SIN INSIGHTS
+          // ====================================================
 
           if (
-            !Array.isArray(insights) ||
+            !Array.isArray(insights)
+            ||
             insights.length === 0
           ) {
 
@@ -476,8 +472,8 @@ document.addEventListener(
 
                 <p class="mb-0 mt-1">
 
-                  La IA no encontró
-                  recomendaciones importantes
+                  No se encontraron
+                  recomendaciones suficientes
                   con los datos disponibles.
 
                 </p>
@@ -491,9 +487,9 @@ document.addEventListener(
           }
 
 
-          // ----------------------------------------------------
-          // Mostrar insights
-          // ----------------------------------------------------
+          // ====================================================
+          // MOSTRAR INSIGHTS
+          // ====================================================
 
           insights.forEach(
             function (insight) {
@@ -503,9 +499,24 @@ document.addEventListener(
                 "alert-info";
 
 
+              // ==================================================
+              // SEVERIDAD
+              // ==================================================
+
+              const severity =
+                (
+                  insight.severity
+                  ||
+                  insight.type
+                  ||
+                  "info"
+                ).toLowerCase();
+
+
               if (
-                insight.severity ===
-                "high"
+                severity === "high"
+                ||
+                severity === "alert"
               ) {
 
                 alertClass =
@@ -514,8 +525,9 @@ document.addEventListener(
               }
 
               else if (
-                insight.severity ===
-                "medium"
+                severity === "medium"
+                ||
+                severity === "warning"
               ) {
 
                 alertClass =
@@ -524,9 +536,24 @@ document.addEventListener(
               }
 
               else if (
-                insight.severity ===
-                "low"
+                severity === "success"
               ) {
+
+                alertClass =
+                  "alert-success";
+
+              }
+
+              else if (
+                severity === "saving"
+              ) {
+
+                alertClass =
+                  "alert-success";
+
+              }
+
+              else {
 
                 alertClass =
                   "alert-info";
@@ -534,52 +561,32 @@ document.addEventListener(
               }
 
 
-              // ------------------------------------------------
-              // Elemento
-              // ------------------------------------------------
+              // ==================================================
+              // ELEMENTO
+              // ==================================================
 
               const element =
                 document.createElement(
                   "div"
                 );
 
-
               element.className =
-                `alert ${alertClass}`;
+                `alert ${alertClass} mb-3`;
 
 
-              // ------------------------------------------------
-              // Título
-              // ------------------------------------------------
+              // ==================================================
+              // TÍTULO
+              // ==================================================
 
               const title =
                 document.createElement(
                   "strong"
                 );
 
-
               title.textContent =
-                insight.title ||
+                insight.title
+                ||
                 "Recomendación financiera";
-
-
-              // ------------------------------------------------
-              // Descripción
-              // ------------------------------------------------
-
-              const description =
-                document.createElement(
-                  "div"
-                );
-
-
-              description.className =
-                "mt-1";
-
-
-              description.textContent =
-                insight.description ||
-                "";
 
 
               element.appendChild(
@@ -587,14 +594,35 @@ document.addEventListener(
               );
 
 
-              element.appendChild(
-                description
-              );
+              // ==================================================
+              // DESCRIPCIÓN
+              // ==================================================
+
+              if (
+                insight.description
+              ) {
+
+                const description =
+                  document.createElement(
+                    "div"
+                  );
+
+                description.className =
+                  "mt-1";
+
+                description.textContent =
+                  insight.description;
+
+                element.appendChild(
+                  description
+                );
+
+              }
 
 
-              // ------------------------------------------------
-              // Recomendación
-              // ------------------------------------------------
+              // ==================================================
+              // RECOMENDACIÓN
+              // ==================================================
 
               if (
                 insight.recommendation
@@ -605,14 +633,12 @@ document.addEventListener(
                     "small"
                   );
 
-
                 recommendation.className =
                   "d-block mt-2";
 
-
                 recommendation.textContent =
+                  "💡 " +
                   insight.recommendation;
-
 
                 element.appendChild(
                   recommendation
@@ -621,9 +647,9 @@ document.addEventListener(
               }
 
 
-              // ------------------------------------------------
-              // Agregar
-              // ------------------------------------------------
+              // ==================================================
+              // AGREGAR
+              // ==================================================
 
               aiResult.appendChild(
                 element
@@ -636,7 +662,6 @@ document.addEventListener(
 
 
         catch (error) {
-
 
           console.error(
             "Error al analizar finanzas:",
@@ -654,7 +679,11 @@ document.addEventListener(
 
               <p class="mb-0 mt-1">
 
-                ${error.message}
+                ${
+                  error.message
+                  ||
+                  "Ocurrió un error inesperado."
+                }
 
               </p>
 
@@ -667,10 +696,8 @@ document.addEventListener(
 
         finally {
 
-
           analyzeBtn.disabled =
             false;
-
 
           analyzeBtn.innerHTML =
             "Analizar mis finanzas";
