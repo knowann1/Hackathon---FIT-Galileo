@@ -220,3 +220,24 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
   .card-body { padding: 22px; }
   .table { display: block; overflow-x: auto; white-space: nowrap; }
 }
+<style>
+.file-upload {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.file-upload input[type="file"] {
+    display: none;
+}
+
+.file-upload label {
+    cursor: pointer;
+    margin: 0;
+}
+
+#file-name {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+</style>
