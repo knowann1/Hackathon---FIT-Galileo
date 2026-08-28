@@ -2,7 +2,7 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
-    <h2>Marketnexo</h2>
+    <h2>MarketNexo</h2>
     <p class="text-muted mb-0">Descubre lo que venden y ofrecen otros usuarios.</p>
   </div>
   <a class="btn btn-primary" href="#publicar">Publicar producto</a>
@@ -36,7 +36,7 @@
 
   <div class="col-lg-5" id="publicar">
     <div class="card p-4">
-      <h4>Publicar en Marketnexo</h4>
+      <h4>Publicar en MarketNexo</h4>
       <p class="text-muted">Comparte tu producto o servicio con todos los usuarios.</p>
       <form method="post" action="{{ url_for('marketnexo.create_post') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
