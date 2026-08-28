@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
-from services.financial_analyzer import summarize_user_finances, detect_insights
+from services.financial_analyzer import summarize_user_finances
 
 
 dashboard_bp = Blueprint('dashboard', __name__, template_folder='../templates')
