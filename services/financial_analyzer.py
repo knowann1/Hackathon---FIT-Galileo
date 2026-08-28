@@ -1,25 +1,35 @@
+from extensions import db
+from models import Expense, Budget
 from datetime import date, timedelta
 from collections import defaultdict
 
-from extensions import db
-from models import Expense, Budget
+
+# ============================================================
+# CONVERSIÓN SEGURA
+# ============================================================
+
+def _safe_float(value):
+
+    try:
+        return float(value or 0)
+
+    except (
+        ValueError,
+        TypeError
+    ):
+
+        return 0.0
 
 
 # ============================================================
-# RESUMEN FINANCIERO DEL USUARIO
+# RESUMEN FINANCIERO
 # ============================================================
 
-def summarize_user_finances(user_id: int) -> dict:
-    """
-    Obtiene y resume la información financiera del usuario.
-
-    Esta función solamente recopila y calcula datos.
-    No determina si una situación financiera es buena o mala.
-    Esa interpretación corresponde a la IA.
-    """
+def summarize_user_finances(
+    user_id: int
+) -> dict:
 
     today = date.today()
-
 
     # ========================================================
     # FECHAS
@@ -32,8 +42,8 @@ def summarize_user_finances(user_id: int) -> dict:
     )
 
     previous_month_end = (
-        first_day_month -
-        timedelta(days=1)
+        first_day_month
+        - timedelta(days=1)
     )
 
     previous_month_start = (
@@ -43,455 +53,378 @@ def summarize_user_finances(user_id: int) -> dict:
     )
 
     since_90_days = (
-        today -
-        timedelta(days=90)
+        today
+        - timedelta(days=90)
     )
 
-
     # ========================================================
-    # MES ACTUAL - GASTOS
+    # TRANSACCIONES MES ACTUAL
     # ========================================================
 
     expenses_month = Expense.query.filter(
-
         Expense.user_id == user_id,
-
         Expense.expense_date >= first_day_month,
-
         Expense.expense_date <= today,
-
-        Expense.transaction_type == 'expense'
-
+        Expense.transaction_type == "expense"
     ).all()
-
-
-    # ========================================================
-    # MES ACTUAL - INGRESOS
-    # ========================================================
 
     incomes_month = Expense.query.filter(
-
         Expense.user_id == user_id,
-
         Expense.expense_date >= first_day_month,
-
         Expense.expense_date <= today,
-
-        Expense.transaction_type == 'income'
-
+        Expense.transaction_type == "income"
     ).all()
 
-
     # ========================================================
-    # MES ANTERIOR - GASTOS
+    # MES ANTERIOR
     # ========================================================
 
     expenses_previous = Expense.query.filter(
-
         Expense.user_id == user_id,
-
         Expense.expense_date >= previous_month_start,
-
         Expense.expense_date <= previous_month_end,
-
-        Expense.transaction_type == 'expense'
-
+        Expense.transaction_type == "expense"
     ).all()
-
-
-    # ========================================================
-    # MES ANTERIOR - INGRESOS
-    # ========================================================
 
     incomes_previous = Expense.query.filter(
-
         Expense.user_id == user_id,
-
         Expense.expense_date >= previous_month_start,
-
         Expense.expense_date <= previous_month_end,
-
-        Expense.transaction_type == 'income'
-
+        Expense.transaction_type == "income"
     ).all()
-
 
     # ========================================================
     # TOTALES
     # ========================================================
 
-    total_expenses_month = sum(
-
-        float(
-            expense.amount or 0
-        )
-
-        for expense in expenses_month
-
+    total_month_expenses = sum(
+        _safe_float(e.amount)
+        for e in expenses_month
     )
 
-
-    total_income_month = sum(
-
-        float(
-            income.amount or 0
-        )
-
-        for income in incomes_month
-
+    total_month_income = sum(
+        _safe_float(e.amount)
+        for e in incomes_month
     )
 
-
-    total_expenses_previous = sum(
-
-        float(
-            expense.amount or 0
-        )
-
-        for expense in expenses_previous
-
+    total_previous_expenses = sum(
+        _safe_float(e.amount)
+        for e in expenses_previous
     )
 
-
-    total_income_previous = sum(
-
-        float(
-            income.amount or 0
-        )
-
-        for income in incomes_previous
-
+    total_previous_income = sum(
+        _safe_float(e.amount)
+        for e in incomes_previous
     )
-
 
     # ========================================================
     # BALANCES
     # ========================================================
 
-    balance_month = (
-        total_income_month -
-        total_expenses_month
+    current_balance = (
+        total_month_income
+        - total_month_expenses
     )
 
-
-    balance_previous = (
-        total_income_previous -
-        total_expenses_previous
+    previous_balance = (
+        total_previous_income
+        - total_previous_expenses
     )
-
 
     # ========================================================
-    # GASTOS POR CATEGORÍA
+    # CATEGORÍAS
     # ========================================================
 
     expense_by_category = defaultdict(float)
-
 
     for expense in expenses_month:
 
         category = (
             expense.category
-            or 'Otros'
+            or "Otros"
         )
 
         expense_by_category[
             category
-        ] += float(
-            expense.amount or 0
+        ] += _safe_float(
+            expense.amount
         )
 
-
-    # ========================================================
-    # CATEGORÍAS MES ANTERIOR
-    # ========================================================
-
     previous_expense_by_category = defaultdict(float)
-
 
     for expense in expenses_previous:
 
         category = (
             expense.category
-            or 'Otros'
+            or "Otros"
         )
 
         previous_expense_by_category[
             category
-        ] += float(
-            expense.amount or 0
+        ] += _safe_float(
+            expense.amount
         )
-
 
     # ========================================================
     # PRESUPUESTOS
     # ========================================================
 
     budgets = Budget.query.filter_by(
-
         user_id=user_id,
-
         month=today.month,
-
         year=today.year
-
     ).all()
-
 
     budget_usage = {}
 
-
     for budget in budgets:
 
-        category = budget.category
-
-        limit = float(
-            budget.amount or 0
+        category = (
+            budget.category
+            or "Otros"
         )
 
-        spent = float(
+        limit = _safe_float(
+            budget.amount
+        )
+
+        spent = _safe_float(
             expense_by_category.get(
                 category,
                 0
             )
         )
 
-
         remaining = (
-            limit -
-            spent
+            limit - spent
         )
 
+        percentage = (
+            (spent / limit) * 100
+            if limit > 0
+            else None
+        )
 
-        percentage = None
+        budget_usage[
+            category
+        ] = {
 
+            "limit":
+                round(
+                    limit,
+                    2
+                ),
 
-        if limit > 0:
+            "spent":
+                round(
+                    spent,
+                    2
+                ),
 
-            percentage = round(
+            "remaining":
+                round(
+                    remaining,
+                    2
+                ),
 
+            "percentage_used":
                 (
-                    spent /
-                    limit
-                ) * 100,
-
-                2
-            )
-
-
-        budget_usage[category] = {
-
-            'limit': round(
-                limit,
-                2
-            ),
-
-            'spent': round(
-                spent,
-                2
-            ),
-
-            'remaining': round(
-                remaining,
-                2
-            ),
-
-            'percentage_used': percentage
+                    round(
+                        percentage,
+                        2
+                    )
+                    if percentage is not None
+                    else None
+                )
         }
 
-
     # ========================================================
-    # CAMBIO DE GASTOS
+    # CAMBIOS
     # ========================================================
 
-    expense_growth_pct = None
+    expense_change_percentage = None
 
+    if total_previous_expenses > 0:
 
-    if total_expenses_previous > 0:
-
-        expense_growth_pct = round(
-
+        expense_change_percentage = (
             (
-                (
-                    total_expenses_month -
-                    total_expenses_previous
-                )
-                /
-                total_expenses_previous
+                total_month_expenses
+                - total_previous_expenses
             )
-            * 100,
+            / total_previous_expenses
+        ) * 100
 
-            2
-        )
+    income_change_percentage = None
 
+    if total_previous_income > 0:
 
-    # ========================================================
-    # CAMBIO DE INGRESOS
-    # ========================================================
-
-    income_growth_pct = None
-
-
-    if total_income_previous > 0:
-
-        income_growth_pct = round(
-
+        income_change_percentage = (
             (
-                (
-                    total_income_month -
-                    total_income_previous
-                )
-                /
-                total_income_previous
+                total_month_income
+                - total_previous_income
             )
-            * 100,
-
-            2
-        )
-
+            / total_previous_income
+        ) * 100
 
     # ========================================================
-    # TRANSACCIONES ÚLTIMOS 90 DÍAS
+    # ÚLTIMOS 90 DÍAS
     # ========================================================
 
     recent_transactions = Expense.query.filter(
-
         Expense.user_id == user_id,
-
         Expense.expense_date >= since_90_days
-
     ).order_by(
-
         Expense.expense_date.desc(),
-
         Expense.id.desc()
-
     ).all()
-
 
     recent_data = []
 
-
-    for transaction in recent_transactions:
+    for transaction in recent_transactions[:50]:
 
         recent_data.append({
 
-            'id': transaction.id,
-
-            'date': (
-
+            "date": (
                 transaction.expense_date.isoformat()
-
                 if transaction.expense_date
-
                 else None
             ),
 
-            'amount': round(
-
-                float(
-                    transaction.amount or 0
+            "amount": round(
+                _safe_float(
+                    transaction.amount
                 ),
-
                 2
             ),
 
-            'currency': (
+            "currency": (
                 transaction.currency
-                or 'GTQ'
+                or "GTQ"
             ),
 
-            'category': (
+            "transaction_type": (
+                transaction.transaction_type
+                or "expense"
+            ),
 
+            "category": (
                 transaction.category
-                or 'Otros'
+                or "Otros"
             ),
 
-            'merchant': (
-
+            "merchant": (
                 transaction.merchant
                 or None
             ),
 
-            'description': (
-
+            "description": (
                 transaction.description
                 or None
             ),
 
-            'payment_method': (
-
+            "payment_method": (
                 transaction.payment_method
                 or None
-            ),
-
-            'transaction_type': (
-
-                transaction.transaction_type
-                or 'expense'
             )
         })
 
-
     # ========================================================
-    # COMERCIOS FRECUENTES
+    # COMERCIOS
     # ========================================================
 
+    merchant_totals = defaultdict(float)
     merchant_counts = defaultdict(int)
-
 
     for transaction in recent_transactions:
 
         if (
-
             transaction.transaction_type
-            == 'expense'
-
+            == "expense"
             and transaction.merchant
-
         ):
 
-            merchant_counts[
+            merchant = (
                 transaction.merchant
+            )
+
+            merchant_totals[
+                merchant
+            ] += _safe_float(
+                transaction.amount
+            )
+
+            merchant_counts[
+                merchant
             ] += 1
 
+    recurring_merchants = []
 
-    recurring_merchants = [
+    for merchant in merchant_totals:
 
-        {
-            'merchant': merchant,
+        if merchant_counts[
+            merchant
+        ] >= 2:
 
-            'transactions': count
+            recurring_merchants.append({
 
-        }
+                "merchant":
+                    merchant,
 
-        for merchant, count
-        in merchant_counts.items()
+                "transactions":
+                    merchant_counts[
+                        merchant
+                    ],
 
-        if count >= 3
+                "total":
+                    round(
+                        merchant_totals[
+                            merchant
+                        ],
+                        2
+                    )
+            })
 
-    ]
-
+    recurring_merchants.sort(
+        key=lambda item: item["total"],
+        reverse=True
+    )
 
     # ========================================================
-    # PORCENTAJE DE AHORRO
+    # PORCENTAJES DE CATEGORÍA
     # ========================================================
 
-    savings_rate = None
+    category_percentages = {}
 
+    for category, amount in sorted(
+        expense_by_category.items(),
+        key=lambda item: item[1],
+        reverse=True
+    ):
 
-    if total_income_month > 0:
-
-        savings_rate = round(
-
-            (
-                balance_month /
-                total_income_month
-            )
-            * 100,
-
-            2
+        percentage = (
+            amount
+            / total_month_expenses
+            * 100
+            if total_month_expenses > 0
+            else 0
         )
 
+        category_percentages[
+            category
+        ] = {
+
+            "amount":
+                round(
+                    amount,
+                    2
+                ),
+
+            "percentage":
+                round(
+                    percentage,
+                    2
+                )
+        }
 
     # ========================================================
     # CATEGORÍA PRINCIPAL
@@ -499,218 +432,626 @@ def summarize_user_finances(user_id: int) -> dict:
 
     top_category = None
 
+    if category_percentages:
 
-    if expense_by_category:
-
-        top_category = max(
-
-            expense_by_category.items(),
-
-            key=lambda item: item[1]
-
+        category_name = next(
+            iter(
+                category_percentages
+            )
         )
 
+        top_category = {
 
-    top_category_data = None
+            "name":
+                category_name,
 
+            "amount":
+                category_percentages[
+                    category_name
+                ]["amount"],
 
-    if top_category:
-
-        top_category_data = {
-
-            'category': top_category[0],
-
-            'amount': round(
-                top_category[1],
-                2
-            )
+            "percentage":
+                category_percentages[
+                    category_name
+                ]["percentage"]
         }
 
+    # ========================================================
+    # TODAS LAS TRANSACCIONES PARA ESTADÍSTICAS
+    # ========================================================
+
+    all_transactions = Expense.query.filter_by(
+        user_id=user_id
+    ).all()
+
+    total_income = 0
+    total_expenses = 0
+
+    income_transactions = []
+    expense_transactions = []
+
+    income_by_category = defaultdict(float)
+    all_expenses_by_category = defaultdict(float)
+    all_merchants = defaultdict(float)
+    payment_methods = defaultdict(float)
+
+    for transaction in all_transactions:
+
+        amount = _safe_float(
+            transaction.amount
+        )
+
+        transaction_type = (
+            transaction.transaction_type
+            or "expense"
+        )
+
+        if transaction_type == "income":
+
+            total_income += amount
+
+            income_transactions.append(
+                amount
+            )
+
+            category = (
+                transaction.category
+                or "Sin categoría"
+            )
+
+            income_by_category[
+                category
+            ] += amount
+
+        else:
+
+            total_expenses += amount
+
+            expense_transactions.append(
+                amount
+            )
+
+            category = (
+                transaction.category
+                or "Otros"
+            )
+
+            all_expenses_by_category[
+                category
+            ] += amount
+
+            payment_method = (
+                transaction.payment_method
+                or "No especificado"
+            )
+
+            payment_methods[
+                payment_method
+            ] += amount
+
+            if transaction.merchant:
+
+                all_merchants[
+                    transaction.merchant
+                ] += amount
 
     # ========================================================
-    # RESUMEN
+    # BALANCE GENERAL
+    # ========================================================
+
+    total_balance = (
+        total_income
+        - total_expenses
+    )
+
+    # ========================================================
+    # RATIO DE GASTO Y AHORRO
+    # ========================================================
+
+    spending_ratio = None
+    savings_ratio = None
+
+    if total_income > 0:
+
+        spending_ratio = (
+            total_expenses
+            / total_income
+        ) * 100
+
+        savings_ratio = (
+            total_balance
+            / total_income
+        ) * 100
+
+    # ========================================================
+    # PROMEDIOS
+    # ========================================================
+
+    average_expense = (
+        sum(expense_transactions)
+        / len(expense_transactions)
+        if expense_transactions
+        else 0
+    )
+
+    average_income = (
+        sum(income_transactions)
+        / len(income_transactions)
+        if income_transactions
+        else 0
+    )
+
+    # ========================================================
+    # MAYOR GASTO
+    # ========================================================
+
+    largest_expense = (
+        max(expense_transactions)
+        if expense_transactions
+        else 0
+    )
+
+    # ========================================================
+    # TOP COMERCIOS
+    # ========================================================
+
+    top_merchants = sorted(
+        all_merchants.items(),
+        key=lambda item: item[1],
+        reverse=True
+    )[:10]
+
+    # ========================================================
+    # RESULTADO
     # ========================================================
 
     summary = {
 
-        # ----------------------------------------------------
-        # Periodos
-        # ----------------------------------------------------
+        "period": {
 
-        'period': {
-
-            'current_month':
+            "current_month":
                 first_day_month.strftime(
-                    '%Y-%m'
+                    "%Y-%m"
                 ),
 
-            'previous_month':
+            "previous_month":
                 previous_month_start.strftime(
-                    '%Y-%m'
+                    "%Y-%m"
                 ),
 
-            'analyzed_last_days':
+            "as_of":
+                today.isoformat(),
+
+            "analyzed_last_days":
                 90
         },
 
+        "total_transactions":
+            len(all_transactions),
 
-        # ----------------------------------------------------
-        # Mes actual
-        # ----------------------------------------------------
+        "total_income":
+            round(
+                total_income,
+                2
+            ),
 
-        'current_month': {
+        "total_expenses":
+            round(
+                total_expenses,
+                2
+            ),
 
-            'expenses':
+        "balance":
+            round(
+                total_balance,
+                2
+            ),
+
+        "spending_ratio":
+            (
                 round(
-                    total_expenses_month,
+                    spending_ratio,
+                    2
+                )
+                if spending_ratio is not None
+                else None
+            ),
+
+        "savings_ratio":
+            (
+                round(
+                    savings_ratio,
+                    2
+                )
+                if savings_ratio is not None
+                else None
+            ),
+
+        "average_expense":
+            round(
+                average_expense,
+                2
+            ),
+
+        "average_income":
+            round(
+                average_income,
+                2
+            ),
+
+        "largest_expense":
+            round(
+                largest_expense,
+                2
+            ),
+
+        "top_category":
+            top_category,
+
+        "current_month": {
+
+            "income":
+                round(
+                    total_month_income,
                     2
                 ),
 
-            'income':
+            "expenses":
                 round(
-                    total_income_month,
+                    total_month_expenses,
                     2
                 ),
 
-            'balance':
+            "balance":
                 round(
-                    balance_month,
-                    2
-                ),
-
-            'savings_rate':
-                savings_rate
-        },
-
-
-        # ----------------------------------------------------
-        # Mes anterior
-        # ----------------------------------------------------
-
-        'previous_month': {
-
-            'expenses':
-                round(
-                    total_expenses_previous,
-                    2
-                ),
-
-            'income':
-                round(
-                    total_income_previous,
-                    2
-                ),
-
-            'balance':
-                round(
-                    balance_previous,
+                    current_balance,
                     2
                 )
         },
 
+        "previous_month": {
 
-        # ----------------------------------------------------
-        # Cambios
-        # ----------------------------------------------------
+            "income":
+                round(
+                    total_previous_income,
+                    2
+                ),
 
-        'changes': {
+            "expenses":
+                round(
+                    total_previous_expenses,
+                    2
+                ),
 
-            'expense_percentage':
-                expense_growth_pct,
-
-            'income_percentage':
-                income_growth_pct
+            "balance":
+                round(
+                    previous_balance,
+                    2
+                )
         },
 
+        "changes": {
 
-        # ----------------------------------------------------
-        # Categorías
-        # ----------------------------------------------------
+            "expense_percentage":
+                (
+                    round(
+                        expense_change_percentage,
+                        2
+                    )
+                    if expense_change_percentage
+                    is not None
+                    else None
+                ),
 
-        'expense_by_category': {
+            "income_percentage":
+                (
+                    round(
+                        income_change_percentage,
+                        2
+                    )
+                    if income_change_percentage
+                    is not None
+                    else None
+                )
+        },
 
+        "expense_change_percentage":
+            (
+                round(
+                    expense_change_percentage,
+                    2
+                )
+                if expense_change_percentage
+                is not None
+                else None
+            ),
+
+        "income_change_percentage":
+            (
+                round(
+                    income_change_percentage,
+                    2
+                )
+                if income_change_percentage
+                is not None
+                else None
+            ),
+
+        "expense_by_category": {
             category: round(
                 amount,
                 2
             )
-
             for category, amount
-            in expense_by_category.items()
-
+            in sorted(
+                expense_by_category.items(),
+                key=lambda item: item[1],
+                reverse=True
+            )
         },
 
-
-        'previous_expense_by_category': {
-
+        "previous_expense_by_category": {
             category: round(
                 amount,
                 2
             )
-
             for category, amount
             in previous_expense_by_category.items()
-
         },
 
+        "category_percentages":
+            category_percentages,
 
-        'top_expense_category':
-            top_category_data,
-
-
-        # ----------------------------------------------------
-        # Presupuestos
-        # ----------------------------------------------------
-
-        'budgets':
-            budget_usage,
-
-
-        # ----------------------------------------------------
-        # Comercios recurrentes
-        # ----------------------------------------------------
-
-        'recurring_merchants':
-            recurring_merchants,
-
-
-        # ----------------------------------------------------
-        # Transacciones recientes
-        # ----------------------------------------------------
-
-        'recent_transactions':
-            recent_data,
-
-
-        # ----------------------------------------------------
-        # Fecha de actualización
-        # ----------------------------------------------------
-
-        'as_of':
-            today.isoformat(),
-
-
-        # ====================================================
-        # COMPATIBILIDAD CON EL DASHBOARD ANTIGUO
-        # ====================================================
-
-        'monthly_expenses':
-            round(
-                total_expenses_month,
-                2
-            ),
-
-        'monthly_incomes':
-            round(
-                total_income_month,
-                2
-            ),
-
-        'previous_month_expenses':
-            round(
-                total_expenses_previous,
+        "income_by_category": {
+            category: round(
+                amount,
                 2
             )
+            for category, amount
+            in income_by_category.items()
+        },
+
+        "top_merchants": {
+            merchant: round(
+                amount,
+                2
+            )
+            for merchant, amount
+            in top_merchants
+        },
+
+        "recurring_merchants":
+            recurring_merchants,
+
+        "payment_methods": {
+            method: round(
+                amount,
+                2
+            )
+            for method, amount
+            in sorted(
+                payment_methods.items(),
+                key=lambda item: item[1],
+                reverse=True
+            )
+        },
+
+        "budgets":
+            budget_usage,
+
+        "recent_transactions":
+            recent_data
     }
 
-
     return summary
+
+
+# ============================================================
+# INSIGHTS BASADOS EN REGLAS
+# ============================================================
+
+def detect_insights(
+    user_id: int
+) -> list:
+
+    summary = summarize_user_finances(
+        user_id
+    )
+
+    insights = []
+
+    current = summary[
+        "current_month"
+    ]
+
+    income = current[
+        "income"
+    ]
+
+    expenses = current[
+        "expenses"
+    ]
+
+    balance = current[
+        "balance"
+    ]
+
+    # ========================================================
+    # BALANCE NEGATIVO
+    # ========================================================
+
+    if income > 0 and balance < 0:
+
+        insights.append({
+
+            "type":
+                "alert",
+
+            "title":
+                "Tus gastos superan tus ingresos",
+
+            "description":
+                (
+                    f"Este mes tienes Q{expenses:.2f} "
+                    f"en gastos frente a Q{income:.2f} "
+                    "en ingresos."
+                ),
+
+            "severity":
+                "high"
+        })
+
+    # ========================================================
+    # SIN INGRESOS
+    # ========================================================
+
+    elif income == 0 and expenses > 0:
+
+        insights.append({
+
+            "type":
+                "warning",
+
+            "title":
+                "No hay ingresos registrados este mes",
+
+            "description":
+                (
+                    f"Hay Q{expenses:.2f} "
+                    "en gastos registrados, pero "
+                    "no aparecen ingresos para "
+                    "el mismo período."
+                ),
+
+            "severity":
+                "medium"
+        })
+
+    # ========================================================
+    # AHORRO POSITIVO
+    # ========================================================
+
+    elif balance > 0:
+
+        savings_ratio = summary.get(
+            "savings_ratio"
+        )
+
+        if savings_ratio is not None:
+
+            insights.append({
+
+                "type":
+                    "saving",
+
+                "title":
+                    "Tienes capacidad de ahorro",
+
+                "description":
+                    (
+                        f"Tu balance general es de "
+                        f"Q{summary['balance']:.2f} y "
+                        f"tu tasa de ahorro calculada "
+                        f"es de {savings_ratio:.1f}%."
+                    ),
+
+                "severity":
+                    "low"
+            })
+
+    # ========================================================
+    # AUMENTO DE GASTOS
+    # ========================================================
+
+    expense_change = summary.get(
+        "expense_change_percentage"
+    )
+
+    if (
+        expense_change is not None
+        and expense_change > 20
+    ):
+
+        insights.append({
+
+            "type":
+                "warning",
+
+            "title":
+                "Tus gastos aumentaron",
+
+            "description":
+                (
+                    f"Los gastos de este mes "
+                    f"aumentaron {expense_change:.1f}% "
+                    "respecto al mes anterior."
+                ),
+
+            "severity":
+                "medium"
+        })
+
+    # ========================================================
+    # PRESUPUESTOS
+    # ========================================================
+
+    for category, budget in (
+        summary.get(
+            "budgets",
+            {}
+        ).items()
+    ):
+
+        percentage = budget.get(
+            "percentage_used"
+        )
+
+        if (
+            percentage is not None
+            and percentage >= 100
+        ):
+
+            insights.append({
+
+                "type":
+                    "alert",
+
+                "title":
+                    f"Presupuesto superado: {category}",
+
+                "description":
+                    (
+                        f"Has utilizado el "
+                        f"{percentage:.1f}% del presupuesto "
+                        f"de {category}."
+                    ),
+
+                "severity":
+                    "high"
+            })
+
+        elif (
+            percentage is not None
+            and percentage >= 80
+        ):
+
+            insights.append({
+
+                "type":
+                    "warning",
+
+                "title":
+                    f"Presupuesto cerca del límite: {category}",
+
+                "description":
+                    (
+                        f"Has utilizado el "
+                        f"{percentage:.1f}% del presupuesto "
+                        f"de {category}."
+                    ),
+
+                "severity":
+                    "medium"
+            })
+
+    return insights
