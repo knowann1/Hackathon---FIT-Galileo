@@ -70,7 +70,21 @@
     <form id="receipt-upload-form" method="post" enctype="multipart/form-data">
       <div class="mb-3">
         <label class="form-label">Archivo</label>
-        <input type="file" name="receipt" class="form-control" accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf" required>
+        <div class="file-upload">
+    <input
+        type="file"
+        name="receipt"
+        id="receipt"
+        accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+        required
+    >
+
+    <label for="receipt" class="btn btn-outline-primary">
+        Elegir archivo
+    </label>
+
+    <span id="file-name">Ningún archivo seleccionado</span>
+</div>
       </div>
       <button class="btn btn-primary" type="submit">Subir y analizar</button>
     </form>
