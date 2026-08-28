@@ -7,21 +7,29 @@ from openai import OpenAI
 
 from extensions import db
 from models import Expense
-from legal_docs_search import build_legal_context_block
+
+from legal_docs_search import (
+    build_legal_context_block
+)
 
 
 # ============================================================
 # CONFIGURACIÓN OPENAI
 # ============================================================
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY = os.getenv(
+    "OPENAI_API_KEY"
+)
+
 OPENAI_MODEL = os.getenv(
     "OPENAI_MODEL",
     "gpt-4o-mini"
 )
 
 client = (
-    OpenAI(api_key=OPENAI_API_KEY)
+    OpenAI(
+        api_key=OPENAI_API_KEY
+    )
     if OPENAI_API_KEY
     else None
 )
@@ -34,23 +42,53 @@ client = (
 def _extract_json(text: str):
 
     if not text:
+
         return None
 
+    text = text.strip()
+
+    # ========================================================
+    # JSON DIRECTO
+    # ========================================================
+
     try:
-        return json.loads(text)
+
+        return json.loads(
+            text
+        )
+
     except Exception:
+
         pass
 
-    start = text.find("{")
-    end = text.rfind("}")
+    # ========================================================
+    # JSON DENTRO DE TEXTO
+    # ========================================================
 
-    if start != -1 and end != -1:
+    start = text.find(
+        "{"
+    )
+
+    end = text.rfind(
+        "}"
+    )
+
+    if (
+        start != -1
+        and end != -1
+        and end > start
+    ):
 
         try:
+
             return json.loads(
-                text[start:end + 1]
+                text[
+                    start:end + 1
+                ]
             )
+
         except Exception:
+
             pass
 
     return None
@@ -59,11 +97,16 @@ def _extract_json(text: str):
 def _safe_float(value):
 
     try:
-        return float(value or 0)
+
+        return float(
+            value or 0
+        )
+
     except (
         ValueError,
         TypeError
     ):
+
         return 0.0
 
 
@@ -71,9 +114,12 @@ def _safe_float(value):
 # PARSEAR TEXTO DE GASTO
 # ============================================================
 
-def parse_expense_text(text: str) -> dict:
+def parse_expense_text(
+    text: str
+) -> dict:
 
     if not text:
+
         return {}
 
     if client:
@@ -81,10 +127,10 @@ def parse_expense_text(text: str) -> dict:
         try:
 
             prompt = f"""
-Eres un asistente especializado en registrar
-transacciones financieras personales.
+Eres un asistente especializado
+en registrar transacciones financieras.
 
-Analiza el siguiente texto:
+Analiza este texto:
 
 {text}
 
@@ -103,26 +149,30 @@ Devuelve ÚNICAMENTE JSON válido:
 
 REGLAS:
 
-- amount: monto de la transacción.
+- amount: monto.
 - currency: moneda.
-- merchant: comercio o establecimiento.
+- merchant: comercio.
 - description: descripción breve.
-- category: categoría financiera.
+- category: categoría.
 - payment_method: método de pago.
-- expense_date: formato YYYY-MM-DD.
-- transaction_type: "expense" o "income".
-- No inventes información.
-- Si un dato no aparece utiliza null.
+- expense_date: YYYY-MM-DD.
+- transaction_type: expense o income.
+- No inventes datos.
+- Si no aparece un dato utiliza null.
 """
 
             response = client.responses.create(
+
                 model=OPENAI_MODEL,
+
                 input=prompt
+
             )
 
             output_text = (
-                response.output_text.strip()
-            )
+                response.output_text
+                or ""
+            ).strip()
 
             result = _extract_json(
                 output_text
@@ -141,22 +191,26 @@ REGLAS:
 
                 return result
 
-        except Exception as e:
+        except Exception as exc:
 
             print(
                 "OpenAI parse expense error:",
-                type(e).__name__,
-                str(e)
+                type(exc).__name__,
+                str(exc)
             )
 
-    return _expense_fallback(text)
+    return _expense_fallback(
+        text
+    )
 
 
 # ============================================================
-# FALLBACK PARA TEXTO
+# FALLBACK
 # ============================================================
 
-def _expense_fallback(text: str) -> dict:
+def _expense_fallback(
+    text: str
+) -> dict:
 
     amount = None
 
@@ -170,7 +224,9 @@ def _expense_fallback(text: str) -> dict:
         try:
 
             amount = float(
-                match.group(1).replace(
+                match.group(
+                    1
+                ).replace(
                     ",",
                     "."
                 )
@@ -180,14 +236,16 @@ def _expense_fallback(text: str) -> dict:
 
             amount = None
 
-    lower_text = text.lower()
+    lower_text = (
+        text.lower()
+    )
 
     category = None
     payment_method = None
     transaction_type = "expense"
 
     # ========================================================
-    # TIPO
+    # INGRESO
     # ========================================================
 
     if any(
@@ -248,7 +306,7 @@ def _expense_fallback(text: str) -> dict:
         category = "Alimentación"
 
     # ========================================================
-    # MÉTODO DE PAGO
+    # PAGO
     # ========================================================
 
     if "tarjeta" in lower_text:
@@ -265,34 +323,42 @@ def _expense_fallback(text: str) -> dict:
 
     return {
 
-        "amount": amount,
+        "amount":
+            amount,
 
-        "currency": "GTQ",
+        "currency":
+            "GTQ",
 
-        "merchant": None,
+        "merchant":
+            None,
 
-        "description": text,
+        "description":
+            text,
 
-        "category": category,
+        "category":
+            category,
 
-        "payment_method": payment_method,
+        "payment_method":
+            payment_method,
 
-        "expense_date": None,
+        "expense_date":
+            None,
 
         "transaction_type":
             transaction_type,
 
         "proposal_source":
             "fallback"
-
     }
 
 
 # ============================================================
-# CONTEXTO FINANCIERO DEL USUARIO
+# CONTEXTO FINANCIERO
 # ============================================================
 
-def get_user_financial_context(user_id):
+def get_user_financial_context(
+    user_id
+):
 
     expenses = (
         Expense.query
@@ -300,45 +366,52 @@ def get_user_financial_context(user_id):
             user_id=user_id
         )
         .order_by(
-            Expense.expense_date.desc()
+            Expense.expense_date.desc(),
+            Expense.id.desc()
         )
         .all()
     )
-
-    # ========================================================
-    # SIN TRANSACCIONES
-    # ========================================================
 
     if not expenses:
 
         return {
 
-            "total_transactions": 0,
+            "total_transactions":
+                0,
 
-            "total_income": 0,
+            "total_income":
+                0,
 
-            "total_expenses": 0,
+            "total_expenses":
+                0,
 
-            "balance": 0,
+            "balance":
+                0,
 
             "message":
-                "El usuario todavía no tiene "
-                "transacciones registradas."
-
+                (
+                    "El usuario todavía no tiene "
+                    "transacciones registradas."
+                )
         }
-
-    # ========================================================
-    # FECHAS
-    # ========================================================
 
     today = datetime.utcnow().date()
 
-    current_month = today.month
-    current_year = today.year
+    current_month = (
+        today.month
+    )
+
+    current_year = (
+        today.year
+    )
 
     previous_month_date = (
-        today.replace(day=1)
-        - timedelta(days=1)
+        today.replace(
+            day=1
+        )
+        - timedelta(
+            days=1
+        )
     )
 
     previous_month = (
@@ -378,7 +451,7 @@ def get_user_financial_context(user_id):
     recent_transactions = []
 
     # ========================================================
-    # PROCESAR TRANSACCIONES
+    # TRANSACCIONES
     # ========================================================
 
     for expense in expenses:
@@ -450,7 +523,7 @@ def get_user_financial_context(user_id):
                     )
 
         # ====================================================
-        # EGRESOS
+        # GASTOS
         # ====================================================
 
         else:
@@ -533,7 +606,7 @@ def get_user_financial_context(user_id):
                     )
 
         # ====================================================
-        # TRANSACCIONES RECIENTES
+        # RECIENTES
         # ====================================================
 
         if len(
@@ -575,7 +648,6 @@ def get_user_financial_context(user_id):
 
                 "payment_method":
                     expense.payment_method
-
             })
 
     # ========================================================
@@ -593,7 +665,7 @@ def get_user_financial_context(user_id):
     )
 
     # ========================================================
-    # PORCENTAJES
+    # RATIOS
     # ========================================================
 
     if total_income > 0:
@@ -617,42 +689,38 @@ def get_user_financial_context(user_id):
     # PROMEDIOS
     # ========================================================
 
-    if expense_transactions:
+    average_expense = (
 
-        average_expense = (
-            sum(
-                expense_transactions
-            )
-            / len(
-                expense_transactions
-            )
+        sum(
+            expense_transactions
+        )
+        / len(
+            expense_transactions
         )
 
-    else:
+        if expense_transactions
+        else 0
+    )
 
-        average_expense = 0
+    average_income = (
 
-    if income_transactions:
-
-        average_income = (
-            sum(
-                income_transactions
-            )
-            / len(
-                income_transactions
-            )
+        sum(
+            income_transactions
+        )
+        / len(
+            income_transactions
         )
 
-    else:
-
-        average_income = 0
-
-    # ========================================================
-    # GASTO MÁS GRANDE
-    # ========================================================
+        if income_transactions
+        else 0
+    )
 
     largest_expense = (
-        max(expense_transactions)
+
+        max(
+            expense_transactions
+        )
+
         if expense_transactions
         else 0
     )
@@ -663,69 +731,11 @@ def get_user_financial_context(user_id):
 
     top_categories = sorted(
         expenses_by_category.items(),
-        key=lambda x: x[1],
+        key=lambda item: item[1],
         reverse=True
     )[:10]
 
-    # ========================================================
-    # COMERCIOS
-    # ========================================================
-
-    top_merchants = sorted(
-        expenses_by_merchant.items(),
-        key=lambda x: x[1],
-        reverse=True
-    )[:10]
-
-    # ========================================================
-    # MÉTODOS DE PAGO
-    # ========================================================
-
-    payment_methods = sorted(
-        expenses_by_payment_method.items(),
-        key=lambda x: x[1],
-        reverse=True
-    )
-
-    # ========================================================
-    # CAMBIO DE GASTOS
-    # ========================================================
-
-    if previous_month_expenses > 0:
-
-        expense_change_percentage = (
-            (
-                current_month_expenses
-                - previous_month_expenses
-            )
-            / previous_month_expenses
-        ) * 100
-
-    else:
-
-        expense_change_percentage = None
-
-    # ========================================================
-    # CAMBIO DE INGRESOS
-    # ========================================================
-
-    if previous_month_income > 0:
-
-        income_change_percentage = (
-            (
-                current_month_income
-                - previous_month_income
-            )
-            / previous_month_income
-        ) * 100
-
-    else:
-
-        income_change_percentage = None
-
-    # ========================================================
-    # CATEGORÍA PRINCIPAL
-    # ========================================================
+    top_category = None
 
     if top_categories:
 
@@ -739,31 +749,22 @@ def get_user_financial_context(user_id):
                     top_categories[0][1],
                     2
                 )
-
         }
-
-    else:
-
-        top_category = None
-
-    # ========================================================
-    # PORCENTAJE POR CATEGORÍA
-    # ========================================================
 
     category_percentages = {}
 
     for category, amount in top_categories:
 
-        if total_expenses > 0:
+        percentage = (
 
-            percentage = (
+            (
                 amount
                 / total_expenses
             ) * 100
 
-        else:
-
-            percentage = 0
+            if total_expenses > 0
+            else 0
+        )
 
         category_percentages[
             category
@@ -780,8 +781,59 @@ def get_user_financial_context(user_id):
                     percentage,
                     2
                 )
-
         }
+
+    # ========================================================
+    # COMERCIOS
+    # ========================================================
+
+    top_merchants = sorted(
+        expenses_by_merchant.items(),
+        key=lambda item: item[1],
+        reverse=True
+    )[:10]
+
+    # ========================================================
+    # MÉTODOS DE PAGO
+    # ========================================================
+
+    payment_methods = sorted(
+        expenses_by_payment_method.items(),
+        key=lambda item: item[1],
+        reverse=True
+    )
+
+    # ========================================================
+    # CAMBIOS
+    # ========================================================
+
+    expense_change_percentage = None
+
+    if previous_month_expenses > 0:
+
+        expense_change_percentage = (
+
+            (
+                current_month_expenses
+                - previous_month_expenses
+            )
+            / previous_month_expenses
+
+        ) * 100
+
+    income_change_percentage = None
+
+    if previous_month_income > 0:
+
+        income_change_percentage = (
+
+            (
+                current_month_income
+                - previous_month_income
+            )
+            / previous_month_income
+
+        ) * 100
 
     # ========================================================
     # RESULTADO
@@ -864,7 +916,6 @@ def get_user_financial_context(user_id):
 
             for category, amount
             in top_categories
-
         },
 
         "income_by_category": {
@@ -877,7 +928,6 @@ def get_user_financial_context(user_id):
 
             for category, amount
             in income_by_category.items()
-
         },
 
         "top_merchants": {
@@ -890,7 +940,6 @@ def get_user_financial_context(user_id):
 
             for merchant, amount
             in top_merchants
-
         },
 
         "payment_methods": {
@@ -903,7 +952,6 @@ def get_user_financial_context(user_id):
 
             for method, amount
             in payment_methods
-
         },
 
         "current_month": {
@@ -925,7 +973,6 @@ def get_user_financial_context(user_id):
                     current_balance,
                     2
                 )
-
         },
 
         "previous_month": {
@@ -940,8 +987,14 @@ def get_user_financial_context(user_id):
                 round(
                     previous_month_expenses,
                     2
-                )
+                ),
 
+            "balance":
+                round(
+                    previous_month_income
+                    - previous_month_expenses,
+                    2
+                )
         },
 
         "expense_change_percentage":
@@ -968,7 +1021,6 @@ def get_user_financial_context(user_id):
 
         "recent_transactions":
             recent_transactions
-
     }
 
 
@@ -976,7 +1028,13 @@ def get_user_financial_context(user_id):
 # ANÁLISIS FINANCIERO CON IA
 # ============================================================
 
-def analyze_finances_with_ai(user_id):
+def analyze_finances_with_ai(
+    user_id
+):
+
+    # ========================================================
+    # OBTENER CONTEXTO
+    # ========================================================
 
     context = (
         get_user_financial_context(
@@ -995,177 +1053,101 @@ def analyze_finances_with_ai(user_id):
 
             "error":
                 "OPENAI_API_KEY no está configurada."
-
         }
 
     try:
 
+        financial_json = json.dumps(
+            context,
+            ensure_ascii=False,
+            indent=2,
+            default=str
+        )
+
         prompt = f"""
-Eres un asistente de finanzas personales.
+Eres NexoAI, un asistente profesional
+de finanzas personales.
 
-Analiza los datos financieros REALES
-del usuario.
+Analiza ÚNICAMENTE los datos financieros
+reales proporcionados a continuación.
 
-DATOS:
+DATOS FINANCIEROS:
 
-{json.dumps(
-    context,
-    ensure_ascii=False,
-    indent=2
-)}
-
-Tu objetivo NO es simplemente decir
-cuál es la categoría donde más gasta.
-
-Debes proporcionar un análisis financiero
-personalizado.
+{financial_json}
 
 ============================================================
-ANALIZA
+OBJETIVO
 ============================================================
 
-1. INGRESOS VS GASTOS
+Genera un análisis financiero personalizado.
 
-Determina si el usuario gasta:
+Analiza, cuando existan datos suficientes:
 
-- menos que sus ingresos
-- aproximadamente lo mismo
-- más que sus ingresos
+1. Ingresos frente a gastos.
 
-Explica qué significa.
+2. Balance.
 
-------------------------------------------------------------
+3. Capacidad de ahorro.
 
-2. BALANCE
+4. Categorías principales.
 
-Analiza el balance general y el balance
-del mes actual.
+5. Porcentaje de cada categoría.
 
-------------------------------------------------------------
+6. Gasto promedio.
 
-3. CAPACIDAD DE AHORRO
+7. Gastos grandes.
 
-Utiliza:
+8. Comercios frecuentes.
 
-- savings_ratio
-- balance
-- ingresos
-- gastos
+9. Métodos de pago.
 
-Si existe capacidad de ahorro,
-propón una estrategia razonable.
+10. Evolución respecto al mes anterior.
 
-------------------------------------------------------------
+11. Presupuestos.
 
-4. CATEGORÍAS
+12. Oportunidades concretas de ahorro.
 
-Identifica las categorías principales.
+13. Alertas financieras justificadas por los datos.
 
-Analiza qué porcentaje representan
-del total de gastos.
-
-No asumas que gastar más en una categoría
-significa necesariamente que sea un problema.
-
-------------------------------------------------------------
-
-5. GASTO PROMEDIO
-
-Analiza el gasto promedio.
-
-Compáralo con el gasto más grande.
-
-------------------------------------------------------------
-
-6. GASTOS GRANDES
-
-Si existe un gasto considerablemente
-superior al promedio, indícalo.
-
-------------------------------------------------------------
-
-7. COMERCIOS
-
-Analiza si existe concentración de gastos
-en determinados comercios.
-
-------------------------------------------------------------
-
-8. MÉTODOS DE PAGO
-
-Analiza los métodos de pago cuando
-existan suficientes datos.
-
-No asumas que utilizar tarjeta es malo.
-
-------------------------------------------------------------
-
-9. EVOLUCIÓN
-
-Compara:
-
-- ingresos actuales
-- ingresos anteriores
-- gastos actuales
-- gastos anteriores
-
-Calcula e interpreta los cambios.
-
-------------------------------------------------------------
-
-10. ALERTAS
-
-Genera alertas solamente cuando
-los datos las justifiquen.
-
-Ejemplos:
-
-- gastos superiores a ingresos
-- balance negativo
-- crecimiento importante de gastos
-- concentración importante de gastos
-
-------------------------------------------------------------
-
-11. AHORRO
-
-Busca oportunidades concretas
-para ahorrar.
-
-Evita consejos genéricos.
-
-------------------------------------------------------------
-
-12. EDUCACIÓN FINANCIERA
-
-Cuando sea útil, explica conceptos
-de forma sencilla.
-
-------------------------------------------------------------
-
-13. CONSEJOS PERSONALIZADOS
-
-Los consejos deben relacionarse
-directamente con los datos.
-
-------------------------------------------------------------
-
-14. POCAS TRANSACCIONES
-
-Si existen menos de 10 transacciones,
-reconoce que el análisis es limitado.
-
-No inventes patrones.
-
-Puedes recomendar registrar más
-transacciones para obtener mejores
-predicciones.
+14. Educación financiera cuando sea útil.
 
 ============================================================
-TIPOS
+POCAS TRANSACCIONES
 ============================================================
 
-Utiliza únicamente:
+Si hay menos de 10 transacciones:
+
+- reconoce que el análisis tiene información limitada;
+- no inventes patrones;
+- no inventes hábitos;
+- puedes dar recomendaciones basadas en los datos existentes.
+
+============================================================
+REGLAS
+============================================================
+
+- No inventes datos.
+- No inventes transacciones.
+- No inventes cantidades.
+- No inventes fechas.
+- No inventes hábitos.
+- No juzgues al usuario.
+- Puedes hacer cálculos.
+- Utiliza quetzales (Q) cuando corresponda.
+- Los consejos deben estar relacionados con los datos.
+- No presentes recomendaciones como órdenes.
+- No afirmes que una categoría es mala solamente porque tiene el mayor gasto.
+- Una categoría alta puede ser completamente normal dependiendo del contexto.
+- Si no existe suficiente información, dilo.
+- Sé concreto.
+- Sé profesional.
+- Responde en español.
+
+============================================================
+TIPOS PERMITIDOS
+============================================================
+
+Utiliza solamente:
 
 success
 info
@@ -1177,105 +1159,166 @@ saving
 FORMATO
 ============================================================
 
-Devuelve únicamente JSON:
+Devuelve ÚNICAMENTE JSON válido.
+
+Formato:
 
 {{
     "insights": [
         {{
             "type": "warning",
             "title": "Título corto",
-            "description": "Explicación basada en datos.",
-            "recommendation": "Consejo práctico.",
+            "description": "Explicación basada en los datos.",
+            "recommendation": "Consejo práctico basado en los datos.",
             "priority": 1
         }}
     ]
 }}
 
-Genera bastantes insights para que el usuario tenga feedback general y profundo de sus gastos e ingresos
-No importa que haya poca informacion en la db del usuario, coloca datos relevantes.
-Coloca consejos financieros especigicops y generales relacionados al usuario
+Genera entre 4 y 8 insights cuando exista
+suficiente información.
 
+Si hay poca información, genera los insights
+que realmente puedan justificarse.
 
+Ordena por importancia.
 
-
-Ordena los insights por importancia.
-
-============================================================
-REGLAS
-============================================================
-
-- No inventes información.
-- No inventes transacciones.
-- No inventes ingresos.
-- No inventes gastos.
-- No inventes fechas.
-- No inventes hábitos.
-- Utiliza solamente los datos proporcionados.
-- Puedes realizar cálculos matemáticos.
-- Sé claro.
-- Sé profesional.
-- Responde en español.
-- No juzgues al usuario.
-- No presentes consejos como órdenes.
-- Explica por qué cada recomendación es relevante.
+No incluyas texto fuera del JSON.
 """
 
         response = client.responses.create(
+
             model=OPENAI_MODEL,
+
             input=prompt
+
         )
 
         output_text = (
-            response.output_text.strip()
-        )
+            response.output_text
+            or ""
+        ).strip()
 
         result = _extract_json(
             output_text
         )
 
-        if result:
+        if not result:
 
-            insights = result.get(
-                "insights",
-                []
+            return {
+
+                "insights": [],
+
+                "financial_context":
+                    context,
+
+                "error":
+                    "La IA no devolvió un JSON válido."
+            }
+
+        insights = result.get(
+            "insights",
+            []
+        )
+
+        if not isinstance(
+            insights,
+            list
+        ):
+
+            insights = []
+
+        # ====================================================
+        # LIMPIAR INSIGHTS
+        # ====================================================
+
+        valid_types = {
+            "success",
+            "info",
+            "warning",
+            "alert",
+            "saving"
+        }
+
+        cleaned_insights = []
+
+        for insight in insights:
+
+            if not isinstance(
+                insight,
+                dict
+            ):
+                continue
+
+            insight_type = (
+                insight.get("type")
+                or "info"
             )
 
-            insights.sort(
-                key=lambda x: x.get(
-                    "priority",
-                    999
-                )
-            )
+            if insight_type not in valid_types:
 
-            result["insights"] = (
-                insights
-            )
+                insight_type = "info"
 
-            result[
-                "financial_context"
-            ] = context
+            cleaned_insights.append({
 
-            return result
+                "type":
+                    insight_type,
+
+                "title":
+                    str(
+                        insight.get(
+                            "title"
+                        )
+                        or "Análisis financiero"
+                    ),
+
+                "description":
+                    str(
+                        insight.get(
+                            "description"
+                        )
+                        or ""
+                    ),
+
+                "recommendation":
+                    str(
+                        insight.get(
+                            "recommendation"
+                        )
+                        or ""
+                    ),
+
+                "priority":
+                    _safe_float(
+                        insight.get(
+                            "priority",
+                            999
+                        )
+                    )
+            })
+
+        cleaned_insights.sort(
+            key=lambda item: item[
+                "priority"
+            ]
+        )
 
         return {
 
-            "insights": [],
+            "insights":
+                cleaned_insights,
 
             "financial_context":
-                context,
-
-            "raw":
-                output_text
-
+                context
         }
 
-    except Exception as e:
+    except Exception as exc:
 
-        print(
-            "Financial AI error:",
-            type(e).__name__,
-            str(e)
-        )
+        print("=" * 60)
+        print("FINANCIAL AI ERROR")
+        print("Tipo:", type(exc).__name__)
+        print("Error:", str(exc))
+        print("=" * 60)
 
         return {
 
@@ -1285,13 +1328,12 @@ REGLAS
                 context,
 
             "error":
-                str(e)
-
+                str(exc)
         }
 
 
 # ============================================================
-# CHAT FINANCIERO PERSONAL
+# CHAT FINANCIERO
 # ============================================================
 
 def ask_financial_ai(
@@ -1306,7 +1348,6 @@ def ask_financial_ai(
 
             "answer":
                 "Escribe una pregunta financiera."
-
         }
 
     if not client:
@@ -1314,9 +1355,10 @@ def ask_financial_ai(
         return {
 
             "answer":
-                "El servicio de inteligencia financiera "
-                "no está configurado."
-
+                (
+                    "El servicio de inteligencia "
+                    "financiera no está configurado."
+                )
         }
 
     try:
@@ -1332,74 +1374,102 @@ def ask_financial_ai(
             or []
         )
 
+        if not isinstance(
+            history,
+            list
+        ):
+
+            history = []
+
         history = history[-10:]
 
         conversation_text = ""
 
         for message in history:
 
-            role = message.get(
-                "role",
-                "user"
+            if not isinstance(
+                message,
+                dict
+            ):
+                continue
+
+            role = (
+                message.get(
+                    "role"
+                )
+                or "user"
             )
 
-            content = message.get(
-                "content",
-                ""
+            content = (
+                message.get(
+                    "content"
+                )
+                or message.get(
+                    "message"
+                )
+                or ""
             )
+
+            if not content:
+                continue
 
             conversation_text += (
                 f"{role}: {content}\n"
             )
 
         # ====================================================
-        # BÚSQUEDA ESPONTÁNEA EN DOCUMENTOS LEGALES
+        # DOCUMENTOS LEGALES
         # ====================================================
-        # No hay un prompt fijo tipo "si pregunta X responde Y".
-        # search_legal_docs (dentro de build_legal_context_block)
-        # puntúa la pregunta del usuario contra los PDFs
-        # indexados (fundamentos legales para emprendedores y
-        # guía de formalización laboral) usando coincidencia de
-        # palabras clave. Si la pregunta no tiene relación legal
-        # ("¿cuánto gasté en comida?"), esto devuelve string
-        # vacío y no se agrega nada al prompt — la IA ni se
-        # entera de que existen esos PDFs para esa pregunta.
 
-        legal_context = build_legal_context_block(question)
+        legal_context = ""
 
-        legal_context_section = ""
+        try:
 
-        if legal_context:
+            legal_result = (
+                build_legal_context_block(
+                    question
+                )
+            )
 
-            legal_context_section = f"""
+            if legal_result:
+
+                legal_context = f"""
+
 ============================================================
 DOCUMENTOS LEGALES DE REFERENCIA
 ============================================================
 
-Se encontraron fragmentos potencialmente relevantes en los
-documentos de referencia legal/laboral disponibles. Úsalos
-ÚNICAMENTE si de verdad ayudan a responder la pregunta del
-usuario. Si no aplican a lo que pregunta, ignóralos por
-completo y no los menciones.
+{legal_result}
 
-Cuando SÍ los uses, indica de qué documento sale la
-información (por ejemplo: "según la Guía para la
-Formalización Laboral...").
+Utiliza estos documentos únicamente
+si son relevantes para la pregunta.
 
-No trates estos fragmentos como asesoría legal vinculante:
-son material de referencia general, no un sustituto de un
-abogado o contador.
+Si utilizas información de ellos,
+menciona su documento de origen.
 
-{legal_context}
+No los presentes como asesoría legal
+personalizada ni vinculante.
 
 """
 
+        except Exception as exc:
+
+            print(
+                "Legal context error:",
+                type(exc).__name__,
+                str(exc)
+            )
+
+        # ====================================================
+        # PROMPT
+        # ====================================================
+
         prompt = f"""
-Eres el administrador financiero
+Eres NexoAI, el administrador financiero
 personal del usuario.
 
 Utiliza los datos financieros reales
-proporcionados por PostgreSQL.
+proporcionados por la aplicación.
 
 ============================================================
 DATOS FINANCIEROS
@@ -1408,9 +1478,12 @@ DATOS FINANCIEROS
 {json.dumps(
     financial_context,
     ensure_ascii=False,
-    indent=2
+    indent=2,
+    default=str
 )}
-{legal_context_section}
+
+{legal_context}
+
 ============================================================
 HISTORIAL DEL CHAT
 ============================================================
@@ -1418,7 +1491,7 @@ HISTORIAL DEL CHAT
 {conversation_text}
 
 ============================================================
-PREGUNTA DEL USUARIO
+PREGUNTA ACTUAL
 ============================================================
 
 {question}
@@ -1431,7 +1504,7 @@ INSTRUCCIONES
 - Sé claro.
 - Sé natural.
 - Personaliza la respuesta.
-- Utiliza los datos de PostgreSQL.
+- Utiliza los datos financieros disponibles.
 - No inventes información.
 - No inventes transacciones.
 - No inventes cantidades.
@@ -1440,34 +1513,55 @@ INSTRUCCIONES
 - Explica cálculos importantes.
 - Da consejos prácticos.
 - Si existen pocos registros, dilo.
-- Si no existe suficiente información,
-  indícalo claramente.
+- Si no existe suficiente información, indícalo.
 - No juzgues al usuario.
 - No tomes decisiones por el usuario.
 - Presenta recomendaciones.
 - Mantén el contexto de la conversación.
 - Si el usuario pregunta por una transacción,
   utiliza únicamente las transacciones disponibles.
-- Si se te proporcionaron fragmentos de documentos legales
-  de referencia y son relevantes a la pregunta, apóyate en
-  ellos y cita el documento de origen. Si no aplican, no los
-  menciones.
+- Si los documentos legales son relevantes,
+  utilízalos correctamente.
+- Si no son relevantes, ignóralos.
+- Nunca reveles información de otros usuarios.
 
-Tu objetivo es ayudar al usuario a comprender
-sus finanzas y tomar mejores decisiones.
-Dale un toque visualmente estetico, utiliza viñetas, cursiva, negrita, signos, emogis, sin perder la formalidad, no dejando de lado el profesionalismo
-Quiero que el texto sea visualmente agradable, que no genere ruido visual
-Ademas, te llamas NexoAI, tengo en cuenta por si se refieren a ti de esa forma, tambien podrian llegar a decirte chat u otra forma, pero tu nombre dado ppor tu creador es NexoAI
+FORMATO:
+
+Haz la respuesta visualmente agradable
+sin generar ruido visual.
+
+Puedes utilizar:
+
+- **negrita**
+- *cursiva*
+- viñetas
+- emojis moderados
+- títulos cortos
+
+Mantén siempre un tono profesional.
+
+Tu nombre es **NexoAI**.
 """
 
         response = client.responses.create(
+
             model=OPENAI_MODEL,
+
             input=prompt
+
         )
 
         answer = (
-            response.output_text.strip()
-        )
+            response.output_text
+            or ""
+        ).strip()
+
+        if not answer:
+
+            answer = (
+                "No pude generar una respuesta "
+                "en este momento."
+            )
 
         return {
 
@@ -1476,26 +1570,26 @@ Ademas, te llamas NexoAI, tengo en cuenta por si se refieren a ti de esa forma, 
 
             "financial_context":
                 financial_context
-
         }
 
-    except Exception as e:
+    except Exception as exc:
 
-        print(
-            "Financial chat error:",
-            type(e).__name__,
-            str(e)
-        )
+        print("=" * 60)
+        print("FINANCIAL CHAT ERROR")
+        print("Tipo:", type(exc).__name__)
+        print("Error:", str(exc))
+        print("=" * 60)
 
         return {
 
             "answer":
-                "Ocurrió un problema al procesar "
-                "tu pregunta. Intenta nuevamente.",
+                (
+                    "Ocurrió un problema al procesar "
+                    "tu pregunta. Intenta nuevamente."
+                ),
 
             "error":
-                str(e)
-
+                str(exc)
         }
 
 
@@ -1508,6 +1602,19 @@ def simulate_savings(
     months=None
 ):
 
+    try:
+
+        amount = float(
+            amount
+        )
+
+    except (
+        ValueError,
+        TypeError
+    ):
+
+        amount = 0
+
     if months is None:
 
         months = [
@@ -1517,16 +1624,38 @@ def simulate_savings(
             24
         ]
 
-    months = sorted(
+    valid_months = []
+
+    for month in months:
+
+        try:
+
+            month = int(
+                month
+            )
+
+            if month > 0:
+
+                valid_months.append(
+                    month
+                )
+
+        except (
+            ValueError,
+            TypeError
+        ):
+
+            continue
+
+    valid_months = sorted(
         set(
-            int(m)
-            for m in months
+            valid_months
         )
     )
 
     projections = {}
 
-    for month in months:
+    for month in valid_months:
 
         projections[
             str(month)
@@ -1538,9 +1667,12 @@ def simulate_savings(
     return {
 
         "monthly_amount":
-            float(amount),
+            round(
+                amount,
+                2
+            ),
 
         "projections":
             projections
-
     }
+
