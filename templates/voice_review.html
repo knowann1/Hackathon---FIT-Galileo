@@ -337,49 +337,58 @@
 
   <div class="d-flex flex-wrap gap-2 mb-2">
 
-    <button
-      type="button"
-      id="start-recording"
-      class="btn btn-outline-primary"
-    >
-      Grabar con micrófono
-    </button>
+  <button
+    type="button"
+    id="start-recording"
+    class="btn btn-outline-primary"
+  >
+    Grabar con micrófono
+  </button>
 
-    <button
-      type="button"
-      id="stop-recording"
-      class="btn btn-outline-danger"
-      disabled
-    >
-      Detener
-    </button>
+  <button
+    type="button"
+    id="stop-recording"
+    class="btn btn-outline-danger"
+    disabled
+  >
+    Detener
+  </button>
 
-  </div>
+</div>
 
 
-  <audio
-    id="voice-preview"
-    controls
-    class="d-none mb-2"
-  ></audio>
+<audio
+  id="voice-preview"
+  controls
+  class="d-none mb-2"
+></audio>
 
+
+<div class="file-upload mb-2">
 
   <input
     id="audio-file"
     type="file"
     name="audio"
-    class="form-control"
     accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm"
     required
   >
 
+  <label for="audio-file" class="btn btn-primary">
+    Elegir archivo de audio
+  </label>
 
-  <small class="text-muted">
-    Puedes grabar desde el micrófono del dispositivo
-    o subir un archivo de audio.
-  </small>
+  <span id="audio-file-name" class="text-muted">
+    Ningún archivo seleccionado
+  </span>
 
 </div>
+
+
+<small class="text-muted">
+  Puedes grabar desde el micrófono del dispositivo
+  o subir un archivo de audio.
+</small>
 
 
 <button
