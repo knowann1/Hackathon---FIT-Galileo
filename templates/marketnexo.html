@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2>Marketnexo</h2>
+    <p class="text-muted mb-0">Descubre lo que venden y ofrecen otros usuarios.</p>
+  </div>
+  <a class="btn btn-primary" href="#publicar">Publicar producto</a>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <h4>Publicaciones de la comunidad</h4>
+    {% if posts %}
+      {% for post in posts %}
+      <article class="card p-3 mb-3">
+        <div class="d-flex justify-content-between gap-3">
+          <h5 class="mb-1">{{ post.product }}</h5>
+          <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y') }}</small>
+        </div>
+        <p class="mt-2 mb-3">{{ post.description }}</p>
+        <div class="small text-muted">
+          <strong>Publicado por:</strong> {{ post.author.username }}
+          <br><strong>Contacto:</strong>
+          <a href="mailto:{{ post.email }}">{{ post.email }}</a>
+          {% if post.phone %} · Tel. {{ post.phone }}{% endif %}
+          {% if post.whatsapp %} · WhatsApp {{ post.whatsapp }}{% endif %}
+          {% if post.social_media %}<br><strong>Redes:</strong> {{ post.social_media }}{% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    {% else %}
+      <div class="alert alert-light border">Aún no hay publicaciones. ¡Sé el primero en publicar!</div>
+    {% endif %}
+  </div>
+
+  <div class="col-lg-5" id="publicar">
+    <div class="card p-4">
+      <h4>Publicar en Marketnexo</h4>
+      <p class="text-muted">Comparte tu producto o servicio con todos los usuarios.</p>
+      <form method="post" action="{{ url_for('marketnexo.create_post') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-3">
+          <label class="form-label" for="product">¿Qué vendes? *</label>
+          <input class="form-control" id="product" name="product" maxlength="255" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="description">Descripción *</label>
+          <textarea class="form-control" id="description" name="description" rows="4" maxlength="2000" required></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="email">Correo de contacto *</label>
+          <input class="form-control" id="email" name="email" type="email" value="{{ current_user.email }}" maxlength="120" required>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 mb-3">
+            <label class="form-label" for="phone">Teléfono</label>
+            <input class="form-control" id="phone" name="phone" type="tel" maxlength="40">
+          </div>
+          <div class="col-sm-6 mb-3">
+            <label class="form-label" for="whatsapp">WhatsApp</label>
+            <input class="form-control" id="whatsapp" name="whatsapp" type="tel" maxlength="40">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="social_media">Redes sociales</label>
+          <input class="form-control" id="social_media" name="social_media" maxlength="255" placeholder="@usuario o enlace">
+        </div>
+        <button class="btn btn-primary w-100" type="submit">Publicar</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
