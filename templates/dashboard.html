@@ -15,7 +15,7 @@
   <div class="col-md-3">
     <div class="card p-3 h-100">
       <h6>Gastos del mes</h6>
-      <h3>Q{{ summary.monthly_expenses }}</h3>
+      <h3 id="monthlyExpenses">Q{{ summary.current_month.expenses }}</h3>
     </div>
   </div>
 
@@ -24,7 +24,7 @@
   <div class="col-md-3">
     <div class="card p-3 h-100">
       <h6>Ingresos del mes</h6>
-      <h3>Q{{ summary.monthly_incomes }}</h3>
+      <h3 id="monthlyIncomes">Q{{ summary.current_month.income }}</h3>
     </div>
   </div>
 
@@ -33,7 +33,7 @@
   <div class="col-md-3">
     <div class="card p-3 h-100">
       <h6>Balance</h6>
-      <h3>Q{{ summary.balance }}</h3>
+      <h3 id="currentBalance">Q{{ summary.current_month.balance }}</h3>
     </div>
   </div>
 
@@ -42,7 +42,7 @@
   <div class="col-md-3">
     <div class="card p-3 h-100">
       <h6>Mes anterior (gastos)</h6>
-      <h3>Q{{ summary.previous_month_expenses }}</h3>
+      <h3 id="previousMonthExpenses">Q{{ summary.previous_month.expenses }}</h3>
     </div>
   </div>
 
@@ -144,7 +144,6 @@
   </div>
 
 </div>
-```
 
   </div>
 
@@ -160,6 +159,8 @@ document.addEventListener(
   "DOMContentLoaded",
   function () {
 
+    // CSRF token (rendered server-side)
+    const CSRF_TOKEN = "{{ csrf_token() }}";
 
     // ==========================================================
     // GRÁFICO DE GASTOS POR CATEGORÍA
@@ -295,13 +296,58 @@ document.addEventListener(
 
 
     // ==========================================================
+    // REFRESCAR RESUMEN (SE USA PARA ACTUALIZAR LOS VALORES)
+    // ==========================================================
+
+    async function refreshSummary() {
+
+      try {
+        const res = await fetch(
+          '/dashboard/api/dashboard/summary',
+          {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: {
+              'Accept': 'application/json'
+            }
+          }
+        );
+
+        if (!res.ok) return;
+
+        const payload = await res.json();
+
+        if (!payload || !payload.data) return;
+
+        const data = payload.data;
+
+        const monthlyExpensesEl = document.getElementById('monthlyExpenses');
+        const monthlyIncomesEl = document.getElementById('monthlyIncomes');
+        const currentBalanceEl = document.getElementById('currentBalance');
+        const previousMonthExpensesEl = document.getElementById('previousMonthExpenses');
+
+        if (monthlyExpensesEl) monthlyExpensesEl.innerText = 'Q' + (data.monthly_expenses ?? 0);
+        if (monthlyIncomesEl) monthlyIncomesEl.innerText = 'Q' + (data.monthly_incomes ?? 0);
+        if (currentBalanceEl) currentBalanceEl.innerText = 'Q' + (data.balance ?? 0);
+        if (previousMonthExpensesEl) previousMonthExpensesEl.innerText = 'Q' + (data.previous_month_expenses ?? 0);
+
+      } catch (err) {
+        console.error('Error refreshing summary:', err);
+      }
+
+    }
+
+    // Llamar inicialmente para asegurar valores actualizados
+    refreshSummary();
+
+
+    // ==========================================================
     // BOTÓN ANALIZAR
     // ==========================================================
 
     analyzeBtn.addEventListener(
       "click",
       async function () {
-
 
         // ======================================================
         // ESTADO DE CARGA
@@ -345,9 +391,8 @@ document.addEventListener(
 
         try {
 
-
           // ====================================================
-          // PETICIÓN AL BACKEND
+          // PETICIÓN AL BACKEND (INCLUYE CSRF TOKEN)
           // ====================================================
 
           const response =
@@ -357,15 +402,13 @@ document.addEventListener(
                 method: "POST",
 
                 headers: {
-                  "Accept":
-                    "application/json",
-
-                  "X-Requested-With":
-                    "XMLHttpRequest"
+                  "Accept": "application/json",
+                  "Content-Type": "application/json",
+                  "X-Requested-With": "XMLHttpRequest",
+                  "X-CSRFToken": CSRF_TOKEN
                 },
 
-                credentials:
-                  "same-origin"
+                credentials: "same-origin"
               }
             );
 
@@ -548,6 +591,9 @@ document.addEventListener(
 
             `;
 
+            // Refrescar resumen por si hay cambios
+            refreshSummary();
+
             return;
 
           }
@@ -559,7 +605,6 @@ document.addEventListener(
 
           insights.forEach(
             function (insight) {
-
 
               if (
                 !insight ||
@@ -756,6 +801,9 @@ document.addEventListener(
             }
           );
 
+          // Refrescar resumen después del análisis por si hay cambios
+          refreshSummary();
+
         }
 
 
@@ -839,4 +887,3 @@ document.addEventListener(
 </script>
 
 {% endblock %}
-
