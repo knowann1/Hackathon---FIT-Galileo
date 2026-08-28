@@ -16,7 +16,7 @@ class User(UserMixin, db.Model):
     budgets = db.relationship('Budget', backref='user', lazy=True)
     goals = db.relationship('FinancialGoal', backref='user', lazy=True)
     insights = db.relationship('FinancialInsight', backref='user', lazy=True)
-
+    market_posts = db.relationship('MarketPost', backref='author', lazy=True)
     def set_password(self, password):
         # Use pbkdf2:sha256 explicitly because hashlib.scrypt is not
         # available in this Python build on the deployment machine.
@@ -90,3 +90,18 @@ class FinancialInsight(db.Model):
 
     def __repr__(self):
         return f"<Insight {self.title} ({self.severity})>"
+class MarketPost(db.Model):
+    __tablename__ = 'marketnexo_posts'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    product = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(40))
+    whatsapp = db.Column(db.String(40))
+    social_media = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    def __repr__(self):
+        return f"<MarketPost {self.product}>"
