@@ -11,62 +11,42 @@
 <div class="row g-3">
 
   <!-- Gastos -->
+
   <div class="col-md-3">
     <div class="card p-3 h-100">
-
       <h6>Gastos del mes</h6>
-
-      <h3>
-        Q{{ summary.monthly_expenses }}
-      </h3>
-
+      <h3>Q{{ summary.monthly_expenses }}</h3>
     </div>
   </div>
-
 
   <!-- Ingresos -->
+
   <div class="col-md-3">
     <div class="card p-3 h-100">
-
       <h6>Ingresos del mes</h6>
-
-      <h3>
-        Q{{ summary.monthly_incomes }}
-      </h3>
-
+      <h3>Q{{ summary.monthly_incomes }}</h3>
     </div>
   </div>
-
 
   <!-- Balance -->
+
   <div class="col-md-3">
     <div class="card p-3 h-100">
-
       <h6>Balance</h6>
-
-      <h3>
-        Q{{ summary.balance }}
-      </h3>
-
+      <h3>Q{{ summary.balance }}</h3>
     </div>
   </div>
 
-
   <!-- Mes anterior -->
+
   <div class="col-md-3">
     <div class="card p-3 h-100">
-
       <h6>Mes anterior (gastos)</h6>
-
-      <h3>
-        Q{{ summary.previous_month_expenses }}
-      </h3>
-
+      <h3>Q{{ summary.previous_month_expenses }}</h3>
     </div>
   </div>
 
 </div>
-
 
 <!-- ============================================================
      GRÁFICO + IA
@@ -74,36 +54,32 @@
 
 <div class="row mt-4">
 
-
   <!-- ==========================================================
        GASTOS POR CATEGORÍA
        =========================================================== -->
 
   <div class="col-md-8">
 
-    <div class="card p-3 h-100">
+```
+<div class="card p-3 h-100">
 
-      <h5>
-        Gastos por categoría
-      </h5>
+  <h5>Gastos por categoría</h5>
 
-      <div
-        style="
-          position: relative;
-          height: 350px;
-        "
-      >
+  <div
+    style="
+      position: relative;
+      height: 350px;
+    "
+  >
 
-        <canvas
-          id="chartCategory"
-        ></canvas>
-
-      </div>
-
-    </div>
+    <canvas id="chartCategory"></canvas>
 
   </div>
 
+</div>
+```
+
+  </div>
 
   <!-- ==========================================================
        RECOMENDACIONES IA
@@ -111,71 +87,68 @@
 
   <div class="col-md-4">
 
-    <div class="card p-3 h-100">
+```
+<div class="card p-3 h-100">
 
-      <h5>
-        🤖 Recomendaciones financieras
-      </h5>
+  <h5>
+    🤖 Recomendaciones financieras
+  </h5>
 
-      <p class="text-muted">
+  <p class="text-muted">
 
-        NexoAI analizará tus ingresos,
-        gastos, categorías, historial,
-        presupuestos y patrones financieros.
+    NexoAI analizará tus ingresos,
+    gastos, categorías, historial,
+    presupuestos y patrones financieros.
+
+  </p>
+
+
+  <!-- ======================================================
+       BOTÓN
+       ======================================================= -->
+
+  <button
+    id="analyzeBtn"
+    type="button"
+    class="btn btn-primary w-100"
+  >
+    Analizar mis finanzas
+  </button>
+
+
+  <!-- ======================================================
+       RESULTADOS
+       ======================================================= -->
+
+  <div
+    id="aiResult"
+    class="mt-3"
+  >
+
+    <div class="alert alert-light border">
+
+      <strong>
+        💡 Consejo personalizado
+      </strong>
+
+      <p class="mb-0 mt-1 text-muted">
+
+        Presiona
+        <strong>"Analizar mis finanzas"</strong>
+        para que NexoAI estudie tus datos.
 
       </p>
-
-
-      <!-- ======================================================
-           BOTÓN
-           ======================================================= -->
-
-      <button
-        id="analyzeBtn"
-        type="button"
-        class="btn btn-primary w-100"
-      >
-
-        Analizar mis finanzas
-
-      </button>
-
-
-      <!-- ======================================================
-           RESULTADOS
-           ======================================================= -->
-
-      <div
-        id="aiResult"
-        class="mt-3"
-      >
-
-        <div class="alert alert-light border">
-
-          <strong>
-            💡 Consejo personalizado
-          </strong>
-
-          <p class="mb-0 mt-1 text-muted">
-
-            Presiona
-            <strong>
-              "Analizar mis finanzas"
-            </strong>
-            para que NexoAI estudie tus datos.
-
-          </p>
-
-        </div>
-
-      </div>
 
     </div>
 
   </div>
 
 </div>
+```
 
+  </div>
+
+</div>
 
 <!-- ============================================================
      JAVASCRIPT
@@ -189,7 +162,7 @@ document.addEventListener(
 
 
     // ==========================================================
-    // GRÁFICO
+    // GRÁFICO DE GASTOS POR CATEGORÍA
     // ==========================================================
 
     const categoryData =
@@ -202,9 +175,7 @@ document.addEventListener(
       Object.values(categoryData);
 
     const ctx =
-      document.getElementById(
-        "chartCategory"
-      );
+      document.getElementById("chartCategory");
 
 
     if (
@@ -215,7 +186,6 @@ document.addEventListener(
       new Chart(
         ctx,
         {
-
           type: "pie",
 
           data: {
@@ -223,13 +193,10 @@ document.addEventListener(
             labels: labels,
 
             datasets: [
-
               {
-
                 data: data,
 
                 backgroundColor: [
-
                   "#007bff",
                   "#28a745",
                   "#ffc107",
@@ -240,13 +207,9 @@ document.addEventListener(
                   "#20c997",
                   "#6610f2",
                   "#e83e8c"
-
                 ]
-
               }
-
             ]
-
           },
 
           options: {
@@ -258,9 +221,7 @@ document.addEventListener(
             plugins: {
 
               legend: {
-
                 position: "bottom"
-
               }
 
             }
@@ -283,10 +244,8 @@ document.addEventListener(
         <div class="text-center text-muted py-5">
 
           <p class="mb-0">
-
             No hay gastos registrados
             para mostrar.
-
           </p>
 
         </div>
@@ -297,7 +256,7 @@ document.addEventListener(
 
 
     // ==========================================================
-    // BOTÓN IA
+    // ELEMENTOS DE IA
     // ==========================================================
 
     const analyzeBtn =
@@ -312,11 +271,32 @@ document.addEventListener(
 
 
     if (!analyzeBtn) {
-
       return;
+    }
+
+
+    // ==========================================================
+    // FUNCIÓN PARA ESCAPAR HTML
+    // ==========================================================
+
+    function escapeHtml(text) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent =
+        text == null
+          ? ""
+          : String(text);
+
+      return div.innerHTML;
 
     }
 
+
+    // ==========================================================
+    // BOTÓN ANALIZAR
+    // ==========================================================
 
     analyzeBtn.addEventListener(
       "click",
@@ -324,7 +304,7 @@ document.addEventListener(
 
 
         // ======================================================
-        // CARGANDO
+        // ESTADO DE CARGA
         // ======================================================
 
         analyzeBtn.disabled = true;
@@ -367,35 +347,48 @@ document.addEventListener(
 
 
           // ====================================================
-          // PETICIÓN
+          // PETICIÓN AL BACKEND
           // ====================================================
 
           const response =
             await fetch(
               "/api/ai/analyze-finances",
               {
-
                 method: "POST",
 
                 headers: {
-
-                  "Content-Type":
+                  "Accept":
                     "application/json",
 
-                  "Accept":
-                    "application/json"
-
+                  "X-Requested-With":
+                    "XMLHttpRequest"
                 },
 
                 credentials:
                   "same-origin"
-
               }
             );
 
 
           // ====================================================
-          // LEER RESPUESTA
+          // LEER RESPUESTA COMO TEXTO
+          //
+          // NO usamos response.json() directamente.
+          // Esto permite detectar si Flask devolvió HTML.
+          // ====================================================
+
+          const rawResponse =
+            await response.text();
+
+
+          console.log(
+            "Respuesta del servidor:",
+            rawResponse
+          );
+
+
+          // ====================================================
+          // INTENTAR CONVERTIR A JSON
           // ====================================================
 
           let json = null;
@@ -403,14 +396,52 @@ document.addEventListener(
           try {
 
             json =
-              await response.json();
+              JSON.parse(
+                rawResponse
+              );
 
           }
 
           catch (jsonError) {
 
+            console.error(
+              "La respuesta no es JSON:",
+              rawResponse
+            );
+
+
+            // ==================================================
+            // SI FLASK DEVOLVIÓ HTML
+            // ==================================================
+
+            let serverMessage =
+              "El servidor devolvió una respuesta que no es JSON.";
+
+
+            if (
+              rawResponse.includes(
+                "<title>"
+              )
+            ) {
+
+              const titleMatch =
+                rawResponse.match(
+                  /<title[^>]*>(.*?)<\/title>/i
+                );
+
+              if (titleMatch) {
+
+                serverMessage =
+                  titleMatch[1];
+
+              }
+
+            }
+
+
             throw new Error(
-              "El servidor no devolvió una respuesta JSON válida."
+              serverMessage +
+              " Revisa la consola del servidor."
             );
 
           }
@@ -426,7 +457,9 @@ document.addEventListener(
 
               json.error
               ||
-              "No se pudo analizar la información financiera."
+              json.message
+              ||
+              `Error del servidor (${response.status})`
 
             );
 
@@ -435,21 +468,56 @@ document.addEventListener(
 
           // ====================================================
           // OBTENER INSIGHTS
+          //
+          // Tu backend devuelve:
+          //
+          // {
+          //   summary: ...,
+          //   rule_insights: ...,
+          //   ai_insights: [...]
+          // }
+          //
+          // Por eso usamos ai_insights primero.
           // ====================================================
 
           const insights =
-            json.ai_insights
-            ||
-            json.insights
-            ||
-            [];
+
+            Array.isArray(
+              json.ai_insights
+            )
+
+              ? json.ai_insights
+
+              : (
+                  Array.isArray(
+                    json.insights
+                  )
+                    ? json.insights
+                    : []
+                );
 
 
           // ====================================================
-          // LIMPIAR
+          // LIMPIAR RESULTADOS
           // ====================================================
 
           aiResult.innerHTML = "";
+
+
+          // ====================================================
+          // MOSTRAR ERROR DEL BACKEND SI EXISTE
+          // ====================================================
+
+          if (
+            json.error &&
+            insights.length === 0
+          ) {
+
+            throw new Error(
+              json.error
+            );
+
+          }
 
 
           // ====================================================
@@ -457,8 +525,6 @@ document.addEventListener(
           // ====================================================
 
           if (
-            !Array.isArray(insights)
-            ||
             insights.length === 0
           ) {
 
@@ -472,9 +538,9 @@ document.addEventListener(
 
                 <p class="mb-0 mt-1">
 
-                  No se encontraron
-                  recomendaciones suficientes
-                  con los datos disponibles.
+                  NexoAI no encontró suficientes
+                  recomendaciones con los datos
+                  financieros disponibles.
 
                 </p>
 
@@ -495,22 +561,32 @@ document.addEventListener(
             function (insight) {
 
 
-              let alertClass =
-                "alert-info";
+              if (
+                !insight ||
+                typeof insight !== "object"
+              ) {
+
+                return;
+
+              }
 
 
               // ==================================================
-              // SEVERIDAD
+              // DETERMINAR TIPO
               // ==================================================
 
               const severity =
-                (
+                String(
                   insight.severity
                   ||
                   insight.type
                   ||
                   "info"
                 ).toLowerCase();
+
+
+              let alertClass =
+                "alert-info";
 
 
               if (
@@ -562,7 +638,7 @@ document.addEventListener(
 
 
               // ==================================================
-              // ELEMENTO
+              // CONTENEDOR
               // ==================================================
 
               const element =
@@ -630,15 +706,37 @@ document.addEventListener(
 
                 const recommendation =
                   document.createElement(
-                    "small"
+                    "div"
                   );
 
                 recommendation.className =
-                  "d-block mt-2";
+                  "small mt-2";
 
-                recommendation.textContent =
-                  "💡 " +
-                  insight.recommendation;
+
+                const icon =
+                  document.createElement(
+                    "strong"
+                  );
+
+                icon.textContent =
+                  "💡 ";
+
+
+                recommendation.appendChild(
+                  icon
+                );
+
+
+                const text =
+                  document.createTextNode(
+                    insight.recommendation
+                  );
+
+
+                recommendation.appendChild(
+                  text
+                );
+
 
                 element.appendChild(
                   recommendation
@@ -648,7 +746,7 @@ document.addEventListener(
 
 
               // ==================================================
-              // AGREGAR
+              // AGREGAR AL DOM
               // ==================================================
 
               aiResult.appendChild(
@@ -661,11 +759,26 @@ document.addEventListener(
         }
 
 
+        // ========================================================
+        // ERROR
+        // ========================================================
+
         catch (error) {
 
           console.error(
-            "Error al analizar finanzas:",
+            "===================================="
+          );
+
+          console.error(
+            "ERROR ANALIZANDO FINANZAS"
+          );
+
+          console.error(
             error
+          );
+
+          console.error(
+            "===================================="
           );
 
 
@@ -679,13 +792,22 @@ document.addEventListener(
 
               <p class="mb-0 mt-1">
 
-                ${
+                ${escapeHtml(
                   error.message
                   ||
                   "Ocurrió un error inesperado."
-                }
+                )}
 
               </p>
+
+              <hr>
+
+              <small>
+
+                Abre la consola de Render/servidor
+                para ver el error exacto de Flask.
+
+              </small>
 
             </div>
 
@@ -693,6 +815,10 @@ document.addEventListener(
 
         }
 
+
+        // ========================================================
+        // RESTAURAR BOTÓN
+        // ========================================================
 
         finally {
 
@@ -713,3 +839,4 @@ document.addEventListener(
 </script>
 
 {% endblock %}
+
