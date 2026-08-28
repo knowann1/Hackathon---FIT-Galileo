@@ -322,6 +322,10 @@ small.text-muted {
   color: var(--text);
 }
 
+.alert-success {
+  color: #000 !important;
+}
+
 /* Chat surface has an inline light background in its template. */
 
 #chatMessages {
