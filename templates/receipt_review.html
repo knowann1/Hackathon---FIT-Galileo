@@ -69,23 +69,65 @@
   {% else %}
     <form id="receipt-upload-form" method="post" enctype="multipart/form-data">
       <div class="mb-3">
-        <label class="form-label">Archivo</label>
-        <div class="file-upload">
-    <input
-        type="file"
-        name="receipt"
-        id="receipt"
-        accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
-        required
-    >
+    <label class="form-label">Archivo</label>
 
-    <label for="receipt" class="btn btn-outline-primary">
-        Elegir archivo
-    </label>
+    <div class="file-upload">
+        <input
+            type="file"
+            name="receipt"
+            id="receipt"
+            accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+            required
+        >
 
-    <span id="file-name">Ningún archivo seleccionado</span>
+        <label for="receipt" class="btn btn-primary">
+            Elegir archivo
+        </label>
+
+        <span id="file-name">Ningún archivo seleccionado</span>
+    </div>
 </div>
-      </div>
+
+<style>
+.file-upload {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.file-upload input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.file-upload label {
+    cursor: pointer;
+    margin: 0;
+}
+
+#file-name {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const fileInput = document.getElementById("receipt");
+    const fileName = document.getElementById("file-name");
+
+    fileInput.addEventListener("change", function () {
+        if (this.files && this.files.length > 0) {
+            fileName.textContent = this.files[0].name;
+        } else {
+            fileName.textContent = "Ningún archivo seleccionado";
+        }
+    });
+});
+</script>
       <button class="btn btn-primary" type="submit">Subir y analizar</button>
     </form>
 
