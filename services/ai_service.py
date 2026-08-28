@@ -7,6 +7,7 @@ from openai import OpenAI
 
 from extensions import db
 from models import Expense
+from legal_docs_search import build_legal_context_block
 
 
 # ============================================================
@@ -1351,6 +1352,48 @@ def ask_financial_ai(
                 f"{role}: {content}\n"
             )
 
+        # ====================================================
+        # BÚSQUEDA ESPONTÁNEA EN DOCUMENTOS LEGALES
+        # ====================================================
+        # No hay un prompt fijo tipo "si pregunta X responde Y".
+        # search_legal_docs (dentro de build_legal_context_block)
+        # puntúa la pregunta del usuario contra los PDFs
+        # indexados (fundamentos legales para emprendedores y
+        # guía de formalización laboral) usando coincidencia de
+        # palabras clave. Si la pregunta no tiene relación legal
+        # ("¿cuánto gasté en comida?"), esto devuelve string
+        # vacío y no se agrega nada al prompt — la IA ni se
+        # entera de que existen esos PDFs para esa pregunta.
+
+        legal_context = build_legal_context_block(question)
+
+        legal_context_section = ""
+
+        if legal_context:
+
+            legal_context_section = f"""
+============================================================
+DOCUMENTOS LEGALES DE REFERENCIA
+============================================================
+
+Se encontraron fragmentos potencialmente relevantes en los
+documentos de referencia legal/laboral disponibles. Úsalos
+ÚNICAMENTE si de verdad ayudan a responder la pregunta del
+usuario. Si no aplican a lo que pregunta, ignóralos por
+completo y no los menciones.
+
+Cuando SÍ los uses, indica de qué documento sale la
+información (por ejemplo: "según la Guía para la
+Formalización Laboral...").
+
+No trates estos fragmentos como asesoría legal vinculante:
+son material de referencia general, no un sustituto de un
+abogado o contador.
+
+{legal_context}
+
+"""
+
         prompt = f"""
 Eres el administrador financiero
 personal del usuario.
@@ -1367,7 +1410,7 @@ DATOS FINANCIEROS
     ensure_ascii=False,
     indent=2
 )}
-
+{legal_context_section}
 ============================================================
 HISTORIAL DEL CHAT
 ============================================================
@@ -1405,6 +1448,10 @@ INSTRUCCIONES
 - Mantén el contexto de la conversación.
 - Si el usuario pregunta por una transacción,
   utiliza únicamente las transacciones disponibles.
+- Si se te proporcionaron fragmentos de documentos legales
+  de referencia y son relevantes a la pregunta, apóyate en
+  ellos y cita el documento de origen. Si no aplican, no los
+  menciones.
 
 Tu objetivo es ayudar al usuario a comprender
 sus finanzas y tomar mejores decisiones.
