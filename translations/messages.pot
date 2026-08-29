@@ -1,116 +1,390 @@
-# Translations template for NexoAI.
-# Copyright (C) 2024 NexoAI
-# This file is distributed under the same license as the NexoAI project.
+# Translations template for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
 #
+#, fuzzy
 msgid ""
 msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-08-29 04:46+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
 
-msgid "Idioma"
-msgstr ""
-
+#: templates/base.html:41
 msgid "Panel"
 msgstr ""
 
+#: templates/base.html:44
 msgid "Gastos"
 msgstr ""
 
+#: templates/base.html:48
 msgid "MarketNexo"
 msgstr ""
 
+#: templates/base.html:53
 msgid "Subir factura"
 msgstr ""
 
+#: templates/base.html:58
 msgid "Registrar por voz"
 msgstr ""
 
+#: templates/base.html:63
 msgid "NexoIA"
 msgstr ""
 
+#: templates/base.html:68 templates/base.html:96
 msgid "Qué es NexoAI"
 msgstr ""
 
+#: templates/base.html:74 templates/base.html:102
+msgid "Idioma"
+msgstr ""
+
+#: templates/base.html:90
 msgid "Cerrar sesión"
 msgstr ""
 
+#: templates/base.html:113
 msgid "Registrar"
 msgstr ""
 
+#: templates/base.html:118 templates/index.html:9
 msgid "Iniciar sesión"
 msgstr ""
 
-msgid "Registrar gasto"
+#: templates/index.html:4
+msgid "Bienvenido a NexoAI"
 msgstr ""
 
-msgid "Gasto registrado"
+#: templates/index.html:5
+msgid "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
 msgstr ""
 
-msgid "Ingreso registrado"
+#: templates/index.html:8
+msgid "Crear cuenta"
 msgstr ""
 
-msgid "Resumen"
+#: templates/index.html:705
+msgid "Asistente financiero conversacional · Guatemala"
 msgstr ""
 
-msgid "Gastos del mes"
+#: templates/index.html:706
+msgid "Le hablás como a un"
 msgstr ""
 
-msgid "Ingresos del mes"
+#: templates/index.html:706
+msgid "cuate"
 msgstr ""
 
-msgid "Balance"
+#: templates/index.html:706
+msgid "Te responde como un asesor."
 msgstr ""
 
-msgid "Mes anterior (gastos)"
+#: templates/index.html:707
+msgid "NexoAI convierte un mensaje de texto suelto —"
 msgstr ""
 
-msgid "Gastos por categoría"
+#: templates/index.html:707
+msgid "gasté 50 en Walmart con tarjeta"
 msgstr ""
 
-msgid "Recomendaciones financieras"
+#: templates/index.html:707
+msgid ""
+"— en un registro financiero estructurado, y ese registro en consejos "
+"concretos sobre tus ingresos, tus gastos y tu capacidad de ahorro."
 msgstr ""
 
-msgid "Analizar mis finanzas"
+#: templates/index.html:711
+msgid "mensaje del usuario"
 msgstr ""
 
-msgid "Movimientos"
+#: templates/index.html:729
+msgid "Nadie lleva un presupuesto"
 msgstr ""
 
-msgid "Nuevo movimiento"
+#: templates/index.html:729
+msgid "en una hoja de cálculo"
 msgstr ""
 
-msgid "Tipo"
+#: templates/index.html:729
+msgid ""
+"La gente lleva sus finanzas en la cabeza, y las anota — si acaso — en una"
+" nota de texto, entre WhatsApp y la fila del súper."
 msgstr ""
 
-msgid "Monto (Q)"
+#: templates/index.html:735
+msgid "Registrar gastos es fricción"
 msgstr ""
 
-msgid "Categoría"
+#: templates/index.html:736
+msgid ""
+"Abrir una app, elegir categoría, tipear el monto — para un gasto de Q15 "
+"nadie lo hace dos veces."
 msgstr ""
 
-msgid "Comercio"
+#: templates/index.html:742
+msgid "Los datos sin contexto no enseñan nada"
 msgstr ""
 
-msgid "Fecha"
+#: templates/index.html:743
+msgid ""
+"Un dashboard con barras de colores no te dice si estás gastando más de lo"
+" que ganás, ni por qué."
 msgstr ""
 
-msgid "Eliminar"
+#: templates/index.html:749
+msgid "Formalizarse da miedo por desconocimiento"
 msgstr ""
 
-msgid "Egreso"
+#: templates/index.html:750
+msgid ""
+"Emprender en Guatemala implica trámites legales y laborales que casi "
+"nadie consulta hasta que ya es tarde."
 msgstr ""
 
-msgid "Ingreso"
+#: templates/index.html:761
+msgid "Lo que hace"
 msgstr ""
 
-msgid "Asistente financiero IA"
+#: templates/index.html:762
+msgid "Cuatro funciones, un mismo cerebro conversacional"
 msgstr ""
 
-msgid "Volver al panel"
+#: templates/index.html:763
+msgid ""
+"No son módulos separados: todas comparten el mismo contexto financiero "
+"del usuario, calculado en vivo desde PostgreSQL en cada pregunta."
 msgstr ""
 
-msgid "Haz una pregunta a la IA..."
+#: templates/index.html:774
+msgid "Texto libre a dato estructurado"
 msgstr ""
 
-msgid "Enviar"
+#: templates/index.html:775
+msgid ""
+"Escribís el gasto como se lo contarías a alguien. El sistema extrae "
+"monto, comercio, categoría, método de pago y fecha — con un modelo de "
+"lenguaje, y un parseo por reglas como respaldo si la IA no responde."
 msgstr ""
+
+#: templates/index.html:777
+msgid "español natural"
+msgstr ""
+
+#: templates/index.html:778
+msgid "fallback por reglas"
+msgstr ""
+
+#: templates/index.html:789
+msgid "Insights financieros automáticos"
+msgstr ""
+
+#: templates/index.html:790
+msgid ""
+"Calcula ratio de ahorro, gasto promedio versus gasto más grande, "
+"concentración por comercio, cambios mes contra mes — y prioriza qué "
+"merece tu atención primero."
+msgstr ""
+
+#: templates/index.html:792
+msgid "balance real"
+msgstr ""
+
+#: templates/index.html:793
+msgid "alertas con datos"
+msgstr ""
+
+#: templates/index.html:804
+msgid "Chat con memoria de tu contexto"
+msgstr ""
+
+#: templates/index.html:805
+msgid ""
+"Preguntale directamente: \"¿cuánto gasté en comida el mes pasado?\", "
+"\"¿me alcanza para ahorrar?\". Responde solo con tus transacciones "
+"reales, nunca inventa cifras."
+msgstr ""
+
+#: templates/index.html:807
+msgid "historial de conversación"
+msgstr ""
+
+#: templates/index.html:808
+msgid "GTQ nativo"
+msgstr ""
+
+#: templates/index.html:819
+msgid "Consulta legal y laboral guatemalteca"
+msgstr ""
+
+#: templates/index.html:820
+msgid ""
+"Cuando la pregunta lo amerita, busca en guías de formalización de "
+"empresas y contratación laboral, y responde citando la fuente — sin "
+"forzar el tema si no aplica."
+msgstr ""
+
+#: templates/index.html:822
+msgid "búsqueda por palabras clave"
+msgstr ""
+
+#: templates/index.html:823
+msgid "citas por documento"
+msgstr ""
+
+#: templates/index.html:833
+msgid "Cómo funciona"
+msgstr ""
+
+#: templates/index.html:834
+msgid "De un mensaje suelto a una recomendación con base"
+msgstr ""
+
+#: templates/index.html:835
+msgid ""
+"El mismo camino, sin importar si la pregunta es sobre un gasto puntual o "
+"sobre tu situación financiera completa."
+msgstr ""
+
+#: templates/index.html:843
+msgid "El usuario escribe, en su idioma"
+msgstr ""
+
+#: templates/index.html:844
+msgid ""
+"Sin formularios ni menús. \"Pagué la luz, Q180, transferencia\" es una "
+"entrada válida."
+msgstr ""
+
+#: templates/index.html:849
+msgid "Se extraen los datos con IA, con respaldo por reglas"
+msgstr ""
+
+#: templates/index.html:850
+msgid ""
+"Un modelo de lenguaje interpreta el texto y devuelve JSON. Si no hay "
+"conexión al modelo, un parseo por palabras clave garantiza que igual se "
+"guarde algo útil."
+msgstr ""
+
+#: templates/index.html:856
+msgid "Se reconstruye el contexto financiero completo"
+msgstr ""
+
+#: templates/index.html:857
+msgid ""
+"Cada pregunta recalcula, desde la base de datos real, totales, promedios,"
+" categorías top, comparación con el mes anterior — nunca datos de caché "
+"ni inventados."
+msgstr ""
+
+#: templates/index.html:863
+msgid "Si la pregunta toca temas legales, se buscan los documentos"
+msgstr ""
+
+#: templates/index.html:864
+msgid ""
+"La búsqueda por palabras clave decide en silencio si hay contenido legal "
+"relevante. Si no lo hay, el prompt ni se entera de que esos documentos "
+"existen."
+msgstr ""
+
+#: templates/index.html:869
+msgid "NexoAI responde con lo que realmente sabe"
+msgstr ""
+
+#: templates/index.html:870
+msgid ""
+"Cálculos explicados, recomendaciones sin juicio, y honestidad cuando hay "
+"pocos datos para sacar conclusiones firmes."
+msgstr ""
+
+#: templates/index.html:879
+msgid "En la práctica"
+msgstr ""
+
+#: templates/index.html:880
+msgid "Así se ve un insight real"
+msgstr ""
+
+#: templates/index.html:881
+msgid ""
+"No es una frase genérica de \"gastás mucho en comida\". Cada "
+"recomendación cita el número exacto que la sostiene."
+msgstr ""
+
+#: templates/index.html:887
+msgid "prioridad 1"
+msgstr ""
+
+#: templates/index.html:889
+msgid "Tu capacidad de ahorro está subutilizada"
+msgstr ""
+
+#: templates/index.html:890
+#, python-format
+msgid ""
+"Tus ingresos del mes fueron Q4,200 y tus gastos Q2,950 — un ratio de "
+"ahorro de 29.8%%, muy por encima de lo que refleja tu balance guardado "
+"hasta ahora."
+msgstr ""
+
+#: templates/index.html:891
+#, python-format
+msgid ""
+"El 62%%, de ese gasto, se concentra en un solo comercio, lo que sugiere "
+"que una compra recurrente podría planificarse con anticipación en vez de "
+"registrarse como gasto variable."
+msgstr ""
+
+#: templates/index.html:892
+msgid "Sugerencia →"
+msgstr ""
+
+#: templates/index.html:892
+msgid ""
+"Con ese margen mensual, apartar Q800 fijos cubriría un fondo de "
+"emergencia de tres meses en menos de un año."
+msgstr ""
+
+#: templates/index.html:900
+msgid "Debajo del capó"
+msgstr ""
+
+#: templates/index.html:901
+msgid "Construido para funcionar, no solo para la demo"
+msgstr ""
+
+#: templates/index.html:905
+msgid "backend"
+msgstr ""
+
+#: templates/index.html:906
+msgid "datos reales"
+msgstr ""
+
+#: templates/index.html:908
+msgid "parseo e insights"
+msgstr ""
+
+#: templates/index.html:909
+msgid "lectura legal"
+msgstr ""
+
+#: templates/index.html:910
+msgid "despliegue"
+msgstr ""
+
+#: templates/index.html:919
+msgid "Hackathon FIT · Universidad Galileo"
+msgstr ""
+

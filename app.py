@@ -1,8 +1,9 @@
 import os
 from flask import Flask, render_template, session, g, request
-from flask_babel import Babel, gettext
+from flask_babel import Babel, gettext, get_translations
 from config import Config
 from extensions import db, migrate, login_manager, csrf, babel
+from i18n import NON_CLDR_LANGUAGES, get_stdlib_translations
 from routes.auth import auth_bp
 from routes.expenses import expenses_bp
 from routes.dashboard import dashboard_bp
@@ -17,8 +18,9 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Babel locale selector
-    def get_locale():
+    # The language the user actually selected (session/user preference),
+    # regardless of whether Babel's Locale.parse() can understand it.
+    def get_selected_language():
         # First check if user has set language preference in session
         if 'lang' in session:
             return session['lang']
@@ -28,12 +30,46 @@ def create_app():
         # Fall back to default
         return app.config['BABEL_DEFAULT_LOCALE']
 
+    # Babel locale selector. Kaqchikel ('cak') and Q'eqchi' ('qeq') are not
+    # valid CLDR locale codes, so babel.Locale.parse() would raise for
+    # them; fall back to the default locale for Babel's own purposes and
+    # let install_gettext_callables below handle their translations.
+    def get_locale():
+        lang = get_selected_language()
+        if lang in NON_CLDR_LANGUAGES:
+            return app.config['BABEL_DEFAULT_LOCALE']
+        return lang
+
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
     csrf.init_app(app)
     babel.init_app(app, locale_selector=get_locale)
+
+    # Override the gettext callables used by templates so that non-CLDR
+    # languages (cak, qeq) are translated via stdlib gettext instead of
+    # Flask-Babel's Locale-dependent lookup.
+    def install_gettext_callables():
+        def _gettext(s):
+            lang = get_selected_language()
+            if lang in NON_CLDR_LANGUAGES:
+                return get_stdlib_translations(lang).gettext(s)
+            return get_translations().ugettext(s)
+
+        def _ngettext(s, p, n):
+            lang = get_selected_language()
+            if lang in NON_CLDR_LANGUAGES:
+                return get_stdlib_translations(lang).ngettext(s, p, n)
+            return get_translations().ungettext(s, p, n)
+
+        app.jinja_env.install_gettext_callables(
+            gettext=_gettext,
+            ngettext=_ngettext,
+            newstyle=True,
+        )
+
+    install_gettext_callables()
 
     # Language selector before request
     @app.before_request
@@ -46,7 +82,7 @@ def create_app():
                 if current_user.is_authenticated and hasattr(current_user, 'language'):
                     current_user.language = lang
                     db.session.commit()
-        g.locale = get_locale()
+        g.locale = get_selected_language()
 
     # Create database tables if they don't exist yet (helps for local/dev runs)
     # This uses SQLAlchemy's create_all and runs inside the app context.
@@ -79,7 +115,7 @@ def create_app():
             return dict(
                 csrf_token=generate_csrf,
                 LANGUAGES=app.config['LANGUAGES'],
-                current_locale=get_locale()
+                current_locale=get_selected_language()
             )
     except Exception:
         pass
