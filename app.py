@@ -166,7 +166,12 @@ def create_app(config_object=Config):
         refresh()
         next_url = request.referrer
         if next_url and is_safe_url(next_url):
-            return redirect(next_url)
+            parsed = urlparse(next_url)
+            target = parsed.path
+            if parsed.query:
+                target = f"{target}?{parsed.query}"
+            if target and target.startswith('/') and not target.startswith('//'):
+                return redirect(target)
         return redirect(url_for('index'))
 
     return app
