@@ -75,9 +75,7 @@ def create_app():
             return dict(
                 csrf_token=generate_csrf,
                 LANGUAGES=app.config['LANGUAGES'],
-                current_locale=i18n.get_locale(),
-                _=i18n.gettext,
-                gettext=i18n.gettext
+                current_locale=i18n.get_locale()
             )
     except Exception:
         pass

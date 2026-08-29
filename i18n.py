@@ -45,7 +45,7 @@ def get_locale():
             best = request.accept_languages.best_match(VALID_LANGUAGES)
             if best:
                 return best
-    except (RuntimeError, Exception):
+    except RuntimeError:
         pass
 
     # 5. Default fallback
