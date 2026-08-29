@@ -123,3 +123,15 @@ msgstr "Taxtzapik li sa IA..."
 
 msgid "Enviar"
 msgstr "Taxtaq"
+
+msgid "Bienvenido a NexoAI"
+msgstr "B'aan q'ij rik'in NexoAI"
+
+msgid "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+msgstr "Tatz'ib'aj, taweta'maj ut ta'ana' us li a'aatinob'aal sa' Guatemala (GTQ)."
+
+msgid "Crear cuenta"
+msgstr "Tatz'ib'aj li awi'"
+
+msgid "Donar"
+msgstr "Taya' jun sipanik"
