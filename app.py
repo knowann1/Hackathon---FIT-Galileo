@@ -1,4 +1,5 @@
 import os
+from babel import Locale, UnknownLocaleError
 from flask import Flask, render_template, session, g, request
 from flask_babel import Babel, gettext
 from config import Config
@@ -11,29 +12,43 @@ from routes.receipts import receipts_bp
 from routes.voice import voice_bp
 from marketnexo import marketnexo_bp
 from flask_login import current_user
+import i18n
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Babel locale selector
-    def get_locale():
-        # First check if user has set language preference in session
-        if 'lang' in session:
-            return session['lang']
-        # Check if user is authenticated and has language preference
-        if current_user.is_authenticated and hasattr(current_user, 'language') and current_user.language:
-            return current_user.language
-        # Fall back to default
-        return app.config['BABEL_DEFAULT_LOCALE']
+    # Babel locale selector.
+    #
+    # NOTE: this is used only for Flask-Babel's own needs (date/number
+    # formatting). Some supported languages (Kaqchikel 'cak', Q'eqchi' 'qeq')
+    # are not valid CLDR locale codes, and `babel.Locale.parse` raises
+    # `UnknownLocaleError` for them, which crashes the request. To keep
+    # Flask-Babel working we fall back to the default locale whenever the
+    # selected language isn't a valid CLDR identifier. Actual message
+    # translation for every language (including 'cak'/'qeq') is handled
+    # separately via i18n.py, which reads the real selected language and
+    # uses stdlib gettext directly.
+    def babel_locale_selector():
+        lang = i18n.get_current_language()
+        try:
+            Locale.parse(lang)
+            return lang
+        except UnknownLocaleError:
+            return app.config['BABEL_DEFAULT_LOCALE']
 
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
     csrf.init_app(app)
-    babel.init_app(app, locale_selector=get_locale)
+    babel.init_app(app, locale_selector=babel_locale_selector)
+
+    # Override Flask-Babel's Locale-based gettext/ngettext with our
+    # stdlib-gettext-based implementation so all supported languages,
+    # including non-CLDR ones, are translated correctly.
+    i18n.install_gettext_callables(app)
 
     # Language selector before request
     @app.before_request
@@ -46,7 +61,7 @@ def create_app():
                 if current_user.is_authenticated and hasattr(current_user, 'language'):
                     current_user.language = lang
                     db.session.commit()
-        g.locale = get_locale()
+        g.locale = i18n.get_current_language()
 
     # Create database tables if they don't exist yet (helps for local/dev runs)
     # This uses SQLAlchemy's create_all and runs inside the app context.
@@ -79,7 +94,7 @@ def create_app():
             return dict(
                 csrf_token=generate_csrf,
                 LANGUAGES=app.config['LANGUAGES'],
-                current_locale=get_locale()
+                current_locale=i18n.get_current_language()
             )
     except Exception:
         pass
