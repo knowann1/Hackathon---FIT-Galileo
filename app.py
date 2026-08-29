@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse, urljoin
 from flask import Flask, render_template, request, session, g, redirect, url_for
 from flask_login import current_user
 from flask_babel import refresh
@@ -143,6 +144,13 @@ def create_app(config_object=Config):
         # Renderizar la plantilla index.html como página principal (sin cambiar la URL)
         return render_template('index.html')
 
+    def is_safe_url(target):
+        if not target:
+            return False
+        ref_url = urlparse(request.host_url)
+        test_url = urlparse(urljoin(request.host_url, target))
+        return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
+
     @app.route("/set-language/<lang>")
     def set_language(lang):
         if lang in app.config.get('LANGUAGES', {}):
@@ -156,8 +164,10 @@ def create_app(config_object=Config):
         else:
             session['lang'] = app.config.get('BABEL_DEFAULT_LOCALE', 'es')
         refresh()
-        next_url = request.referrer or url_for('index')
-        return redirect(next_url)
+        next_url = request.referrer
+        if next_url and is_safe_url(next_url):
+            return redirect(next_url)
+        return redirect(url_for('index'))
 
     return app
 
