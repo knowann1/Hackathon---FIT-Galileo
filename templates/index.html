@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
   <div class="d-flex flex-column justify-content-center align-items-center text-center" style="min-height: 80vh;">
-    <h1>Bienvenido a NexoAI</h1>
-    <p>Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ).</p>
+    <h1>{{ _('Bienvenido a NexoAI') }}</h1>
+    <p>{{ _('Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ).') }}</p>
 
     <div>
-        <a href="/register" class="btn btn-primary">Crear cuenta</a>
-        <a href="/login" class="btn btn-outline-primary">Iniciar sesión</a>
+        <a href="/register" class="btn btn-primary">{{ _('Crear cuenta') }}</a>
+        <a href="/login" class="btn btn-outline-primary">{{ _('Iniciar sesión') }}</a>
     </div>
 </div>
 <head>
@@ -696,19 +696,19 @@
 <nav>
   <div class="nav-inner">
     <div class="nav-mark"><span class="dot"></span>NexoAI</div>
-    <div class="nav-tag">FIT Galileo · Hackathon</div>
+    <div class="nav-tag">FIT Galileo · {{ _('Hackathon') }}</div>
   </div>
 </nav>
 
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow">Asistente financiero conversacional · Guatemala</div>
-    <h1>Le hablás como a un <em>cuate</em>.<br>Te responde como un asesor.</h1>
-    <p class="hero-sub">NexoAI convierte un mensaje de texto suelto —<strong> "gasté 50 en Walmart con tarjeta" </strong>— en un registro financiero estructurado, y ese registro en consejos concretos sobre tus ingresos, tus gastos y tu capacidad de ahorro.</p>
+    <div class="eyebrow">{{ _('Asistente financiero conversacional') }} · Guatemala</div>
+    <h1>{{ _('Le hablás como a un') }} <em>{{ _('cuate') }}</em>.<br>{{ _('Te responde como un asesor.') }}</h1>
+    <p class="hero-sub">{{ _('NexoAI convierte un mensaje de texto suelto') }} —<strong> "{{ _('gasté 50 en Walmart con tarjeta') }}" </strong>— {{ _('en un registro financiero estructurado, y ese registro en consejos concretos sobre tus ingresos, tus gastos y tu capacidad de ahorro.') }}</p>
 
     <div class="thread">
       <div class="thread-card msg">
-        <div class="thread-label"><span class="pip"></span>mensaje del usuario</div>
+        <div class="thread-label"><span class="pip"></span>{{ _('mensaje del usuario') }}</div>
         <div class="msg-text" id="typedMsg"><span class="cursor"></span></div>
       </div>
       <div class="thread-arrow">
@@ -726,28 +726,28 @@
   <div class="wrap">
     <div class="problem-grid">
       <div class="problem-lede reveal">
-        Nadie lleva un presupuesto <span class="strike">en una hoja de cálculo</span>. La gente lleva sus finanzas en la cabeza, y las anota — si acaso — en una nota de texto, entre WhatsApp y la fila del súper.
+        {{ _('Nadie lleva un presupuesto') }} <span class="strike">{{ _('en una hoja de cálculo') }}</span>. {{ _('La gente lleva sus finanzas en la cabeza, y las anota — si acaso — en una nota de texto, entre WhatsApp y la fila del súper.') }}
       </div>
       <div class="problem-list">
         <div class="problem-item reveal">
           <div class="problem-num">01</div>
           <div>
-            <h3>Registrar gastos es fricción</h3>
-            <p>Abrir una app, elegir categoría, tipear el monto — para un gasto de Q15 nadie lo hace dos veces.</p>
+            <h3>{{ _('Registrar gastos es fricción') }}</h3>
+            <p>{{ _('Abrir una app, elegir categoría, tipear el monto — para un gasto de Q15 nadie lo hace dos veces.') }}</p>
           </div>
         </div>
         <div class="problem-item reveal">
           <div class="problem-num">02</div>
           <div>
-            <h3>Los datos sin contexto no enseñan nada</h3>
-            <p>Un dashboard con barras de colores no te dice si estás gastando más de lo que ganás, ni por qué.</p>
+            <h3>{{ _('Los datos sin contexto no enseñan nada') }}</h3>
+            <p>{{ _('Un dashboard con barras de colores no te dice si estás gastando más de lo que ganás, ni por qué.') }}</p>
           </div>
         </div>
         <div class="problem-item reveal">
           <div class="problem-num">03</div>
           <div>
-            <h3>Formalizarse da miedo por desconocimiento</h3>
-            <p>Emprender en Guatemala implica trámites legales y laborales que casi nadie consulta hasta que ya es tarde.</p>
+            <h3>{{ _('Formalizarse da miedo por desconocimiento') }}</h3>
+            <p>{{ _('Emprender en Guatemala implica trámites legales y laborales que casi nadie consulta hasta que ya es tarde.') }}</p>
           </div>
         </div>
       </div>
@@ -758,9 +758,9 @@
 <section id="capacidades">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="section-kicker">Lo que hace</div>
-      <h2>Cuatro funciones, un mismo cerebro conversacional</h2>
-      <p>No son módulos separados: todas comparten el mismo contexto financiero del usuario, calculado en vivo desde PostgreSQL en cada pregunta.</p>
+      <div class="section-kicker">{{ _('Lo que hace') }}</div>
+      <h2>{{ _('Cuatro funciones, un mismo cerebro conversacional') }}</h2>
+      <p>{{ _('No son módulos separados: todas comparten el mismo contexto financiero del usuario, calculado en vivo desde PostgreSQL en cada pregunta.') }}</p>
     </div>
 
     <div class="cap-grid reveal">
@@ -771,11 +771,11 @@
           </div>
           <div class="cap-fn">parse_expense_text()</div>
         </div>
-        <h3>Texto libre a dato estructurado</h3>
-        <p>Escribís el gasto como se lo contarías a alguien. El sistema extrae monto, comercio, categoría, método de pago y fecha — con un modelo de lenguaje, y un parseo por reglas como respaldo si la IA no responde.</p>
+        <h3>{{ _('Texto libre a dato estructurado') }}</h3>
+        <p>{{ _('Escribís el gasto como se lo contarías a alguien. El sistema extrae monto, comercio, categoría, método de pago y fecha — con un modelo de lenguaje, y un parseo por reglas como respaldo si la IA no responde.') }}</p>
         <div class="cap-tags">
-          <span class="cap-tag">español natural</span>
-          <span class="cap-tag">fallback por reglas</span>
+          <span class="cap-tag">{{ _('español natural') }}</span>
+          <span class="cap-tag">{{ _('fallback por reglas') }}</span>
         </div>
       </div>
 
@@ -786,11 +786,11 @@
           </div>
           <div class="cap-fn">analyze_finances_with_ai()</div>
         </div>
-        <h3>Insights financieros automáticos</h3>
-        <p>Calcula ratio de ahorro, gasto promedio versus gasto más grande, concentración por comercio, cambios mes contra mes — y prioriza qué merece tu atención primero.</p>
+        <h3>{{ _('Insights financieros automáticos') }}</h3>
+        <p>{{ _('Calcula ratio de ahorro, gasto promedio versus gasto más grande, concentración por comercio, cambios mes contra mes — y prioriza qué merece tu atención primero.') }}</p>
         <div class="cap-tags">
-          <span class="cap-tag">balance real</span>
-          <span class="cap-tag">alertas con datos</span>
+          <span class="cap-tag">{{ _('balance real') }}</span>
+          <span class="cap-tag">{{ _('alertas con datos') }}</span>
         </div>
       </div>
 
@@ -801,11 +801,11 @@
           </div>
           <div class="cap-fn">ask_financial_ai()</div>
         </div>
-        <h3>Chat con memoria de tu contexto</h3>
-        <p>Preguntale directamente: "¿cuánto gasté en comida el mes pasado?", "¿me alcanza para ahorrar?". Responde solo con tus transacciones reales, nunca inventa cifras.</p>
+        <h3>{{ _('Chat con memoria de tu contexto') }}</h3>
+        <p>{{ _('Preguntale directamente: "¿cuánto gasté en comida el mes pasado?", "¿me alcanza para ahorrar?". Responde solo con tus transacciones reales, nunca inventa cifras.') }}</p>
         <div class="cap-tags">
-          <span class="cap-tag">historial de conversación</span>
-          <span class="cap-tag">GTQ nativo</span>
+          <span class="cap-tag">{{ _('historial de conversación') }}</span>
+          <span class="cap-tag">{{ _('GTQ nativo') }}</span>
         </div>
       </div>
 
@@ -816,11 +816,11 @@
           </div>
           <div class="cap-fn">search_legal_docs()</div>
         </div>
-        <h3>Consulta legal y laboral guatemalteca</h3>
-        <p>Cuando la pregunta lo amerita, busca en guías de formalización de empresas y contratación laboral, y responde citando la fuente — sin forzar el tema si no aplica.</p>
+        <h3>{{ _('Consulta legal y laboral guatemalteca') }}</h3>
+        <p>{{ _('Cuando la pregunta lo amerita, busca en guías de formalización de empresas y contratación laboral, y responde citando la fuente — sin forzar el tema si no aplica.') }}</p>
         <div class="cap-tags">
-          <span class="cap-tag">búsqueda por palabras clave</span>
-          <span class="cap-tag">citas por documento</span>
+          <span class="cap-tag">{{ _('búsqueda por palabras clave') }}</span>
+          <span class="cap-tag">{{ _('citas por documento') }}</span>
         </div>
       </div>
     </div>
@@ -830,9 +830,9 @@
 <section id="flujo">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="section-kicker">Cómo funciona</div>
-      <h2>De un mensaje suelto a una recomendación con base</h2>
-      <p>El mismo camino, sin importar si la pregunta es sobre un gasto puntual o sobre tu situación financiera completa.</p>
+      <div class="section-kicker">{{ _('Cómo funciona') }}</div>
+      <h2>{{ _('De un mensaje suelto a una recomendación con base') }}</h2>
+      <p>{{ _('El mismo camino, sin importar si la pregunta es sobre un gasto puntual o sobre tu situación financiera completa.') }}</p>
     </div>
 
     <div class="flow reveal">
@@ -840,34 +840,34 @@
 
       <div class="flow-step">
         <div class="flow-marker">01</div>
-        <h3>El usuario escribe, en su idioma</h3>
-        <p>Sin formularios ni menús. "Pagué la luz, Q180, transferencia" es una entrada válida.</p>
+        <h3>{{ _('El usuario escribe, en su idioma') }}</h3>
+        <p>{{ _('Sin formularios ni menús. "Pagué la luz, Q180, transferencia" es una entrada válida.') }}</p>
       </div>
 
       <div class="flow-step">
         <div class="flow-marker">02</div>
-        <h3>Se extraen los datos con IA, con respaldo por reglas</h3>
-        <p>Un modelo de lenguaje interpreta el texto y devuelve JSON. Si no hay conexión al modelo, un parseo por palabras clave garantiza que igual se guarde algo útil.</p>
+        <h3>{{ _('Se extraen los datos con IA, con respaldo por reglas') }}</h3>
+        <p>{{ _('Un modelo de lenguaje interpreta el texto y devuelve JSON. Si no hay conexión al modelo, un parseo por palabras clave garantiza que igual se guarde algo útil.') }}</p>
         <span class="flow-code">proposal_source: "openai" | "fallback"</span>
       </div>
 
       <div class="flow-step">
         <div class="flow-marker">03</div>
-        <h3>Se reconstruye el contexto financiero completo</h3>
-        <p>Cada pregunta recalcula, desde la base de datos real, totales, promedios, categorías top, comparación con el mes anterior — nunca datos de caché ni inventados.</p>
+        <h3>{{ _('Se reconstruye el contexto financiero completo') }}</h3>
+        <p>{{ _('Cada pregunta recalcula, desde la base de datos real, totales, promedios, categorías top, comparación con el mes anterior — nunca datos de caché ni inventados.') }}</p>
         <span class="flow-code">get_user_financial_context(user_id)</span>
       </div>
 
       <div class="flow-step">
         <div class="flow-marker">04</div>
-        <h3>Si la pregunta toca temas legales, se buscan los documentos</h3>
-        <p>La búsqueda por palabras clave decide en silencio si hay contenido legal relevante. Si no lo hay, el prompt ni se entera de que esos documentos existen.</p>
+        <h3>{{ _('Si la pregunta toca temas legales, se buscan los documentos') }}</h3>
+        <p>{{ _('La búsqueda por palabras clave decide en silencio si hay contenido legal relevante. Si no lo hay, el prompt ni se entera de que esos documentos existen.') }}</p>
       </div>
 
       <div class="flow-step">
         <div class="flow-marker">05</div>
-        <h3>NexoAI responde con lo que realmente sabe</h3>
-        <p>Cálculos explicados, recomendaciones sin juicio, y honestidad cuando hay pocos datos para sacar conclusiones firmes.</p>
+        <h3>{{ _('NexoAI responde con lo que realmente sabe') }}</h3>
+        <p>{{ _('Cálculos explicados, recomendaciones sin juicio, y honestidad cuando hay pocos datos para sacar conclusiones firmes.') }}</p>
       </div>
     </div>
   </div>
@@ -876,20 +876,20 @@
 <section id="ejemplo">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="section-kicker">En la práctica</div>
-      <h2>Así se ve un insight real</h2>
-      <p>No es una frase genérica de "gastás mucho en comida". Cada recomendación cita el número exacto que la sostiene.</p>
+      <div class="section-kicker">{{ _('En la práctica') }}</div>
+      <h2>{{ _('Así se ve un insight real') }}</h2>
+      <p>{{ _('No es una frase genérica de "gastás mucho en comida". Cada recomendación cita el número exacto que la sostiene.') }}</p>
     </div>
 
     <div class="insight-demo reveal">
       <div class="insight-demo-head">
         <span class="insight-badge">saving</span>
-        <span>prioridad 1</span>
+        <span>{{ _('prioridad 1') }}</span>
       </div>
-      <h4>Tu capacidad de ahorro está subutilizada</h4>
-      <p>Tus ingresos del mes fueron Q4,200 y tus gastos Q2,950 — un ratio de ahorro de 29.8%, muy por encima de lo que refleja tu balance guardado hasta ahora.</p>
-      <p>El 62% de ese gasto se concentra en un solo comercio, lo que sugiere que una compra recurrente podría planificarse con anticipación en vez de registrarse como gasto variable.</p>
-      <div class="rec"><strong>Sugerencia →</strong> Con ese margen mensual, apartar Q800 fijos cubriría un fondo de emergencia de tres meses en menos de un año.</div>
+      <h4>{{ _('Tu capacidad de ahorro está subutilizada') }}</h4>
+      <p>{{ _('Tus ingresos del mes fueron Q4,200 y tus gastos Q2,950 — un ratio de ahorro de 29.8%, muy por encima de lo que refleja tu balance guardado hasta ahora.') }}</p>
+      <p>{{ _('El 62% de ese gasto se concentra en un solo comercio, lo que sugiere que una compra recurrente podría planificarse con anticipación en vez de registrarse como gasto variable.') }}</p>
+      <div class="rec"><strong>{{ _('Sugerencia →') }}</strong> {{ _('Con ese margen mensual, apartar Q800 fijos cubriría un fondo de emergencia de tres meses en menos de un año.') }}</div>
     </div>
   </div>
 </section>
@@ -897,17 +897,17 @@
 <section id="stack">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="section-kicker">Debajo del capó</div>
-      <h2>Construido para funcionar, no solo para la demo</h2>
+      <div class="section-kicker">{{ _('Debajo del capó') }}</div>
+      <h2>{{ _('Construido para funcionar, no solo para la demo') }}</h2>
     </div>
 
     <div class="stack-row reveal">
-      <div class="stack-chip">Flask <span class="stack-role">· backend</span></div>
-      <div class="stack-chip">PostgreSQL <span class="stack-role">· datos reales</span></div>
+      <div class="stack-chip">Flask <span class="stack-role">· {{ _('backend') }}</span></div>
+      <div class="stack-chip">PostgreSQL <span class="stack-role">· {{ _('datos reales') }}</span></div>
       <div class="stack-chip">SQLAlchemy <span class="stack-role">· ORM</span></div>
-      <div class="stack-chip">OpenAI <span class="stack-role">· parseo e insights</span></div>
-      <div class="stack-chip">pypdf <span class="stack-role">· lectura legal</span></div>
-      <div class="stack-chip">Render <span class="stack-role">· despliegue</span></div>
+      <div class="stack-chip">OpenAI <span class="stack-role">· {{ _('parseo e insights') }}</span></div>
+      <div class="stack-chip">pypdf <span class="stack-role">· {{ _('lectura legal') }}</span></div>
+      <div class="stack-chip">Render <span class="stack-role">· {{ _('despliegue') }}</span></div>
     </div>
   </div>
 </section>
@@ -926,14 +926,14 @@
   var typedMsg = document.getElementById('typedMsg');
   var jsonOut = document.getElementById('jsonOut');
 
-  var sampleMessage = 'gasté 50 en Walmart con tarjeta';
+  var sampleMessage = {{ _('gasté 50 en Walmart con tarjeta')|tojson }};
 
   var sampleFields = [
     { k: 'amount', v: '50.00' },
     { k: 'currency', v: '"GTQ"' },
     { k: 'merchant', v: '"Walmart"' },
-    { k: 'category', v: '"Supermercado"' },
-    { k: 'payment_method', v: '"Tarjeta"' },
+    { k: 'category', v: '"' + {{ _('Supermercado')|tojson }} + '"' },
+    { k: 'payment_method', v: '"' + {{ _('Tarjeta')|tojson }} + '"' },
     { k: 'transaction_type', v: '"expense"' }
   ];
 
