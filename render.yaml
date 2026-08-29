@@ -3,7 +3,7 @@ services:
     name: financial-ai-web
     env: python
     plan: free
-    buildCommand: "pip install -r requirements.txt"
+    buildCommand: "pip install -r requirements.txt && pybabel compile -d translations"
     startCommand: "gunicorn app:create_app"
     instanceType: standard
     envVars:

@@ -124,3 +124,69 @@ msgstr "Haz una pregunta a la IA..."
 
 msgid "Enviar"
 msgstr "Enviar"
+
+msgid "Bienvenido a NexoAI"
+msgstr "Bienvenido a NexoAI"
+
+msgid "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+msgstr "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+
+msgid "Crear cuenta"
+msgstr "Crear cuenta"
+
+msgid "Registrar Movimiento"
+msgstr "Registrar Movimiento"
+
+msgid "Métodos de registro"
+msgstr "Métodos de registro"
+
+msgid "Subir foto"
+msgstr "Subir foto"
+
+msgid "Grabar audio"
+msgstr "Grabar audio"
+
+msgid "Escribir manualmente"
+msgstr "Escribir manualmente"
+
+msgid "Moneda"
+msgstr "Moneda"
+
+msgid "Descripción"
+msgstr "Descripción"
+
+msgid "Método de pago"
+msgstr "Método de pago"
+
+msgid "Guardar"
+msgstr "Guardar"
+
+msgid "Usuario"
+msgstr "Usuario"
+
+msgid "Correo"
+msgstr "Correo"
+
+msgid "Contraseña"
+msgstr "Contraseña"
+
+msgid "Entrar"
+msgstr "Entrar"
+
+msgid "Completa todos los campos"
+msgstr "Completa todos los campos"
+
+msgid "Usuario o correo ya existe"
+msgstr "Usuario o correo ya existe"
+
+msgid "Registro exitoso. Bienvenido."
+msgstr "Registro exitoso. Bienvenido."
+
+msgid "Has iniciado sesión"
+msgstr "Has iniciado sesión"
+
+msgid "Credenciales inválidas"
+msgstr "Credenciales inválidas"
+
+msgid "Sesión cerrada"
+msgstr "Sesión cerrada"
