@@ -1,6 +1,6 @@
 import os
-from flask import Flask, render_template, session, g, request
-from flask_babel import Babel, gettext
+from flask import Flask, render_template, session, g, request, redirect, jsonify
+from flask_babel import Babel
 from config import Config
 from extensions import db, migrate, login_manager, csrf, babel
 from routes.auth import auth_bp
@@ -11,42 +11,64 @@ from routes.receipts import receipts_bp
 from routes.voice import voice_bp
 from marketnexo import marketnexo_bp
 from flask_login import current_user
+from i18n import (
+    normalize_language_code,
+    get_current_locale,
+    custom_gettext,
+    custom_ngettext,
+    get_all_translations
+)
 
 
-def create_app():
+def create_app(config_class=None):
     app = Flask(__name__)
     app.config.from_object(Config)
+    if config_class:
+        if isinstance(config_class, dict):
+            app.config.update(config_class)
+        else:
+            app.config.from_object(config_class)
 
-    # Babel locale selector
-    def get_locale():
-        # First check if user has set language preference in session
-        if 'lang' in session:
-            return session['lang']
-        # Check if user is authenticated and has language preference
-        if current_user.is_authenticated and hasattr(current_user, 'language') and current_user.language:
-            return current_user.language
-        # Fall back to default
-        return app.config['BABEL_DEFAULT_LOCALE']
+    # Babel locale selector - fallback to safe CLDR locale ('es') to avoid UnknownLocaleError
+    def babel_locale_selector():
+        loc = get_current_locale()
+        if loc in ('es', 'qu'):
+            return loc
+        return app.config.get('BABEL_DEFAULT_LOCALE', 'es')
 
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
     csrf.init_app(app)
-    babel.init_app(app, locale_selector=get_locale)
+    babel.init_app(app, locale_selector=babel_locale_selector)
+
+    # Install gettext callables into Jinja environment
+    app.jinja_env.globals.update(
+        _=custom_gettext,
+        gettext=custom_gettext,
+        ngettext=custom_ngettext
+    )
 
     # Language selector before request
     @app.before_request
     def before_request():
         if 'lang' in request.args:
-            lang = request.args.get('lang')
+            raw_lang = request.args.get('lang')
+            lang = normalize_language_code(raw_lang)
             if lang in app.config['LANGUAGES']:
                 session['lang'] = lang
+                session.modified = True
                 # Update user's language preference if authenticated
                 if current_user.is_authenticated and hasattr(current_user, 'language'):
                     current_user.language = lang
-                    db.session.commit()
-        g.locale = get_locale()
+                    try:
+                        db.session.commit()
+                    except Exception:
+                        db.session.rollback()
+        curr = get_current_locale()
+        g._current_app_locale = curr
+        g.locale = curr
 
     # Create database tables if they don't exist yet (helps for local/dev runs)
     # This uses SQLAlchemy's create_all and runs inside the app context.
@@ -70,16 +92,23 @@ def create_app():
         except Exception:
             return None
 
-    # Provide CSRF token helper to templates
+    # Provide CSRF token and i18n helpers to templates
     try:
         from flask_wtf.csrf import generate_csrf
 
         @app.context_processor
-        def inject_csrf_token():
+        def inject_template_globals():
+            current_lang = get_current_locale()
             return dict(
                 csrf_token=generate_csrf,
                 LANGUAGES=app.config['LANGUAGES'],
-                current_locale=get_locale()
+                supported_languages=app.config['LANGUAGES'],
+                current_locale=current_lang,
+                current_language_name=app.config['LANGUAGES'].get(current_lang, 'Español'),
+                _=custom_gettext,
+                gettext=custom_gettext,
+                ngettext=custom_ngettext,
+                all_translations=get_all_translations()
             )
     except Exception:
         pass
@@ -92,6 +121,35 @@ def create_app():
     app.register_blueprint(receipts_bp, url_prefix="/receipts")
     app.register_blueprint(voice_bp, url_prefix="/voice")
     app.register_blueprint(marketnexo_bp, url_prefix="/marketnexo")
+
+    @app.route("/set-language/<lang>")
+    @app.route("/set_language/<lang>")
+    def set_language(lang):
+        norm_lang = normalize_language_code(lang)
+        if norm_lang in app.config['LANGUAGES']:
+            session['lang'] = norm_lang
+            session.modified = True
+            if current_user.is_authenticated and hasattr(current_user, 'language'):
+                current_user.language = norm_lang
+                try:
+                    db.session.commit()
+                except Exception:
+                    db.session.rollback()
+        next_url = request.args.get('next') or request.referrer or '/'
+        return redirect(next_url)
+
+    @app.route("/api/translations")
+    def api_translations():
+        all_trans = get_all_translations()
+        requested_lang = request.args.get('lang')
+        if requested_lang:
+            norm = normalize_language_code(requested_lang)
+            return jsonify({
+                'lang': norm,
+                'translations': all_trans.get(norm, {}),
+                'all': all_trans
+            })
+        return jsonify(all_trans)
 
     @app.route("/")
     def index():

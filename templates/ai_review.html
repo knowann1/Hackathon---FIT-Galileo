@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<h3>Información detectada por IA</h3>
+<h3>{{ _('Información detectada por IA') }}</h3>
 {% if proposal %}
   <pre>{{ proposal | tojson(indent=2) }}</pre>
   <form method="post" action="{{ url_for('ai.confirm_expense') }}">
@@ -13,11 +13,11 @@
     <input type="hidden" name="expense_date" value="{{ proposal.expense_date or proposal.get('expense_date','') }}">
     <input type="hidden" name="ai_confidence" value="{{ proposal.ai_confidence or proposal.get('confidence','') }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <button class="btn btn-success">Confirmar</button>
-    <a class="btn btn-secondary" href="/expenses/new">Editar</a>
-    <a class="btn btn-link" href="/dashboard">Cancelar</a>
+    <button class="btn btn-success">{{ _('Confirmar') }}</button>
+    <a class="btn btn-secondary" href="/expenses/new">{{ _('Editar') }}</a>
+    <a class="btn btn-link" href="/dashboard">{{ _('Cancelar') }}</a>
   </form>
 {% else %}
-  <p>No se detectó propuesta.</p>
+  <p>{{ _('No se detectó propuesta.') }}</p>
 {% endif %}
 {% endblock %}

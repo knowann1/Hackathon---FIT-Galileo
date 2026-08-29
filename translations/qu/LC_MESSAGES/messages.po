@@ -1,4 +1,4 @@
-# K'iche' translations for NexoAI.
+# qu translations for NexoAI.
 # Copyright (C) 2024 NexoAI
 #
 msgid ""
@@ -9,7 +9,7 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: qu\n"
-"Language-Team: K'iche'\n"
+"Language-Team: qu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -94,6 +94,9 @@ msgstr "Ruwäch"
 msgid "Monto (Q)"
 msgstr "Kiwäch (Q)"
 
+msgid "Monto"
+msgstr "Kiwäch"
+
 msgid "Categoría"
 msgstr "Ch'ab'al"
 
@@ -105,6 +108,9 @@ msgstr "Q'ijul"
 
 msgid "Eliminar"
 msgstr "Tik'apij"
+
+msgid "Eliminar?"
+msgstr "¿Tik'apij?"
 
 msgid "Egreso"
 msgstr "Kach'apem"
@@ -123,3 +129,147 @@ msgstr "Tatz'apik samaj chi ri IA..."
 
 msgid "Enviar"
 msgstr "Tataq"
+
+msgid "NexoAI analizará tus ingresos, gastos, categorías, historial, presupuestos y patrones financieros."
+msgstr "NexoAI kretamaj ri siwan, kach'apem, ch'ab'al, wujil, cholb'äl chuqa' rub'eyal apwaq."
+
+msgid "Consejo personalizado"
+msgstr "Pixab' chi awech"
+
+msgid "Presiona \"Analizar mis finanzas\" para que NexoAI estudie tus datos."
+msgstr "Tapitz'o' \"Tik'elixin ri nu kach'apem\" rech ri NexoAI kretamaj ri awujil."
+
+msgid "No hay gastos registrados para mostrar."
+msgstr "Man k'o ta kach'apem tz'ib'am rech kk'utik."
+
+msgid "Analizando tus finanzas..."
+msgstr "Tajin kretamaxik ri apwaq..."
+
+msgid "Analizando..."
+msgstr "Tajin kretamaxik..."
+
+msgid "Estoy revisando tus ingresos, gastos, categorías y patrones financieros."
+msgstr "Tajin nitz'ët ri siwan, kach'apem, ch'ab'al chuqa' rub'eyal apwaq."
+
+msgid "Análisis completado"
+msgstr "K'isom kretamaxik"
+
+msgid "NexoAI no encontró suficientes recomendaciones con los datos financieros disponibles."
+msgstr "NexoAI man xuriq taj k'i pixab' ruk' ri awujil k'o k'ate'."
+
+msgid "Recomendación financiera"
+msgstr "Pixab' rech pwaq"
+
+msgid "No se pudo realizar el análisis"
+msgstr "Man xkwin ta ub'anik ri kretamaxik"
+
+msgid "Ocurrió un error inesperado."
+msgstr "Xk'ulmataj jun sachoj man oyob'em taj."
+
+msgid "Bienvenido a NexoAI"
+msgstr "Ütz ipetik pa NexoAI"
+
+msgid "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+msgstr "Tatz'ib'aj, ch'obo chuqa' tawutzirisaj ri apwaq pa Iximulew (GTQ)."
+
+msgid "Crear cuenta"
+msgstr "Ub'anik b'i'aj"
+
+msgid "Usuario"
+msgstr "Kojol rech"
+
+msgid "Correo"
+msgstr "Taqowuj"
+
+msgid "Contraseña"
+msgstr "Ewatzij"
+
+msgid "Entrar"
+msgstr "Tak'ula'"
+
+msgid "Guardar"
+msgstr "Tak'olo'"
+
+msgid "Descripción"
+msgstr "Ub'ixik"
+
+msgid "Moneda"
+msgstr "Pwaq"
+
+msgid "Método de pago"
+msgstr "Rub'eyal tojb'äl"
+
+msgid "Registrar Movimiento"
+msgstr "Titz'ib'äx Tiquin"
+
+msgid "Métodos de registro"
+msgstr "Rub'eyal tz'ib'anem"
+
+msgid "Subir foto"
+msgstr "Takub'än wachb'äl"
+
+msgid "Grabar audio"
+msgstr "Tiyak q'ojom"
+
+msgid "Escribir manualmente"
+msgstr "Titz'ib'äx pa q'ab'aj"
+
+msgid "Hola. Puedes preguntarme sobre tus gastos, presupuesto y metas de ahorro."
+msgstr "Jas taq. Kaxkwin kattz'onoj chwe chi rij ri akach'apem, cholb'äl chuqa' meb'il."
+
+msgid "Publicar producto"
+msgstr "Uk'utik k'ayij"
+
+msgid "Descubre lo que venden y ofrecen otros usuarios."
+msgstr "Tariqo ri kkik'ayij chuqa' kkisipej nik'aj chik winaq."
+
+msgid "Publicaciones de la comunidad"
+msgstr "Tzijol rech ri tinamit"
+
+msgid "Publicado por:"
+msgstr "Tzijom ruma:"
+
+msgid "Contacto:"
+msgstr "Ch'ab'exik:"
+
+msgid "Redes:"
+msgstr "K'amab'ey:"
+
+msgid "Aún no hay publicaciones. ¡Sé el primero en publicar!"
+msgstr "Maja' k'o tzijol. ¡Chatok nab'e rech kattzijonik!"
+
+msgid "Publicar en MarketNexo"
+msgstr "Uk'utik pa MarketNexo"
+
+msgid "Comparte tu producto o servicio con todos los usuarios."
+msgstr "Takomonij ri ak'ayij o ri asamaj kuk' konojel ri winaq."
+
+msgid "¿Qué vendes? *"
+msgstr "¿Jas kak'ayij? *"
+
+msgid "Descripción *"
+msgstr "Ub'ixik *"
+
+msgid "Correo de contacto *"
+msgstr "Taqowuj rech ch'ab'exik *"
+
+msgid "Teléfono"
+msgstr "Oyonib'äl"
+
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+msgid "Redes sociales"
+msgstr "Komon k'amab'ey"
+
+msgid "Publicar"
+msgstr "Tatzijoj"
+
+msgid "Confirmar"
+msgstr "Tijikib'ax"
+
+msgid "Editar"
+msgstr "Tijalik"
+
+msgid "Cancelar"
+msgstr "Tichupik"
