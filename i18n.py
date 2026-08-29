@@ -99,8 +99,15 @@ gettext = custom_gettext
 ngettext = custom_ngettext
 
 
+_all_translations_cache = None
+
+
 def get_all_translations():
-    """Return all translations as a dictionary of key-value pairs per language."""
+    """Return all translations as a dictionary of key-value pairs per language (cached in memory)."""
+    global _all_translations_cache
+    if _all_translations_cache is not None:
+        return _all_translations_cache
+
     all_trans = {}
     languages = ['es', 'qu', 'cak', 'qeq']
     
@@ -120,7 +127,7 @@ def get_all_translations():
             with open(po_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             import re
-            entries = re.findall(r'msgid\s+"(.*)"\nmsgstr\s+"(.*)"', content)
+            entries = re.findall(r'msgid\s+"(.+?)"\s+msgstr\s+"(.*?)"', content, re.DOTALL)
             for msgid, msgstr in entries:
                 if msgid:
                     # Unescape standard gettext escapes
@@ -134,4 +141,5 @@ def get_all_translations():
         elif lang == 'qeq':
             all_trans['qeqchi'] = all_trans[lang]
 
-    return all_trans
+    _all_translations_cache = all_trans
+    return _all_translations_cache

@@ -15,7 +15,7 @@
       <td>{{ e.merchant }}</td>
       <td>{{ e.expense_date }}</td>
       <td>
-        <form method="post" action="/expenses/{{ e.id }}/delete" onsubmit="return confirm('{{ _('¿Eliminar?') }}');">
+        <form method="post" action="/expenses/{{ e.id }}/delete" onsubmit='return confirm("{{ _("Eliminar?")|replace("\"", "\\\"") }}");'>
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button class="btn btn-sm btn-danger">{{ _('Eliminar') }}</button>
         </form>

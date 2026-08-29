@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlsplit
 from flask import Flask, render_template, session, g, request, redirect, jsonify
 from flask_babel import Babel
 from config import Config
@@ -18,6 +19,16 @@ from i18n import (
     custom_ngettext,
     get_all_translations
 )
+
+
+def is_safe_url(target):
+    """Validate that the redirect target is an internal relative URL to prevent open redirects."""
+    if not target or not isinstance(target, str):
+        return False
+    parts = urlsplit(target)
+    if parts.scheme or parts.netloc:
+        return False
+    return target.startswith('/') and not target.startswith('//')
 
 
 def create_app(config_class=None):
@@ -135,8 +146,10 @@ def create_app(config_class=None):
                     db.session.commit()
                 except Exception:
                     db.session.rollback()
-        next_url = request.args.get('next') or request.referrer or '/'
-        return redirect(next_url)
+        target = request.args.get('next')
+        if not target or not is_safe_url(target):
+            target = request.referrer if request.referrer and is_safe_url(request.referrer) else '/'
+        return redirect(target)
 
     @app.route("/api/translations")
     def api_translations():

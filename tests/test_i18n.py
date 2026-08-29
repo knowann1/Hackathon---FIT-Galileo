@@ -104,3 +104,18 @@ def test_language_persistence_across_requests(auth_client):
     assert response.status_code == 200
     html = response.get_data(as_text=True)
     assert "Kichoq&#39;om" in html or "Kichoq'om" in html or "Tiquin" in html
+
+def test_set_language_redirect_safety(client):
+    # Unsafe external redirect should fallback to '/'
+    response = client.get("/set-language/es?next=https://evil.com", follow_redirects=False)
+    assert response.status_code == 302
+    assert response.headers.get("Location") == "/"
+
+    response = client.get("/set-language/es?next=//evil.com", follow_redirects=False)
+    assert response.status_code == 302
+    assert response.headers.get("Location") == "/"
+
+    # Safe internal redirect should be respected
+    response = client.get("/set-language/es?next=/expenses/", follow_redirects=False)
+    assert response.status_code == 302
+    assert response.headers.get("Location") == "/expenses/"
