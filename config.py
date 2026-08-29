@@ -11,7 +11,7 @@ class Config:
 
     # Session
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
-    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'true').lower() in ('true', '1')
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
 
@@ -33,10 +33,12 @@ class Config:
     # Multilingual Support
     LANGUAGES = {
         'es': 'Español',
-        'qu': 'Quechua',
+        'qu': "K'iche'",
         'cak': 'Kaqchikel',
         'qeq': "Q'eqchi'"
     }
     BABEL_DEFAULT_LOCALE = 'es'
     BABEL_DEFAULT_TIMEZONE = 'America/Guatemala'
     BABEL_TRANSLATION_DIRECTORIES = 'translations'
+
+LANGUAGES = Config.LANGUAGES

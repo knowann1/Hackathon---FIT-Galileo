@@ -1,6 +1,5 @@
-# Spanish translations for NexoAI.
+# es translations for NexoAI.
 # Copyright (C) 2024 NexoAI
-# This file is distributed under the same license as the NexoAI project.
 #
 msgid ""
 msgstr ""
@@ -10,7 +9,7 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
-"Language-Team: Spanish\n"
+"Language-Team: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -95,6 +94,9 @@ msgstr "Tipo"
 msgid "Monto (Q)"
 msgstr "Monto (Q)"
 
+msgid "Monto"
+msgstr "Monto"
+
 msgid "Categoría"
 msgstr "Categoría"
 
@@ -106,6 +108,9 @@ msgstr "Fecha"
 
 msgid "Eliminar"
 msgstr "Eliminar"
+
+msgid "Eliminar?"
+msgstr "¿Eliminar?"
 
 msgid "Egreso"
 msgstr "Egreso"
@@ -124,3 +129,147 @@ msgstr "Haz una pregunta a la IA..."
 
 msgid "Enviar"
 msgstr "Enviar"
+
+msgid "NexoAI analizará tus ingresos, gastos, categorías, historial, presupuestos y patrones financieros."
+msgstr "NexoAI analizará tus ingresos, gastos, categorías, historial, presupuestos y patrones financieros."
+
+msgid "Consejo personalizado"
+msgstr "Consejo personalizado"
+
+msgid "Presiona \"Analizar mis finanzas\" para que NexoAI estudie tus datos."
+msgstr "Presiona \"Analizar mis finanzas\" para que NexoAI estudie tus datos."
+
+msgid "No hay gastos registrados para mostrar."
+msgstr "No hay gastos registrados para mostrar."
+
+msgid "Analizando tus finanzas..."
+msgstr "Analizando tus finanzas..."
+
+msgid "Analizando..."
+msgstr "Analizando..."
+
+msgid "Estoy revisando tus ingresos, gastos, categorías y patrones financieros."
+msgstr "Estoy revisando tus ingresos, gastos, categorías y patrones financieros."
+
+msgid "Análisis completado"
+msgstr "Análisis completado"
+
+msgid "NexoAI no encontró suficientes recomendaciones con los datos financieros disponibles."
+msgstr "NexoAI no encontró suficientes recomendaciones con los datos financieros disponibles."
+
+msgid "Recomendación financiera"
+msgstr "Recomendación financiera"
+
+msgid "No se pudo realizar el análisis"
+msgstr "No se pudo realizar el análisis"
+
+msgid "Ocurrió un error inesperado."
+msgstr "Ocurrió un error inesperado."
+
+msgid "Bienvenido a NexoAI"
+msgstr "Bienvenido a NexoAI"
+
+msgid "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+msgstr "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+
+msgid "Crear cuenta"
+msgstr "Crear cuenta"
+
+msgid "Usuario"
+msgstr "Usuario"
+
+msgid "Correo"
+msgstr "Correo"
+
+msgid "Contraseña"
+msgstr "Contraseña"
+
+msgid "Entrar"
+msgstr "Entrar"
+
+msgid "Guardar"
+msgstr "Guardar"
+
+msgid "Descripción"
+msgstr "Descripción"
+
+msgid "Moneda"
+msgstr "Moneda"
+
+msgid "Método de pago"
+msgstr "Método de pago"
+
+msgid "Registrar Movimiento"
+msgstr "Registrar Movimiento"
+
+msgid "Métodos de registro"
+msgstr "Métodos de registro"
+
+msgid "Subir foto"
+msgstr "Subir foto"
+
+msgid "Grabar audio"
+msgstr "Grabar audio"
+
+msgid "Escribir manualmente"
+msgstr "Escribir manualmente"
+
+msgid "Hola. Puedes preguntarme sobre tus gastos, presupuesto y metas de ahorro."
+msgstr "Hola. Puedes preguntarme sobre tus gastos, presupuesto y metas de ahorro."
+
+msgid "Publicar producto"
+msgstr "Publicar producto"
+
+msgid "Descubre lo que venden y ofrecen otros usuarios."
+msgstr "Descubre lo que venden y ofrecen otros usuarios."
+
+msgid "Publicaciones de la comunidad"
+msgstr "Publicaciones de la comunidad"
+
+msgid "Publicado por:"
+msgstr "Publicado por:"
+
+msgid "Contacto:"
+msgstr "Contacto:"
+
+msgid "Redes:"
+msgstr "Redes:"
+
+msgid "Aún no hay publicaciones. ¡Sé el primero en publicar!"
+msgstr "Aún no hay publicaciones. ¡Sé el primero en publicar!"
+
+msgid "Publicar en MarketNexo"
+msgstr "Publicar en MarketNexo"
+
+msgid "Comparte tu producto o servicio con todos los usuarios."
+msgstr "Comparte tu producto o servicio con todos los usuarios."
+
+msgid "¿Qué vendes? *"
+msgstr "¿Qué vendes? *"
+
+msgid "Descripción *"
+msgstr "Descripción *"
+
+msgid "Correo de contacto *"
+msgstr "Correo de contacto *"
+
+msgid "Teléfono"
+msgstr "Teléfono"
+
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+msgid "Redes sociales"
+msgstr "Redes sociales"
+
+msgid "Publicar"
+msgstr "Publicar"
+
+msgid "Confirmar"
+msgstr "Confirmar"
+
+msgid "Editar"
+msgstr "Editar"
+
+msgid "Cancelar"
+msgstr "Cancelar"

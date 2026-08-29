@@ -1,6 +1,5 @@
 # Translations template for NexoAI.
 # Copyright (C) 2024 NexoAI
-# This file is distributed under the same license as the NexoAI project.
 #
 msgid ""
 msgstr ""
@@ -85,6 +84,9 @@ msgstr ""
 msgid "Monto (Q)"
 msgstr ""
 
+msgid "Monto"
+msgstr ""
+
 msgid "Categoría"
 msgstr ""
 
@@ -95,6 +97,9 @@ msgid "Fecha"
 msgstr ""
 
 msgid "Eliminar"
+msgstr ""
+
+msgid "Eliminar?"
 msgstr ""
 
 msgid "Egreso"
@@ -113,4 +118,148 @@ msgid "Haz una pregunta a la IA..."
 msgstr ""
 
 msgid "Enviar"
+msgstr ""
+
+msgid "NexoAI analizará tus ingresos, gastos, categorías, historial, presupuestos y patrones financieros."
+msgstr ""
+
+msgid "Consejo personalizado"
+msgstr ""
+
+msgid "Presiona \"Analizar mis finanzas\" para que NexoAI estudie tus datos."
+msgstr ""
+
+msgid "No hay gastos registrados para mostrar."
+msgstr ""
+
+msgid "Analizando tus finanzas..."
+msgstr ""
+
+msgid "Analizando..."
+msgstr ""
+
+msgid "Estoy revisando tus ingresos, gastos, categorías y patrones financieros."
+msgstr ""
+
+msgid "Análisis completado"
+msgstr ""
+
+msgid "NexoAI no encontró suficientes recomendaciones con los datos financieros disponibles."
+msgstr ""
+
+msgid "Recomendación financiera"
+msgstr ""
+
+msgid "No se pudo realizar el análisis"
+msgstr ""
+
+msgid "Ocurrió un error inesperado."
+msgstr ""
+
+msgid "Bienvenido a NexoAI"
+msgstr ""
+
+msgid "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+msgstr ""
+
+msgid "Crear cuenta"
+msgstr ""
+
+msgid "Usuario"
+msgstr ""
+
+msgid "Correo"
+msgstr ""
+
+msgid "Contraseña"
+msgstr ""
+
+msgid "Entrar"
+msgstr ""
+
+msgid "Guardar"
+msgstr ""
+
+msgid "Descripción"
+msgstr ""
+
+msgid "Moneda"
+msgstr ""
+
+msgid "Método de pago"
+msgstr ""
+
+msgid "Registrar Movimiento"
+msgstr ""
+
+msgid "Métodos de registro"
+msgstr ""
+
+msgid "Subir foto"
+msgstr ""
+
+msgid "Grabar audio"
+msgstr ""
+
+msgid "Escribir manualmente"
+msgstr ""
+
+msgid "Hola. Puedes preguntarme sobre tus gastos, presupuesto y metas de ahorro."
+msgstr ""
+
+msgid "Publicar producto"
+msgstr ""
+
+msgid "Descubre lo que venden y ofrecen otros usuarios."
+msgstr ""
+
+msgid "Publicaciones de la comunidad"
+msgstr ""
+
+msgid "Publicado por:"
+msgstr ""
+
+msgid "Contacto:"
+msgstr ""
+
+msgid "Redes:"
+msgstr ""
+
+msgid "Aún no hay publicaciones. ¡Sé el primero en publicar!"
+msgstr ""
+
+msgid "Publicar en MarketNexo"
+msgstr ""
+
+msgid "Comparte tu producto o servicio con todos los usuarios."
+msgstr ""
+
+msgid "¿Qué vendes? *"
+msgstr ""
+
+msgid "Descripción *"
+msgstr ""
+
+msgid "Correo de contacto *"
+msgstr ""
+
+msgid "Teléfono"
+msgstr ""
+
+msgid "WhatsApp"
+msgstr ""
+
+msgid "Redes sociales"
+msgstr ""
+
+msgid "Publicar"
+msgstr ""
+
+msgid "Confirmar"
+msgstr ""
+
+msgid "Editar"
+msgstr ""
+
+msgid "Cancelar"
 msgstr ""

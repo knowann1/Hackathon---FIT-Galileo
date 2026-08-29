@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-<h3>Movimientos</h3>
-<a class="btn btn-primary mb-3" href="/expenses/new">Nuevo movimiento</a>
+<h3>{{ _('Movimientos') }}</h3>
+<a class="btn btn-primary mb-3" href="/expenses/new">{{ _('Nuevo movimiento') }}</a>
 <table class="table table-striped">
   <thead>
-    <tr><th>Tipo</th><th>Monto (Q)</th><th>Categoría</th><th>Comercio</th><th>Fecha</th><th></th></tr>
+    <tr><th>{{ _('Tipo') }}</th><th>{{ _('Monto (Q)') }}</th><th>{{ _('Categoría') }}</th><th>{{ _('Comercio') }}</th><th>{{ _('Fecha') }}</th><th></th></tr>
   </thead>
   <tbody>
     {% for e in expenses %}
     <tr>
-      <td>{% if e.transaction_type == 'income' %}<span class="badge bg-success">Ingreso</span>{% else %}<span class="badge bg-danger">Egreso</span>{% endif %}</td>
+      <td>{% if e.transaction_type == 'income' %}<span class="badge bg-success">{{ _('Ingreso') }}</span>{% else %}<span class="badge bg-danger">{{ _('Egreso') }}</span>{% endif %}</td>
       <td>Q{{ e.amount }}</td>
       <td>{{ e.category }}</td>
       <td>{{ e.merchant }}</td>
       <td>{{ e.expense_date }}</td>
       <td>
-        <form method="post" action="/expenses/{{ e.id }}/delete" onsubmit="return confirm('Eliminar?');">
+        <form method="post" action="/expenses/{{ e.id }}/delete" onsubmit='return confirm("{{ _("Eliminar?")|replace("\"", "\\\"") }}");'>
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-          <button class="btn btn-sm btn-danger">Eliminar</button>
+          <button class="btn btn-sm btn-danger">{{ _('Eliminar') }}</button>
         </form>
       </td>
     </tr>
