@@ -1,5 +1,5 @@
 import os
-from flask import Flask, redirect, url_for
+from flask import Flask, render_template
 from config import Config
 from extensions import db, migrate, login_manager, csrf
 from routes.auth import auth_bp
@@ -64,8 +64,8 @@ def create_app():
 
     @app.route("/")
     def index():
-        # Redirigir a la página estática 'que-es-nexoai.html' en /static
-        return redirect(url_for('static', filename='que-es-nexoai.html'))
+        # Renderizar la plantilla index.html como página principal (sin cambiar la URL)
+        return render_template('index.html')
 
     return app
 
