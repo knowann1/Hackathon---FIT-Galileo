@@ -1,116 +1,223 @@
-# Translations template for NexoAI.
-# Copyright (C) 2024 NexoAI
-# This file is distributed under the same license as the NexoAI project.
+# Translations template for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
 #
+#, fuzzy
 msgid ""
 msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-08-29 02:58+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
 
-msgid "Idioma"
+#: routes/auth.py:17
+msgid "Completa todos los campos"
 msgstr ""
 
+#: routes/auth.py:20
+msgid "Usuario o correo ya existe"
+msgstr ""
+
+#: routes/auth.py:28
+msgid "Registro exitoso. Bienvenido."
+msgstr ""
+
+#: routes/auth.py:41
+msgid "Has iniciado sesión"
+msgstr ""
+
+#: routes/auth.py:43
+msgid "Credenciales inválidas"
+msgstr ""
+
+#: routes/auth.py:52
+msgid "Sesión cerrada"
+msgstr ""
+
+#: templates/base.html:41
 msgid "Panel"
 msgstr ""
 
+#: templates/base.html:44
 msgid "Gastos"
 msgstr ""
 
+#: templates/base.html:48
 msgid "MarketNexo"
 msgstr ""
 
+#: templates/base.html:53
 msgid "Subir factura"
 msgstr ""
 
+#: templates/base.html:58
 msgid "Registrar por voz"
 msgstr ""
 
+#: templates/base.html:63
 msgid "NexoIA"
 msgstr ""
 
+#: templates/base.html:68 templates/base.html:96
 msgid "Qué es NexoAI"
 msgstr ""
 
+#: templates/base.html:74 templates/base.html:102
+msgid "Idioma"
+msgstr ""
+
+#: templates/base.html:90
 msgid "Cerrar sesión"
 msgstr ""
 
+#: templates/base.html:113 templates/login.html:5 templates/login.html:22
 msgid "Registrar"
 msgstr ""
 
+#: templates/base.html:118 templates/index.html:9 templates/login.html:5
 msgid "Iniciar sesión"
 msgstr ""
 
-msgid "Registrar gasto"
-msgstr ""
-
-msgid "Gasto registrado"
-msgstr ""
-
-msgid "Ingreso registrado"
-msgstr ""
-
+#: templates/dashboard.html:5
 msgid "Resumen"
 msgstr ""
 
+#: templates/dashboard.html:17
 msgid "Gastos del mes"
 msgstr ""
 
+#: templates/dashboard.html:26
 msgid "Ingresos del mes"
 msgstr ""
 
+#: templates/dashboard.html:35
 msgid "Balance"
 msgstr ""
 
+#: templates/dashboard.html:44
 msgid "Mes anterior (gastos)"
 msgstr ""
 
+#: templates/dashboard.html:66
 msgid "Gastos por categoría"
 msgstr ""
 
+#: templates/dashboard.html:94
 msgid "Recomendaciones financieras"
 msgstr ""
 
+#: templates/dashboard.html:115 templates/dashboard.html:164
 msgid "Analizar mis finanzas"
 msgstr ""
 
-msgid "Movimientos"
+#: templates/expense_form.html:3
+msgid "Registrar Movimiento"
 msgstr ""
 
-msgid "Nuevo movimiento"
+#: templates/expense_form.html:7
+msgid "Métodos de registro"
 msgstr ""
 
+#: templates/expense_form.html:9
+msgid "Subir foto"
+msgstr ""
+
+#: templates/expense_form.html:10
+msgid "Grabar audio"
+msgstr ""
+
+#: templates/expense_form.html:11
+msgid "Escribir manualmente"
+msgstr ""
+
+#: templates/expense_form.html:19 templates/expenses.html:7
 msgid "Tipo"
 msgstr ""
 
-msgid "Monto (Q)"
-msgstr ""
-
-msgid "Categoría"
-msgstr ""
-
-msgid "Comercio"
-msgstr ""
-
-msgid "Fecha"
-msgstr ""
-
-msgid "Eliminar"
-msgstr ""
-
+#: templates/expense_form.html:21 templates/expenses.html:12
 msgid "Egreso"
 msgstr ""
 
+#: templates/expense_form.html:22 templates/expenses.html:12
 msgid "Ingreso"
 msgstr ""
 
-msgid "Asistente financiero IA"
+#: templates/expense_form.html:26 templates/expenses.html:7
+msgid "Monto (Q)"
 msgstr ""
 
-msgid "Volver al panel"
+#: templates/expense_form.html:30
+msgid "Moneda"
 msgstr ""
 
-msgid "Haz una pregunta a la IA..."
+#: templates/expense_form.html:34
+msgid "Descripción"
 msgstr ""
 
-msgid "Enviar"
+#: templates/expense_form.html:38 templates/expenses.html:7
+msgid "Comercio"
 msgstr ""
+
+#: templates/expense_form.html:42 templates/expenses.html:7
+msgid "Categoría"
+msgstr ""
+
+#: templates/expense_form.html:50
+msgid "Método de pago"
+msgstr ""
+
+#: templates/expense_form.html:58 templates/expenses.html:7
+msgid "Fecha"
+msgstr ""
+
+#: templates/expense_form.html:61
+msgid "Guardar"
+msgstr ""
+
+#: templates/expenses.html:3
+msgid "Movimientos"
+msgstr ""
+
+#: templates/expenses.html:4
+msgid "Nuevo movimiento"
+msgstr ""
+
+#: templates/expenses.html:18 templates/expenses.html:20
+msgid "Eliminar"
+msgstr ""
+
+#: templates/index.html:4
+msgid "Bienvenido a NexoAI"
+msgstr ""
+
+#: templates/index.html:5
+msgid "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+msgstr ""
+
+#: templates/index.html:8
+msgid "Crear cuenta"
+msgstr ""
+
+#: templates/login.html:10
+msgid "Usuario"
+msgstr ""
+
+#: templates/login.html:15
+msgid "Correo"
+msgstr ""
+
+#: templates/login.html:19
+msgid "Contraseña"
+msgstr ""
+
+#: templates/login.html:22
+msgid "Entrar"
+msgstr ""
+

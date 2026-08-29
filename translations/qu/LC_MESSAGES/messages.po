@@ -123,3 +123,69 @@ msgstr "Tatz'apik samaj chi ri IA..."
 
 msgid "Enviar"
 msgstr "Tataq"
+
+msgid "Bienvenido a NexoAI"
+msgstr "Utz'il pa NexoAI"
+
+msgid "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+msgstr "Titz'ib'äx, tanaw' xuquje' tawelej ri ak'ual chi kach'apem pa Guatemala (GTQ)."
+
+msgid "Crear cuenta"
+msgstr "Tik'iyirisaj kuenta"
+
+msgid "Registrar Movimiento"
+msgstr "Titz'ib'äx tiquin"
+
+msgid "Métodos de registro"
+msgstr "Ub'antajik titz'ib'anik"
+
+msgid "Subir foto"
+msgstr "Takub'än wachib'äl"
+
+msgid "Grabar audio"
+msgstr "Titz'ib'äx awäch"
+
+msgid "Escribir manualmente"
+msgstr "Titz'ib'äx pa qa q'ab'"
+
+msgid "Moneda"
+msgstr "Pwaq"
+
+msgid "Descripción"
+msgstr "Tzijonem"
+
+msgid "Método de pago"
+msgstr "Ub'antajik tojik"
+
+msgid "Guardar"
+msgstr "Tiyak"
+
+msgid "Usuario"
+msgstr "Ajchakib'äl"
+
+msgid "Correo"
+msgstr "Correo"
+
+msgid "Contraseña"
+msgstr "Ewan tzij"
+
+msgid "Entrar"
+msgstr "Tok'"
+
+msgid "Completa todos los campos"
+msgstr "Tatz'aqatisaj ronojel ri kaxa'"
+
+msgid "Usuario o correo ya existe"
+msgstr "Ri ajchakib'äl o correo k'o chik"
+
+msgid "Registro exitoso. Bienvenido."
+msgstr "Utz xtz'ib'äx. Utz'il."
+
+msgid "Has iniciado sesión"
+msgstr "Xok'apij sesión"
+
+msgid "Credenciales inválidas"
+msgstr "Man utz ta ri ewan tzij"
+
+msgid "Sesión cerrada"
+msgstr "Xk'apij sesión"

@@ -74,10 +74,13 @@
                   {{ _('Idioma') }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
-                  <li><a class="dropdown-item" href="?lang=es">Español</a></li>
-                  <li><a class="dropdown-item" href="?lang=qu">K'iche'</a></li>
-                  <li><a class="dropdown-item" href="?lang=cak">Kaqchikel</a></li>
-                  <li><a class="dropdown-item" href="?lang=qeq">Q'eqchi'</a></li>
+                  {% for code, name in LANGUAGES.items() %}
+                    <li>
+                      <a class="dropdown-item{% if code == current_locale %} active{% endif %}" href="?lang={{ code }}">
+                        {{ name }}
+                      </a>
+                    </li>
+                  {% endfor %}
                 </ul>
               </li>
               <li class="nav-item">
@@ -102,10 +105,13 @@
                   {{ _('Idioma') }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
-                  <li><a class="dropdown-item" href="?lang=es">Español</a></li>
-                  <li><a class="dropdown-item" href="?lang=qu">K'iche'</a></li>
-                  <li><a class="dropdown-item" href="?lang=cak">Kaqchikel</a></li>
-                  <li><a class="dropdown-item" href="?lang=qeq">Q'eqchi'</a></li>
+                  {% for code, name in LANGUAGES.items() %}
+                    <li>
+                      <a class="dropdown-item{% if code == current_locale %} active{% endif %}" href="?lang={{ code }}">
+                        {{ name }}
+                      </a>
+                    </li>
+                  {% endfor %}
                 </ul>
               </li>
               <li class="nav-item">

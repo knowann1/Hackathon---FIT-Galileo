@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
   <div class="d-flex flex-column justify-content-center align-items-center text-center" style="min-height: 80vh;">
-    <h1>Bienvenido a NexoAI</h1>
-    <p>Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ).</p>
+    <h1>{{ _('Bienvenido a NexoAI') }}</h1>
+    <p>{{ _('Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ).') }}</p>
 
     <div>
-        <a href="/register" class="btn btn-primary">Crear cuenta</a>
-        <a href="/login" class="btn btn-outline-primary">Iniciar sesión</a>
+        <a href="/register" class="btn btn-primary">{{ _('Crear cuenta') }}</a>
+        <a href="/login" class="btn btn-outline-primary">{{ _('Iniciar sesión') }}</a>
     </div>
 </div>
 <head>
