@@ -182,7 +182,7 @@ msgid "Registro exitoso. Bienvenido."
 msgstr "Utz xtz'ib'än. Utz'il."
 
 msgid "Has iniciado sesión"
-msgstr "Xk'apij ri sesión"
+msgstr "Xok'apij ri sesión"
 
 msgid "Credenciales inválidas"
 msgstr "Man utz ta ri ewan tzij"

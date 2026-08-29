@@ -33,7 +33,6 @@ def test_switching_language_never_returns_500(client, registered_user, lang):
     """(a) Selecting any configured language must never crash with a 500."""
     response = client.get(f'/dashboard?lang={lang}')
     assert response.status_code == 200
-    assert response.status_code != 500
 
 
 def test_invalid_locale_falls_back_safely(client, registered_user):

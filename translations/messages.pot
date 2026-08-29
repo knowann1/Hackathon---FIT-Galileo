@@ -1,14 +1,14 @@
-# Translations template for PROJECT.
-# Copyright (C) 2026 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
+# Translations template for NexoAI.
+# Copyright (C) 2026 NexoAI
+# This file is distributed under the same license as the NexoAI project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
+"Project-Id-Version: NexoAI 1.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-08-29 02:58+0000\n"
+"POT-Creation-Date: 2026-08-29 03:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,7 +41,7 @@ msgstr ""
 msgid "Sesión cerrada"
 msgstr ""
 
-#: templates/base.html:41
+#: templates/base.html:41 tests/test_i18n.py:114
 msgid "Panel"
 msgstr ""
 
@@ -65,27 +65,28 @@ msgstr ""
 msgid "NexoIA"
 msgstr ""
 
-#: templates/base.html:68 templates/base.html:96
+#: templates/base.html:68 templates/base.html:99
 msgid "Qué es NexoAI"
 msgstr ""
 
-#: templates/base.html:74 templates/base.html:102
+#: templates/base.html:74 templates/base.html:105
 msgid "Idioma"
 msgstr ""
 
-#: templates/base.html:90
+#: templates/base.html:93
 msgid "Cerrar sesión"
 msgstr ""
 
-#: templates/base.html:113 templates/login.html:5 templates/login.html:22
+#: templates/base.html:119 templates/login.html:5 templates/login.html:22
 msgid "Registrar"
 msgstr ""
 
-#: templates/base.html:118 templates/index.html:9 templates/login.html:5
+#: templates/base.html:124 templates/index.html:9 templates/login.html:5
+#: tests/test_i18n.py:93
 msgid "Iniciar sesión"
 msgstr ""
 
-#: templates/dashboard.html:5
+#: templates/dashboard.html:5 tests/test_i18n.py:51
 msgid "Resumen"
 msgstr ""
 
