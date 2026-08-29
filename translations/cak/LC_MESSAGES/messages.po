@@ -5,121 +5,532 @@ msgid ""
 msgstr ""
 "Project-Id-Version: NexoAI 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"POT-Creation-Date: 2026-08-29 04:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: cak\n"
 "Language-Team: Kaqchikel\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Language: cak\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.12.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.18.0\n"
 
-msgid "Idioma"
-msgstr "Riquin tzij"
-
+#: templates/base.html:41
 msgid "Panel"
 msgstr "Samajib'äl"
 
+#: templates/base.html:44
 msgid "Gastos"
 msgstr "Kichoq'om"
 
+#: templates/base.html:48
 msgid "MarketNexo"
 msgstr "MarketNexo"
 
+#: templates/base.html:53
 msgid "Subir factura"
 msgstr "Taqöy ri recepta"
 
+#: templates/base.html:58
 msgid "Registrar por voz"
 msgstr "Titz'ib'äx ruma ri toq'"
 
+#: templates/base.html:63
 msgid "NexoIA"
 msgstr "NexoIA"
 
+#: templates/base.html:68 templates/base.html:96
 msgid "Qué es NexoAI"
 msgstr "¿Jas ri NexoAI?"
 
+#: templates/base.html:74 templates/base.html:102
+msgid "Idioma"
+msgstr "Riquin tzij"
+
+#: templates/base.html:90
 msgid "Cerrar sesión"
 msgstr "Tik'apij ri sesión"
 
+#: templates/base.html:113
 msgid "Registrar"
 msgstr "Titz'ib'äx"
 
+#: templates/base.html:118 templates/index.html:9
 msgid "Iniciar sesión"
 msgstr "Tak'apij ri sesión"
 
-msgid "Registrar gasto"
-msgstr "Titz'ib'äx kichoq'om"
+#: templates/index.html:4
+msgid "Bienvenido a NexoAI"
+msgstr "Utz ape'i pa NexoAI"
 
-msgid "Gasto registrado"
-msgstr "Titz'ib'än kichoq'om"
+#: templates/index.html:5
+msgid ""
+"Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+msgstr ""
+"Titz'ib'äx, tach'ob' xuquje' tawutzirisaj ri ak'aslem pa ri apuwaq pa "
+"Guatemala (GTQ)."
 
-msgid "Ingreso registrado"
-msgstr "Titz'ib'än kiriquin"
+#: templates/index.html:8
+msgid "Crear cuenta"
+msgstr "Tik'iyisäx ri cuenta"
 
-msgid "Resumen"
-msgstr "Xel ri samaj"
+#: templates/index.html:705
+msgid "Asistente financiero conversacional · Guatemala"
+msgstr "Ri mowa samaj re tzijonem chi rij puwaq · Guatemala"
 
-msgid "Gastos del mes"
-msgstr "Kichoq'om ri ik'"
+#: templates/index.html:706
+msgid "Le hablás como a un"
+msgstr "Tatzijoj rik'in jer jun"
 
-msgid "Ingresos del mes"
-msgstr "Kiriquin ri ik'"
+#: templates/index.html:706
+msgid "cuate"
+msgstr "wachib'il"
 
-msgid "Balance"
-msgstr "Samaj ch'aqa't"
+#: templates/index.html:706
+msgid "Te responde como un asesor."
+msgstr "Kub'ij chawe jer jun etamanel."
 
-msgid "Mes anterior (gastos)"
-msgstr "Janru ik' (kichoq'om)"
+#: templates/index.html:707
+msgid "NexoAI convierte un mensaje de texto suelto —"
+msgstr "Ri NexoAI kujal ri jun tzij tz'ib'am —"
 
-msgid "Gastos por categoría"
-msgstr "Kichoq'om ruma riquin"
+#: templates/index.html:707
+msgid "gasté 50 en Walmart con tarjeta"
+msgstr "xinch'ako 50 pa Walmart rik'in ri tarjeta"
 
-msgid "Recomendaciones financieras"
-msgstr "Retol samaj chi kichoq'om"
+#: templates/index.html:707
+msgid ""
+"— en un registro financiero estructurado, y ese registro en consejos "
+"concretos sobre tus ingresos, tus gastos y tu capacidad de ahorro."
+msgstr ""
+"— pa jun tz'ib'anïk ütz b'anom, xuquje' ri tz'ib'anïk pa na'oj chi rij ri "
+"asiwan, ri akichoq'om xuquje' ri akowil chi rutz'ukik."
 
-msgid "Analizar mis finanzas"
-msgstr "Tik'elixin ri nu kichoq'om"
+#: templates/index.html:711
+msgid "mensaje del usuario"
+msgstr "ri utzij ri ajsamajel"
 
-msgid "Movimientos"
-msgstr "Tiquin"
+#: templates/index.html:729
+msgid "Nadie lleva un presupuesto"
+msgstr "Majun winäq kukoj ri presupuesto"
 
-msgid "Nuevo movimiento"
-msgstr "K'ak'a tiquin"
+#: templates/index.html:729
+msgid "en una hoja de cálculo"
+msgstr "pa jun ruwuj etab'äl"
 
-msgid "Tipo"
-msgstr "Ruwäch"
+#: templates/index.html:729
+msgid ""
+"La gente lleva sus finanzas en la cabeza, y las anota — si acaso — en una "
+"nota de texto, entre WhatsApp y la fila del súper."
+msgstr ""
+"Ri winaqi' kikoj ri kipuwaq pa kijolom, xuquje' katz'ib'äx — we k'o — pa jun"
+" tzij, chi kixo'l WhatsApp xuquje' ri ch'akat pa k'ayb'äl."
 
-msgid "Monto (Q)"
-msgstr "Kiwäch (Q)"
+#: templates/index.html:735
+msgid "Registrar gastos es fricción"
+msgstr "Titz'ib'äx ri kichoq'om jun k'axk'omal"
 
-msgid "Categoría"
-msgstr "Riquin"
+#: templates/index.html:736
+msgid ""
+"Abrir una app, elegir categoría, tipear el monto — para un gasto de Q15 "
+"nadie lo hace dos veces."
+msgstr ""
+"Tijaq jun app, tich'a jun ch'ab'al, titz'ib'äx ri kiwäch — pa jun choq'om "
+"Q15 majun kub'än keb' mul."
 
-msgid "Comercio"
-msgstr "Kich'ojom"
+#: templates/index.html:742
+msgid "Los datos sin contexto no enseñan nada"
+msgstr "Ri etamab'äl man rik'in ta tzijonem man kuk'ut ta jub'a'"
 
-msgid "Fecha"
-msgstr "Q'ijul"
+#: templates/index.html:743
+msgid ""
+"Un dashboard con barras de colores no te dice si estás gastando más de lo "
+"que ganás, ni por qué."
+msgstr ""
+"Jun ruwächal rik'in b'ar b'onil man kub'ij ta chawe we niachoq'oj ni'oj "
+"chuwäch ri asiwan, ni japucha'."
 
-msgid "Eliminar"
-msgstr "Tik'apij"
+#: templates/index.html:749
+msgid "Formalizarse da miedo por desconocimiento"
+msgstr "Tik'iyisäx pa utzil kuya' xib'irisanïk ruma man etamab'äl ta"
 
-msgid "Egreso"
-msgstr "Kichoq'om"
+#: templates/index.html:750
+msgid ""
+"Emprender en Guatemala implica trámites legales y laborales que casi nadie "
+"consulta hasta que ya es tarde."
+msgstr ""
+"Tik'iyisäx jun samaj pa Guatemala kuk'äm ub'anik taqanik xuquje' samaj ri "
+"man kajin ta niq'ax nutzukuj k'a ta chi kaq'aq'."
 
-msgid "Ingreso"
-msgstr "Kiriquin"
+#: templates/index.html:761
+msgid "Lo que hace"
+msgstr "Ri nub'än"
 
-msgid "Asistente financiero IA"
-msgstr "Mowa samaj chik ri kichoq'om"
+#: templates/index.html:762
+msgid "Cuatro funciones, un mismo cerebro conversacional"
+msgstr "Kajib' samaj, jun jolomaj re tzijonem"
 
-msgid "Volver al panel"
-msgstr "Tak'alaj chi samajib'äl"
+#: templates/index.html:763
+msgid ""
+"No son módulos separados: todas comparten el mismo contexto financiero del "
+"usuario, calculado en vivo desde PostgreSQL en cada pregunta."
+msgstr ""
+"Man jalajöj ta módulos: konojel kikomon ri jun tzijonem chi rij ri puwaq re "
+"ri ajsamajel, tetamäx pa PostgreSQL pa ronojel k'utunïk."
 
-msgid "Haz una pregunta a la IA..."
-msgstr "Tatz'apik samaj chi ri IA..."
+#: templates/index.html:774
+msgid "Texto libre a dato estructurado"
+msgstr "Tzij ütz chi etamab'äl ütz b'anom"
 
-msgid "Enviar"
-msgstr "Tataq"
+#: templates/index.html:775
+msgid ""
+"Escribís el gasto como se lo contarías a alguien. El sistema extrae monto, "
+"comercio, categoría, método de pago y fecha — con un modelo de lenguaje, y "
+"un parseo por reglas como respaldo si la IA no responde."
+msgstr ""
+"Natz'ib'äj ri choq'om jer natzijoj che jun winäq. Ri sistema kuk'am ri "
+"kiwäch, k'ayb'äl, ch'ab'al, ub'anik tojb'äl xuquje' q'ijul — rik'in jun "
+"modelo re tzij, xuquje' jun etab'äl re taqanik jer to'onel we ri IA man "
+"kub'ij ta."
+
+#: templates/index.html:777
+msgid "español natural"
+msgstr "kaxlan tzij ütz"
+
+#: templates/index.html:778
+msgid "fallback por reglas"
+msgstr "to'onel ruma taqanik"
+
+#: templates/index.html:789
+msgid "Insights financieros automáticos"
+msgstr "Na'oj chi rij puwaq ronojel q'ij"
+
+#: templates/index.html:790
+msgid ""
+"Calcula ratio de ahorro, gasto promedio versus gasto más grande, "
+"concentración por comercio, cambios mes contra mes — y prioriza qué merece "
+"tu atención primero."
+msgstr ""
+"Kutéq ri ub'anik tz'ukik, ri choq'om k'iyalil chuqa' ri nima'q choq'om, ri "
+"molik pa k'ayb'äl, ri jalwachinïk ik' chuqa' ik' — xuquje' kuya' na'oj "
+"achike ütz nab'ey tatz'et."
+
+#: templates/index.html:792
+msgid "balance real"
+msgstr "ch'uxinel qitzij"
+
+#: templates/index.html:793
+msgid "alertas con datos"
+msgstr "na'oj rik'in etab'äl"
+
+#: templates/index.html:804
+msgid "Chat con memoria de tu contexto"
+msgstr "Tzijonem rik'in na'oj re atzijonem"
+
+#: templates/index.html:805
+msgid ""
+"Preguntale directamente: \"¿cuánto gasté en comida el mes pasado?\", \"¿me "
+"alcanza para ahorrar?\". Responde solo con tus transacciones reales, nunca "
+"inventa cifras."
+msgstr ""
+"Tak'utuj che pa jun b'ey: \"¿jampe' xinch'ako pa way pa ri ik' kanöq?\", "
+"\"¿kachäp na chwe chi rutz'ukik?\". Kub'ij xa xe rik'in ri qitzij tiquin, "
+"majub'ir kutz'ukuj kiwäch."
+
+#: templates/index.html:807
+msgid "historial de conversación"
+msgstr "runik'ilal tzijonem"
+
+#: templates/index.html:808
+msgid "GTQ nativo"
+msgstr "GTQ tinamit"
+
+#: templates/index.html:819
+msgid "Consulta legal y laboral guatemalteca"
+msgstr "K'utunïk taqanik xuquje' samaj re Guatemala"
+
+#: templates/index.html:820
+msgid ""
+"Cuando la pregunta lo amerita, busca en guías de formalización de empresas y"
+" contratación laboral, y responde citando la fuente — sin forzar el tema si "
+"no aplica."
+msgstr ""
+"Toq ri k'utunïk kajin, kutzukuj pa ruwuj re tik'iyisäx samaj xuquje' "
+"tiq'axan samaj, xuquje' kub'ij ronojel achike ruwuj — man kuk'am ta ri na'oj"
+" we man kajin ta."
+
+#: templates/index.html:822
+msgid "búsqueda por palabras clave"
+msgstr "tzukunïk ruma nab'ey tzij"
+
+#: templates/index.html:823
+msgid "citas por documento"
+msgstr "tzij ruma ruwuj"
+
+#: templates/index.html:833
+msgid "Cómo funciona"
+msgstr "Jas nub'än"
+
+#: templates/index.html:834
+msgid "De un mensaje suelto a una recomendación con base"
+msgstr "Chi jun tzij k'a chi jun na'oj rik'in ruxe'el"
+
+#: templates/index.html:835
+msgid ""
+"El mismo camino, sin importar si la pregunta es sobre un gasto puntual o "
+"sobre tu situación financiera completa."
+msgstr ""
+"Ri jun b'ey, man kajin ta we ri k'utunïk chi rij jun choq'om o chi rij "
+"ronojel ri apuwaq."
+
+#: templates/index.html:843
+msgid "El usuario escribe, en su idioma"
+msgstr "Ri ajsamajel katz'ib'äx, pa ruch'ab'al"
+
+#: templates/index.html:844
+msgid ""
+"Sin formularios ni menús. \"Pagué la luz, Q180, transferencia\" es una "
+"entrada válida."
+msgstr ""
+"Man ruwuj ta ni menú. \"Xintoj ri saq, Q180, tijalïk\" jun tz'aqat okib'äl."
+
+#: templates/index.html:849
+msgid "Se extraen los datos con IA, con respaldo por reglas"
+msgstr "Ketamäx ri etamab'äl rik'in IA, rik'in to'onel ruma taqanik"
+
+#: templates/index.html:850
+msgid ""
+"Un modelo de lenguaje interpreta el texto y devuelve JSON. Si no hay "
+"conexión al modelo, un parseo por palabras clave garantiza que igual se "
+"guarde algo útil."
+msgstr ""
+"Jun modelo re tzij kuk'ut ri tzij xuquje' kuya' chik JSON. We man k'o ta "
+"ok'aslem rik'in ri modelo, jun etab'äl ruma nab'ey tzij kuya' na chi "
+"katz'ib'äx jun ütz."
+
+#: templates/index.html:856
+msgid "Se reconstruye el contexto financiero completo"
+msgstr "Nub'an chik ronojel ri tzijonem re puwaq"
+
+#: templates/index.html:857
+msgid ""
+"Cada pregunta recalcula, desde la base de datos real, totales, promedios, "
+"categorías top, comparación con el mes anterior — nunca datos de caché ni "
+"inventados."
+msgstr ""
+"Ronojel k'utunïk kutéq chik, chi rij ri qitzij etab'äl, ronojel, k'iyalil, "
+"ütziläj ch'ab'al, jalwachinïk rik'in ri ik' kanöq — majub'ir etamab'äl re "
+"caché ni tz'ukum."
+
+#: templates/index.html:863
+msgid "Si la pregunta toca temas legales, se buscan los documentos"
+msgstr "We ri k'utunïk kuch'ako taqanik na'oj, kitzukux ri wujal"
+
+#: templates/index.html:864
+msgid ""
+"La búsqueda por palabras clave decide en silencio si hay contenido legal "
+"relevante. Si no lo hay, el prompt ni se entera de que esos documentos "
+"existen."
+msgstr ""
+"Ri tzukunïk ruma nab'ey tzij kuchöw pa jub'a' we k'o taqanik na'oj ütz. We "
+"man k'o ta, ri k'utunïk man kaqetamaj ta chi e k'o ri wuj."
+
+#: templates/index.html:869
+msgid "NexoAI responde con lo que realmente sabe"
+msgstr "NexoAI kub'ij ri qitzij retamam"
+
+#: templates/index.html:870
+msgid ""
+"Cálculos explicados, recomendaciones sin juicio, y honestidad cuando hay "
+"pocos datos para sacar conclusiones firmes."
+msgstr ""
+"Etab'äl kub'anom, na'oj man q'atb'äl tzij, xuquje' qitzij toq e k'iy ta "
+"etamab'äl re elesaj tz'aqat na'oj."
+
+#: templates/index.html:879
+msgid "En la práctica"
+msgstr "Pa ub'anik"
+
+#: templates/index.html:880
+msgid "Así se ve un insight real"
+msgstr "Je' natz'et jun qitzij na'oj"
+
+#: templates/index.html:881
+msgid ""
+"No es una frase genérica de \"gastás mucho en comida\". Cada recomendación "
+"cita el número exacto que la sostiene."
+msgstr ""
+"Man jun tzij konojel ta re \"kachoq'oj k'iy pa way\". Ronojel na'oj kuya' ri"
+" qitzij ajilab'äl re kuk'ëj."
+
+#: templates/index.html:887
+msgid "prioridad 1"
+msgstr "nab'ey na'oj 1"
+
+#: templates/index.html:889
+msgid "Tu capacidad de ahorro está subutilizada"
+msgstr "Ri akowil chi rutz'ukik man kokisäx ta ütz"
+
+#: templates/index.html:890
+#, python-format
+msgid ""
+"Tus ingresos del mes fueron Q4,200 y tus gastos Q2,950 — un ratio de ahorro "
+"de 29.8%%, muy por encima de lo que refleja tu balance guardado hasta ahora."
+msgstr ""
+"Ri asiwan pa ik' xa Q4,200 xuquje' ri akichoq'om Q2,950 — jun ub'anik "
+"tz'ukik re 29.8%%, nim chik chuwäch ri ch'uxinel yakom pa amaq'."
+
+#: templates/index.html:891
+#, python-format
+msgid ""
+"El 62%%, de ese gasto, se concentra en un solo comercio, lo que sugiere que "
+"una compra recurrente podría planificarse con anticipación en vez de "
+"registrarse como gasto variable."
+msgstr ""
+"Ri 62%%, re ri choq'om, kumolo pa xa jun k'ayb'äl, ri kuya' na'oj chi jun "
+"lokoj ri kaq'ax na'oj ütz tib'an nab'ey chuwäch tik'iyisäx jer choq'om "
+"jalajöj."
+
+#: templates/index.html:892
+msgid "Sugerencia →"
+msgstr "Na'oj →"
+
+#: templates/index.html:892
+msgid ""
+"Con ese margen mensual, apartar Q800 fijos cubriría un fondo de emergencia "
+"de tres meses en menos de un año."
+msgstr ""
+"Rik'in ri kowil pa ik', tiya' kanöq Q800 jusu' kuchöp jun etab'äl re "
+"k'axk'omal pa oxi' ik' pa jub'a' junab'."
+
+#: templates/index.html:900
+msgid "Debajo del capó"
+msgstr "Chi ruxe'el"
+
+#: templates/index.html:901
+msgid "Construido para funcionar, no solo para la demo"
+msgstr "B'anom richin niq'ax, man xa richin ri demo ta"
+
+#: templates/index.html:905
+msgid "backend"
+msgstr "ruxe'el samaj"
+
+#: templates/index.html:906
+msgid "datos reales"
+msgstr "qitzij etamab'äl"
+
+#: templates/index.html:908
+msgid "parseo e insights"
+msgstr "etab'äl xuquje' na'oj"
+
+#: templates/index.html:909
+msgid "lectura legal"
+msgstr "sik'inïk taqanik"
+
+#: templates/index.html:910
+msgid "despliegue"
+msgstr "elik pa samaj"
+
+#: templates/index.html:919
+msgid "Hackathon FIT · Universidad Galileo"
+msgstr "Hackathon FIT · Universidad Galileo"
+
+#~ msgid "Registrar gasto"
+#~ msgstr "Titz'ib'äx kichoq'om"
+
+#~ msgid "Gasto registrado"
+#~ msgstr "Titz'ib'än kichoq'om"
+
+#~ msgid "Ingreso registrado"
+#~ msgstr "Titz'ib'än kiriquin"
+
+#~ msgid "Resumen"
+#~ msgstr "Xel ri samaj"
+
+#~ msgid "Gastos del mes"
+#~ msgstr "Kichoq'om ri ik'"
+
+#~ msgid "Ingresos del mes"
+#~ msgstr "Kiriquin ri ik'"
+
+#~ msgid "Balance"
+#~ msgstr "Samaj ch'aqa't"
+
+#~ msgid "Mes anterior (gastos)"
+#~ msgstr "Janru ik' (kichoq'om)"
+
+#~ msgid "Gastos por categoría"
+#~ msgstr "Kichoq'om ruma riquin"
+
+#~ msgid "Recomendaciones financieras"
+#~ msgstr "Retol samaj chi kichoq'om"
+
+#~ msgid "Analizar mis finanzas"
+#~ msgstr "Tik'elixin ri nu kichoq'om"
+
+#~ msgid "Movimientos"
+#~ msgstr "Tiquin"
+
+#~ msgid "Nuevo movimiento"
+#~ msgstr "K'ak'a tiquin"
+
+#~ msgid "Tipo"
+#~ msgstr "Ruwäch"
+
+#~ msgid "Monto (Q)"
+#~ msgstr "Kiwäch (Q)"
+
+#~ msgid "Categoría"
+#~ msgstr "Riquin"
+
+#~ msgid "Comercio"
+#~ msgstr "Kich'ojom"
+
+#~ msgid "Fecha"
+#~ msgstr "Q'ijul"
+
+#~ msgid "Eliminar"
+#~ msgstr "Tik'apij"
+
+#~ msgid "Egreso"
+#~ msgstr "Kichoq'om"
+
+#~ msgid "Ingreso"
+#~ msgstr "Kiriquin"
+
+#~ msgid "Asistente financiero IA"
+#~ msgstr "Mowa samaj chik ri kichoq'om"
+
+#~ msgid "Volver al panel"
+#~ msgstr "Tak'alaj chi samajib'äl"
+
+#~ msgid "Haz una pregunta a la IA..."
+#~ msgstr "Tatz'apik samaj chi ri IA..."
+
+#~ msgid "Enviar"
+#~ msgstr "Tataq"
+
+#~ msgid ""
+#~ "El 62% de ese gasto se concentra en un solo comercio, lo que sugiere que una"
+#~ " compra recurrente podría planificarse con anticipación en vez de "
+#~ "registrarse como gasto variable."
+#~ msgstr ""
+#~ "Ri 62% re ri choq'om kumolo pa xa jun k'ayb'äl, ri kuya' na'oj chi jun lokoj"
+#~ " ri kaq'ax na'oj ütz tib'an nab'ey chuwäch tik'iyisäx jer choq'om jalajöj."
+
+#~ msgid ""
+#~ "Tus ingresos del mes fueron Q4,200 y tus gastos Q2,950 — un ratio de ahorro "
+#~ "de 29.8%, muy por encima de lo que refleja tu balance guardado hasta ahora."
+#~ msgstr ""
+#~ "Ri asiwan pa ik' xa Q4,200 xuquje' ri akichoq'om Q2,950 — jun ub'anik "
+#~ "tz'ukik re 29.8%, nim chik chuwäch ri ch'uxinel yakom pa amaq'."
+
+#~ msgid ""
+#~ "El 62%, de ese gasto, se concentra en un solo comercio, lo que sugiere que "
+#~ "una compra recurrente podría planificarse con anticipación en vez de "
+#~ "registrarse como gasto variable."
+#~ msgstr ""
+#~ "Ri 62%, re ri choq'om, kumolo pa xa jun k'ayb'äl, ri kuya' na'oj chi jun "
+#~ "lokoj ri kaq'ax na'oj ütz tib'an nab'ey chuwäch tik'iyisäx jer choq'om "
+#~ "jalajöj."
