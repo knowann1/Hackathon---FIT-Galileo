@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
 from config import Config
 from extensions import db, migrate, login_manager, csrf
 from routes.auth import auth_bp
@@ -64,9 +64,8 @@ def create_app():
 
     @app.route("/")
     def index():
-        # Al ingresar a la raíz, redirigir al formulario de inicio de sesión
-        from flask import redirect, url_for
-        return redirect(url_for('auth.login'))
+        # Mostrar la página "nexo" (templates/index.html) como página principal
+        return render_template('index.html')
 
     return app
 
