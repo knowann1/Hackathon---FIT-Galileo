@@ -22,8 +22,10 @@ def register():
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
-        flash('Registro exitoso. Inicia sesión.', 'success')
-        return redirect(url_for('auth.login'))
+        # Iniciar sesión automáticamente y redirigir al panel
+        login_user(user)
+        flash('Registro exitoso. Bienvenido.', 'success')
+        return redirect(url_for('dashboard.index'))
     return render_template('login.html', register=True)
 
 
