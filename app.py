@@ -165,7 +165,7 @@ def create_app(config_object=Config):
         else:
             session['lang'] = app.config.get('BABEL_DEFAULT_LOCALE', 'es')
         refresh()
-        next_url = request.referrer
+        next_url = request.args.get('next') or request.referrer
         if next_url and is_safe_url(next_url):
             return redirect(next_url)
         return redirect(url_for('index'))

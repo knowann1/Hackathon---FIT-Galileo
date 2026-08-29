@@ -103,7 +103,7 @@
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
                 {% for code, name in LANGUAGES.items() %}
                   <li>
-                    <a class="dropdown-item {% if current_locale == code %}active{% endif %}" href="{{ url_for('set_language', lang=code) }}">
+                    <a class="dropdown-item {% if current_locale == code %}active{% endif %}" href="{{ url_for('set_language', lang=code, next=request.path) }}">
                       {{ name }}
                     </a>
                   </li>

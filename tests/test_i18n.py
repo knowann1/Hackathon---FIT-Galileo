@@ -84,7 +84,13 @@ def test_session_language_persistence(client):
 
 
 def test_set_language_endpoint(client):
-    """Test /set-language/<lang> route redirects back to referrer."""
+    """Test /set-language/<lang> route redirects back to referrer or next param."""
+    # Test with next parameter
+    res_next = client.get('/set-language/qu?next=/expenses')
+    assert res_next.status_code == 302
+    assert res_next.headers['Location'] == '/expenses'
+
+    # Test with Referer header
     response = client.get('/set-language/qu', headers={'Referer': '/login'})
     assert response.status_code == 302
     assert response.headers['Location'] == '/login'
