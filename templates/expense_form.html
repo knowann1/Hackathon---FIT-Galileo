@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-<h3>Registrar Movimiento</h3>
+<h3>{{ _('Registrar Movimiento') }}</h3>
 
 <div class="card mb-4">
   <div class="card-body">
-    <h5 class="card-title">Métodos de registro</h5>
+    <h5 class="card-title">{{ _('Métodos de registro') }}</h5>
     <div class="d-flex flex-wrap gap-2">
-      <a href="/receipts/upload" class="btn btn-outline-primary">Subir foto</a>
-      <a href="/voice/record" class="btn btn-outline-success">Grabar audio</a>
-      <a href="#manual-form" class="btn btn-outline-secondary">Escribir manualmente</a>
+      <a href="/receipts/upload" class="btn btn-outline-primary">{{ _('Subir foto') }}</a>
+      <a href="/voice/record" class="btn btn-outline-success">{{ _('Grabar audio') }}</a>
+      <a href="#manual-form" class="btn btn-outline-secondary">{{ _('Escribir manualmente') }}</a>
     </div>
   </div>
 </div>
@@ -16,48 +16,48 @@
 <form id="manual-form" method="post">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <div class="mb-3">
-    <label class="form-label">Tipo</label>
+    <label class="form-label">{{ _('Tipo') }}</label>
     <select name="transaction_type" class="form-select">
-      <option value="expense" selected>Egreso</option>
-      <option value="income">Ingreso</option>
+      <option value="expense" selected>{{ _('Egreso') }}</option>
+      <option value="income">{{ _('Ingreso') }}</option>
     </select>
   </div>
   <div class="mb-3">
-    <label class="form-label">Monto (Q)</label>
+    <label class="form-label">{{ _('Monto (Q)') }}</label>
     <input type="number" step="0.01" class="form-control" name="amount" required>
   </div>
   <div class="mb-3">
-    <label class="form-label">Moneda</label>
+    <label class="form-label">{{ _('Moneda') }}</label>
     <input class="form-control" name="currency" value="GTQ">
   </div>
   <div class="mb-3">
-    <label class="form-label">Descripción</label>
+    <label class="form-label">{{ _('Descripción') }}</label>
     <input class="form-control" name="description">
   </div>
   <div class="mb-3">
-    <label class="form-label">Comercio</label>
+    <label class="form-label">{{ _('Comercio') }}</label>
     <input class="form-control" name="merchant">
   </div>
   <div class="mb-3">
-    <label class="form-label">Categoría</label>
+    <label class="form-label">{{ _('Categoría') }}</label>
     <select name="category" class="form-select">
       {% for c in categories %}
-        <option value="{{c}}">{{c}}</option>
+        <option value="{{c}}">{{ _(c) }}</option>
       {% endfor %}
     </select>
   </div>
   <div class="mb-3">
-    <label class="form-label">Método de pago</label>
+    <label class="form-label">{{ _('Método de pago') }}</label>
     <select name="payment_method" class="form-select">
       {% for p in payment_methods %}
-        <option value="{{p}}">{{p}}</option>
+        <option value="{{p}}">{{ _(p) }}</option>
       {% endfor %}
     </select>
   </div>
   <div class="mb-3">
-    <label class="form-label">Fecha</label>
+    <label class="form-label">{{ _('Fecha') }}</label>
     <input type="date" class="form-control" name="expense_date">
   </div>
-  <button class="btn btn-primary" type="submit">Guardar</button>
+  <button class="btn btn-primary" type="submit">{{ _('Guardar') }}</button>
 </form>
 {% endblock %}

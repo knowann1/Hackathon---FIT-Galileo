@@ -2,24 +2,24 @@
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-md-6">
-    <h3>{{ 'Registrar' if register else 'Iniciar sesión' }}</h3>
+    <h3>{{ _('Registrarse') if register else _('Iniciar sesión') }}</h3>
     <form method="post">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       {% if register %}
         <div class="mb-3">
-          <label class="form-label">Usuario</label>
+          <label class="form-label">{{ _('Usuario') }}</label>
           <input class="form-control" name="username" required>
         </div>
       {% endif %}
       <div class="mb-3">
-        <label class="form-label">Correo</label>
+        <label class="form-label">{{ _('Correo') }}</label>
         <input type="email" class="form-control" name="email" required>
       </div>
       <div class="mb-3">
-        <label class="form-label">Contraseña</label>
+        <label class="form-label">{{ _('Contraseña') }}</label>
         <input type="password" class="form-control" name="password" required>
       </div>
-      <button class="btn btn-primary" type="submit">{{ 'Registrar' if register else 'Entrar' }}</button>
+      <button class="btn btn-primary" type="submit">{{ _('Registrarse') if register else _('Iniciar sesión') }}</button>
     </form>
   </div>
 </div>

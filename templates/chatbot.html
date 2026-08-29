@@ -4,17 +4,17 @@
   <div class="col-lg-8">
     <div class="card shadow-sm">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">Asistente financiero IA</h4>
-        <a href="/dashboard" class="btn btn-sm btn-outline-secondary">Volver al panel</a>
+        <h4 class="mb-0">{{ _('Asistente financiero IA') }}</h4>
+        <a href="/dashboard" class="btn btn-sm btn-outline-secondary">{{ _('Volver al panel') }}</a>
       </div>
       <div class="card-body">
         <div id="chatMessages" class="mb-3" style="min-height: 280px; max-height: 420px; overflow-y: auto; background: #f8f9fa; border-radius: .5rem; padding: 1rem;">
-          <div class="alert alert-light mb-2">Hola. Puedes preguntarme sobre tus gastos, presupuesto y metas de ahorro.</div>
+          <div class="alert alert-light mb-2">{{ _('Hola. Puedes preguntarme sobre tus gastos, presupuesto y metas de ahorro.') }}</div>
         </div>
         <form id="chatForm">
           <div class="input-group">
-            <input id="chatInput" type="text" class="form-control" placeholder="Haz una pregunta a la IA..." required>
-            <button class="btn btn-primary" type="submit">Enviar</button>
+            <input id="chatInput" type="text" class="form-control" placeholder="{{ _('Haz una pregunta a la IA...') }}" required>
+            <button class="btn btn-primary" type="submit">{{ _('Enviar') }}</button>
           </div>
         </form>
       </div>
@@ -51,9 +51,9 @@
         body: JSON.stringify({ message })
       });
       const json = await response.json();
-      appendMessage(json.reply || 'No pudimos responder en este momento. Por favor, inténtelo de nuevo.', false);
+      appendMessage(json.reply || '{{ _("No pudimos responder en este momento. Por favor, inténtelo de nuevo.") }}', false);
     } catch (error) {
-      appendMessage('No pudimos contactar con el asistente de IA. Por favor, inténtelo de nuevo.', false);
+      appendMessage('{{ _("No pudimos contactar con el asistente de IA. Por favor, inténtelo de nuevo.") }}', false);
     }
   });
 </script>

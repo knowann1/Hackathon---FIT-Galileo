@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask_babel import gettext as _
 from flask_login import login_required, current_user
 from extensions import db
 from models import Expense
@@ -28,7 +29,7 @@ def new_expense():
         try:
             amount = float(request.form.get('amount'))
         except (TypeError, ValueError):
-            flash('Monto inválido', 'danger')
+            flash(_('Monto inválido'), 'danger')
             return redirect(url_for('expenses.new_expense'))
         currency = request.form.get('currency') or 'GTQ'
         description = request.form.get('description')
@@ -40,7 +41,7 @@ def new_expense():
         try:
             expense_date = datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
         except ValueError:
-            flash('Fecha inválida', 'danger')
+            flash(_('Fecha inválida'), 'danger')
             return redirect(url_for('expenses.new_expense'))
         exp = Expense(
             user_id=current_user.id,
@@ -56,7 +57,10 @@ def new_expense():
         )
         db.session.add(exp)
         db.session.commit()
-        flash(f'{"Ingreso" if transaction_type=="income" else "Gasto"} registrado', 'success')
+        if transaction_type == "income":
+            flash(_('Ingreso registrado'), 'success')
+        else:
+            flash(_('Gasto registrado'), 'success')
         return redirect(url_for('expenses.list_expenses'))
     return render_template('expense_form.html', categories=CATEGORIES, payment_methods=PAYMENT_METHODS)
 
@@ -66,9 +70,9 @@ def new_expense():
 def delete_expense(expense_id):
     exp = Expense.query.get_or_404(expense_id)
     if exp.user_id != current_user.id:
-        flash('No autorizado', 'danger')
+        flash(_('No autorizado'), 'danger')
         return redirect(url_for('expenses.list_expenses'))
     db.session.delete(exp)
     db.session.commit()
-    flash('Gasto eliminado', 'info')
+    flash(_('Gasto eliminado'), 'info')
     return redirect(url_for('expenses.list_expenses'))

@@ -11,6 +11,7 @@ from flask import (
     current_app,
     jsonify
 )
+from flask_babel import gettext as _
 
 from werkzeug.utils import secure_filename
 
@@ -75,7 +76,7 @@ def record_voice():
         if not f:
 
             flash(
-                'Selecciona un archivo de audio',
+                _('Selecciona un archivo de audio'),
                 'danger'
             )
 
@@ -94,7 +95,7 @@ def record_voice():
         if not filename:
 
             flash(
-                'El archivo de audio no es válido.',
+                _('El archivo de audio no es válido.'),
                 'danger'
             )
 
@@ -109,8 +110,7 @@ def record_voice():
         if not _is_allowed_audio(filename):
 
             flash(
-                'Formato de audio no permitido. '
-                'Usa WAV, MP3, M4A, OGG o WEBM.',
+                _('Formato de audio no permitido. Usa WAV, MP3, M4A, OGG o WEBM.'),
                 'danger'
             )
 
@@ -129,7 +129,7 @@ def record_voice():
         if not upload_dir:
 
             flash(
-                'La carpeta de archivos no está configurada.',
+                _('La carpeta de archivos no está configurada.'),
                 'danger'
             )
 
@@ -186,7 +186,7 @@ def record_voice():
             )
 
             flash(
-                'No se pudo procesar el audio.',
+                _('No se pudo procesar el audio.'),
                 'danger'
             )
 
@@ -461,7 +461,7 @@ def confirm_voice():
     if amount is None:
 
         flash(
-            'Monto inválido, no se guardó.',
+            _('Monto inválido, no se guardó.'),
             'danger'
         )
 
@@ -510,14 +510,14 @@ def confirm_voice():
     if transaction_type == 'income':
 
         flash(
-            'Ingreso guardado desde voz.',
+            _('Ingreso guardado desde voz.'),
             'success'
         )
 
     else:
 
         flash(
-            'Gasto guardado desde voz.',
+            _('Gasto guardado desde voz.'),
             'success'
         )
 

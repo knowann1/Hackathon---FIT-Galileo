@@ -1,4 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_babel import gettext as _
 from flask_login import current_user, login_required
 
 from extensions import db
@@ -26,11 +27,11 @@ def create_post():
     social_media = (request.form.get('social_media') or '').strip()
 
     if not product or not description or not email:
-        flash('Completa el producto o servicio, la descripción y el correo.', 'danger')
+        flash(_('Completa el producto o servicio, la descripción y el correo.'), 'danger')
         return redirect(url_for('marketnexo.index'))
 
     if not phone and not whatsapp:
-        flash('Agrega un teléfono o un WhatsApp para que puedan contactarte.', 'danger')
+        flash(_('Agrega un teléfono o un WhatsApp para que puedan contactarte.'), 'danger')
         return redirect(url_for('marketnexo.index'))
 
     post = MarketPost(
@@ -44,5 +45,5 @@ def create_post():
     )
     db.session.add(post)
     db.session.commit()
-    flash('Tu publicación se agregó a Marketnexo.', 'success')
+    flash(_('Tu publicación se agregó a Marketnexo.'), 'success')
     return redirect(url_for('marketnexo.index'))

@@ -17,3 +17,15 @@ class Config:
     MAX_CONTENT_LENGTH = 6 * 1024 * 1024  # 6 MB
     UPLOAD_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.pdf', '.wav', '.mp3', '.m4a', '.webm', '.ogg']
     UPLOAD_PATH = os.path.join(basedir, 'static', 'uploads')
+
+    # Multilingual / Babel configuration
+    LANGUAGES = {
+        'es': 'Español',
+        'qu': "K'iche'",
+        'cak': 'Kaqchikel',
+        'qeq': "Q'eqchi'"
+    }
+    BABEL_DEFAULT_LOCALE = 'es'
+    BABEL_DEFAULT_TIMEZONE = 'America/Guatemala'
+    BABEL_TRANSLATION_DIRECTORIES = 'translations'
+

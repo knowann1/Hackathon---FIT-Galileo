@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<h3>Revisión de factura/recibo</h3>
+<h3>{{ _('Revisión de factura/recibo') }}</h3>
 <div id="receipt-review-container" data-categories='{{ categories | tojson | safe }}' data-payment-methods='{{ payment_methods | tojson | safe }}'>
   {% if result %}
     <div id="receipt-result" data-receipt-result='{{ result | tojson | safe }}'></div>
@@ -10,66 +10,66 @@
 
       <div class="row g-3">
         <div class="col-md-4">
-          <label class="form-label">Tipo</label>
+          <label class="form-label">{{ _('Tipo') }}</label>
           <select name="transaction_type" class="form-select">
-            <option value="expense" {% if (result.transaction_type or result.get('transaction_type','expense')) == 'expense' %}selected{% endif %}>Egreso</option>
-            <option value="income" {% if (result.transaction_type or result.get('transaction_type','')) == 'income' %}selected{% endif %}>Ingreso</option>
+            <option value="expense" {% if (result.transaction_type or result.get('transaction_type','expense')) == 'expense' %}selected{% endif %}>{{ _('Egreso') }}</option>
+            <option value="income" {% if (result.transaction_type or result.get('transaction_type','')) == 'income' %}selected{% endif %}>{{ _('Ingreso') }}</option>
           </select>
         </div>
         <div class="col-md-4">
-          <label class="form-label">Monto (Q)</label>
+          <label class="form-label">{{ _('Monto (Q)') }}</label>
           <input type="number" step="0.01" class="form-control" name="total" value="{{ result.total or result.get('total','') }}">
         </div>
         <div class="col-md-4">
-          <label class="form-label">Moneda</label>
+          <label class="form-label">{{ _('Moneda') }}</label>
           <input class="form-control" name="currency" value="{{ result.currency or result.get('currency','GTQ') }}">
         </div>
         <div class="col-md-6">
-          <label class="form-label">Comercio</label>
+          <label class="form-label">{{ _('Comercio') }}</label>
           <input class="form-control" name="merchant" value="{{ result.merchant or result.get('merchant','') }}">
         </div>
         <div class="col-md-6">
-          <label class="form-label">Fecha</label>
+          <label class="form-label">{{ _('Fecha') }}</label>
           <input type="date" class="form-control" name="expense_date" value="{{ result.expense_date or result.get('expense_date','') or result.date or result.get('date','') }}">
         </div>
         <div class="col-12">
-          <label class="form-label">Descripción</label>
+          <label class="form-label">{{ _('Descripción') }}</label>
           <input class="form-control" name="description" value="{{ result.description or result.get('description','') }}">
         </div>
         <div class="col-md-6">
-          <label class="form-label">Número de factura</label>
+          <label class="form-label">{{ _('Número de factura') }}</label>
           <input class="form-control" name="invoice_number" value="{{ result.invoice_number or result.get('invoice_number','') }}">
         </div>
       </div>
 
       <div class="mb-3 mt-3">
-        <label class="form-label">Categoría</label>
+        <label class="form-label">{{ _('Categoría') }}</label>
         <select name="category" class="form-select">
           {% for c in categories %}
-            <option value="{{c}}" {% if (result.category or result.get('category','')) == c %}selected{% endif %}>{{c}}</option>
+            <option value="{{c}}" {% if (result.category or result.get('category','')) == c %}selected{% endif %}>{{ _(c) }}</option>
           {% endfor %}
         </select>
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Método de pago</label>
+        <label class="form-label">{{ _('Método de pago') }}</label>
         <select name="payment_method" class="form-select">
           {% for p in payment_methods %}
-            <option value="{{p}}" {% if (result.payment_method or result.get('payment_method','')) == p %}selected{% endif %}>{{p}}</option>
+            <option value="{{p}}" {% if (result.payment_method or result.get('payment_method','')) == p %}selected{% endif %}>{{ _(p) }}</option>
           {% endfor %}
         </select>
       </div>
 
       <div class="d-flex gap-2 mt-3">
-        <button class="btn btn-success">Confirmar</button>
-        <a class="btn btn-secondary" href="/expenses/new">Editar</a>
-        <a href="/receipts/upload" class="btn btn-link">Cancelar</a>
+        <button class="btn btn-success">{{ _('Confirmar') }}</button>
+        <a class="btn btn-secondary" href="/expenses/new">{{ _('Editar') }}</a>
+        <a href="/receipts/upload" class="btn btn-link">{{ _('Cancelar') }}</a>
       </div>
     </form>
   {% else %}
     <form id="receipt-upload-form" method="post" enctype="multipart/form-data">
       <div class="mb-3">
-    <label class="form-label">Archivo</label>
+    <label class="form-label">{{ _('Archivo') }}</label>
 
     <div class="file-upload">
         <input
@@ -81,10 +81,10 @@
         >
 
         <label for="receipt" class="btn btn-primary">
-            Elegir archivo
+            {{ _('Elegir archivo') }}
         </label>
 
-        <span id="file-name">Ningún archivo seleccionado</span>
+        <span id="file-name">{{ _('Ningún archivo seleccionado') }}</span>
     </div>
 </div>
 
@@ -123,16 +123,16 @@ document.addEventListener("DOMContentLoaded", function () {
         if (this.files && this.files.length > 0) {
             fileName.textContent = this.files[0].name;
         } else {
-            fileName.textContent = "Ningún archivo seleccionado";
+            fileName.textContent = "{{ _('Ningún archivo seleccionado') }}";
         }
     });
 });
 </script>
-      <button class="btn btn-primary" type="submit">Subir y analizar</button>
+      <button class="btn btn-primary" type="submit">{{ _('Subir y analizar') }}</button>
     </form>
 
     <div class="mt-3">
-      <button class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#manual-entry" aria-expanded="false">Registro manual</button>
+      <button class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#manual-entry" aria-expanded="false">{{ _('Registro manual') }}</button>
     </div>
 
     <div id="manual-entry" class="collapse mt-3">
@@ -141,51 +141,51 @@ document.addEventListener("DOMContentLoaded", function () {
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <div class="row">
             <div class="mb-3 col-md-4">
-              <label class="form-label">Tipo</label>
+              <label class="form-label">{{ _('Tipo') }}</label>
               <select name="transaction_type" class="form-select">
-                <option value="expense" selected>Egreso</option>
-                <option value="income">Ingreso</option>
+                <option value="expense" selected>{{ _('Egreso') }}</option>
+                <option value="income">{{ _('Ingreso') }}</option>
               </select>
             </div>
             <div class="mb-3 col-md-4">
-              <label class="form-label">Monto (Q)</label>
+              <label class="form-label">{{ _('Monto (Q)') }}</label>
               <input type="number" step="0.01" class="form-control" name="amount" required>
             </div>            <div class="mb-3 col-md-4">
-              <label class="form-label">Moneda</label>
+              <label class="form-label">{{ _('Moneda') }}</label>
               <input class="form-control" name="currency" value="GTQ">
             </div>
             <div class="mb-3 col-md-4">
-              <label class="form-label">Fecha</label>
+              <label class="form-label">{{ _('Fecha') }}</label>
               <input type="date" class="form-control" name="expense_date">
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label">Comercio</label>
+            <label class="form-label">{{ _('Comercio') }}</label>
             <input class="form-control" name="merchant">
           </div>
           <div class="mb-3">
-            <label class="form-label">Descripción</label>
+            <label class="form-label">{{ _('Descripción') }}</label>
             <input class="form-control" name="description">
           </div>
           <div class="row">
             <div class="mb-3 col-md-6">
-              <label class="form-label">Categoría</label>
+              <label class="form-label">{{ _('Categoría') }}</label>
               <select name="category" class="form-select">
                 {% for c in categories %}
-                  <option value="{{c}}">{{c}}</option>
+                  <option value="{{c}}">{{ _(c) }}</option>
                 {% endfor %}
               </select>
             </div>
             <div class="mb-3 col-md-6">
-              <label class="form-label">Método de pago</label>
+              <label class="form-label">{{ _('Método de pago') }}</label>
               <select name="payment_method" class="form-select">
                 {% for p in payment_methods %}
-                  <option value="{{p}}">{{p}}</option>
+                  <option value="{{p}}">{{ _(p) }}</option>
                 {% endfor %}
               </select>
             </div>
           </div>
-          <button class="btn btn-success" type="submit">Guardar manualmente</button>
+          <button class="btn btn-success" type="submit">{{ _('Guardar manualmente') }}</button>
         </form>
       </div>
     </div>

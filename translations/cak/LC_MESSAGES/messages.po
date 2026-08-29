@@ -1,0 +1,669 @@
+# Translations template for NexoAI (Kaqchikel).
+# Copyright (C) 2026
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: NexoAI 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-29 02:30+0000\n"
+"PO-Revision-Date: 2026-08-29 02:30+0000\n"
+"Last-Translator: \n"
+"Language: cak\n"
+"Language-Team: Kaqchikel\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: marketnexo.py:30
+msgid "Completa el producto o servicio, la descripción y el correo."
+msgstr "Tatz'aqatisaj ri k'ayij, ri rub'anikil chuqa' ri taqowuj."
+
+#: marketnexo.py:34
+msgid "Agrega un teléfono o un WhatsApp para que puedan contactarte."
+msgstr "Tatz'aqatisaj jun oyonib'äl richin yatkikanoj."
+
+#: marketnexo.py:48
+msgid "Tu publicación se agregó a Marketnexo."
+msgstr "Ri aya'on xtz'aqatisäx pa Marketnexo."
+
+#: routes/ai.py:260
+msgid "Texto no proporcionado"
+msgstr "Man xya' täj ri tz'ib'atzij"
+
+#: routes/ai.py:337 routes/expenses.py:32
+msgid "Monto inválido"
+msgstr "Man ütz täj ri rajil"
+
+#: routes/ai.py:452
+msgid "Monto requerido para guardar"
+msgstr "Nrajo' ri rajil richin nyak"
+
+#: routes/ai.py:465
+msgid "El monto debe ser mayor que cero"
+msgstr "Ri rajil k'o chi nïm chuwäch wa'ix (0)"
+
+#: routes/ai.py:542
+msgid "No se pudo guardar la transacción"
+msgstr "Man xyakisetäj ta ri tojb'äl"
+
+#: routes/ai.py:559
+msgid "Ingreso guardado desde propuesta de IA"
+msgstr "Xyakitäj ri oken pwaq ruma IA"
+
+#: routes/ai.py:566
+msgid "Gasto guardado desde propuesta de IA"
+msgstr "Xyakitäj ri tojb'äl ruma IA"
+
+#: routes/auth.py:17
+msgid "Completa todos los campos"
+msgstr "Tatz'aqatisaj ronojel ri cholaj"
+
+#: routes/auth.py:20
+msgid "Usuario o correo ya existe"
+msgstr "Ri b'i'aj o taqowuj k'o chik"
+
+#: routes/auth.py:28
+msgid "Registro exitoso. Bienvenido."
+msgstr "Ütz petïk. Xatz'ib'aj ab'i'."
+
+#: routes/auth.py:41
+msgid "Has iniciado sesión"
+msgstr "Xatok pa ramaj"
+
+#: routes/auth.py:43
+msgid "Credenciales inválidas"
+msgstr "Man ütz ta ri b'i'aj chuqa' retal tz'ib'"
+
+#: routes/auth.py:52
+msgid "Sesión cerrada"
+msgstr "Xtz'apïx ri okem"
+
+#: routes/expenses.py:44
+msgid "Fecha inválida"
+msgstr "Man ütz täj ri q'ij"
+
+#: routes/expenses.py:61
+msgid "Ingreso registrado"
+msgstr "Xtz'ib'äx ri oken pwaq"
+
+#: routes/expenses.py:63
+msgid "Gasto registrado"
+msgstr "Xtz'ib'äx ri tojb'äl"
+
+#: routes/expenses.py:73
+msgid "No autorizado"
+msgstr "Man ya'on ta q'ij"
+
+#: routes/expenses.py:77
+msgid "Gasto eliminado"
+msgstr "Xelesäx ri tojb'äl"
+
+#: routes/receipts.py:24
+msgid "Selecciona un archivo"
+msgstr "Tacha' jun wuj"
+
+#: routes/receipts.py:28
+msgid "Formato no permitido. Sube una imagen PNG, JPG o PDF."
+msgstr "Man ya'on ta q'ij. Tajotob'isaj PNG, JPG o PDF."
+
+#: routes/receipts.py:95
+msgid "Total no detectado, no se puede guardar"
+msgstr "Man xilitäj ta ronojel rajil, man nyak täj"
+
+#: routes/receipts.py:129
+msgid "Factura guardada como ingreso"
+msgstr "Wujil xyak achi'el oken pwaq"
+
+#: routes/receipts.py:131
+msgid "Factura guardada como gasto"
+msgstr "Wujil xyak achi'el tojb'äl"
+
+#: routes/voice.py:79
+msgid "Selecciona un archivo de audio"
+msgstr "Tacha' jun ch'ab'äl wuj"
+
+#: routes/voice.py:98
+msgid "El archivo de audio no es válido."
+msgstr "Ri ch'ab'äl wuj man ütz täj."
+
+#: routes/voice.py:113
+msgid "Formato de audio no permitido. Usa WAV, MP3, M4A, OGG o WEBM."
+msgstr "Man ya'on ta q'ij. Takusaj WAV, MP3, M4A, OGG o WEBM."
+
+#: routes/voice.py:132
+msgid "La carpeta de archivos no está configurada."
+msgstr "Ri yakb'äl wuj man chojmirisan täj."
+
+#: routes/voice.py:189
+msgid "No se pudo procesar el audio."
+msgstr "Man xtikïr ta chupam rusamajixik ri ch'ab'äl."
+
+#: routes/voice.py:464
+msgid "Monto inválido, no se guardó."
+msgstr "Man ütz ta ri rajil, man xyak täj."
+
+#: routes/voice.py:513
+msgid "Ingreso guardado desde voz."
+msgstr "Xyakitäj ri oken pwaq rik'in ch'ab'äl."
+
+#: routes/voice.py:520
+msgid "Gasto guardado desde voz."
+msgstr "Xyakitäj ri tojb'äl rik'in ch'ab'äl."
+
+#: templates/ai_review.html:3
+msgid "Información detectada por IA"
+msgstr "Retal xilitäj ruma IA"
+
+#: templates/ai_review.html:16 templates/receipt_review.html:64
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:284
+msgid "Confirmar"
+msgstr "Jikib'anïk"
+
+#: templates/ai_review.html:17 templates/receipt_review.html:65
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:291
+msgid "Editar"
+msgstr "Nuk'unïk"
+
+#: templates/ai_review.html:18 templates/receipt_review.html:66
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:298
+msgid "Cancelar"
+msgstr "Q'atïk"
+
+#: templates/ai_review.html:21
+msgid "No se detectó propuesta."
+msgstr "Man xilitäj ta jun na'oj."
+
+#: templates/base.html:41
+msgid "Panel"
+msgstr "Wachib'äl"
+
+#: templates/base.html:44
+msgid "Gastos"
+msgstr "Tojb'äl"
+
+#: templates/base.html:53
+msgid "Subir factura"
+msgstr "Jotob'isaj wuj"
+
+#: templates/base.html:58
+msgid "Registrar por voz"
+msgstr "Tz'ib'an rik'in ch'ab'äl"
+
+#: templates/base.html:68 templates/base.html:84
+msgid "Qué es NexoAI"
+msgstr "Achike ri NexoAI"
+
+#: templates/base.html:78
+msgid "Cerrar sesión"
+msgstr "Tz'apij okem"
+
+#: templates/base.html:89 templates/login.html:5 templates/login.html:22
+msgid "Registrarse"
+msgstr "Tz'ib'aj ab'i'"
+
+#: templates/base.html:94 templates/index.html:9 templates/login.html:5
+msgid ""
+msgstr ""
+
+#: templates/login.html:22
+msgid "Iniciar sesión"
+msgstr "Okem"
+
+#: templates/base.html:101
+msgid "Idioma"
+msgstr "Ch'ab'äl"
+
+#: templates/chatbot.html:7
+msgid "Asistente financiero IA"
+msgstr "To'onel Pwaq IA"
+
+#: templates/chatbot.html:8
+msgid "Volver al panel"
+msgstr "Tzalïk pa wachib'äl"
+
+#: templates/chatbot.html:12
+msgid "Hola. Puedes preguntarme sobre tus gastos, presupuesto y metas de ahorro."
+msgstr "Ütz awäch. Yatikïr nak'utuj chiwe chirij atojb'äl, apwaq chuqa' yakoj pwaq."
+
+#: templates/chatbot.html:16
+msgid "Haz una pregunta a la IA..."
+msgstr "Tak'utuj chi re ri IA..."
+
+#: templates/chatbot.html:17
+msgid "Enviar"
+msgstr "Taqïk"
+
+#: templates/chatbot.html:54
+msgid "No pudimos responder en este momento. Por favor, inténtelo de nuevo."
+msgstr "Man xqatikïr ta xqatzolij chupan re ramaj. Tab'ana' jun utzil, tab'ana' chik."
+
+#: templates/chatbot.html:56
+msgid "No pudimos contactar con el asistente de IA. Por favor, inténtelo de nuevo."
+msgstr "Man xqïl ta ri to'onel IA. Tab'ana' chik."
+
+#: templates/dashboard.html:5
+msgid "Resumen"
+msgstr "Rucholajem pwaq"
+
+#: templates/dashboard.html:17
+msgid "Gastos del mes"
+msgstr "Tojb'äl richin ri ik'"
+
+#: templates/dashboard.html:26
+msgid "Ingresos del mes"
+msgstr "Oken pwaq richin ri ik'"
+
+#: templates/dashboard.html:35
+msgid "Balance"
+msgstr "Pajb'äl pwaq"
+
+#: templates/dashboard.html:44
+msgid "Mes anterior (gastos)"
+msgstr "Tojb'äl richin ri ik' kan"
+
+#: templates/dashboard.html:66
+msgid "Gastos por categoría"
+msgstr "Tojb'äl pa taq ruwäch"
+
+#: templates/dashboard.html:94
+msgid "Recomendaciones financieras"
+msgstr "Pixab' richin Pwaq"
+
+#: templates/dashboard.html:99
+msgid "NexoAI analizará tus ingresos, gastos, categorías, historial, presupuestos y patrones financieros."
+msgstr "NexoAI nutz'ët ri awoken, atojb'äl, chuqa' ri apwaq."
+
+#: templates/dashboard.html:113 templates/dashboard.html:135
+msgid ""
+msgstr ""
+
+#: templates/dashboard.html:869
+msgid "Analizar mis finanzas"
+msgstr "Rutz'etik nupwaq"
+
+#: templates/dashboard.html:129
+msgid "Consejo personalizado"
+msgstr "Pixab' chawa"
+
+#: templates/dashboard.html:134
+msgid "Presiona"
+msgstr "Tapitz'a'"
+
+#: templates/dashboard.html:136
+msgid "para que NexoAI estudie tus datos."
+msgstr "richin NexoAI nutz'ët ri atzij."
+
+#: templates/dashboard.html:246
+msgid "No hay gastos registrados para mostrar."
+msgstr "Maj tojb'äl tz'ib'an richin nk'ut."
+
+#: templates/dashboard.html:363
+msgid "Analizando tus finanzas..."
+msgstr "Tajin nutz'ët ri apwaq..."
+
+#: templates/dashboard.html:373
+msgid "Analizando..."
+msgstr "Tajin nutz'ët..."
+
+#: templates/dashboard.html:378
+msgid "Estoy revisando tus ingresos, gastos, categorías y patrones financieros."
+msgstr "Tajin ntz'ët ri awoken, atojb'äl chuqa' apwaq."
+
+#: templates/dashboard.html:574
+msgid "Análisis completado"
+msgstr "Xk'is ri tz'etonem"
+
+#: templates/dashboard.html:579
+msgid "NexoAI no encontró suficientes recomendaciones con los datos financieros disponibles."
+msgstr "NexoAI man xïl ta k'ïy pixab' rik'in ri k'o."
+
+#: templates/dashboard.html:831
+msgid "No se pudo realizar el análisis"
+msgstr "Man xtikïr ta chupam rutz'etik"
+
+#: templates/dashboard.html:839
+msgid "Ocurrió un error inesperado."
+msgstr "Xb'anatäj jun sachoj."
+
+#: templates/dashboard.html:848
+msgid "Abre la consola de Render/servidor para ver el error exacto de Flask."
+msgstr "Tajaqa' ri kematz'ib' richin natz'ët ri sachoj."
+
+#: templates/expense_form.html:3
+msgid "Registrar Movimiento"
+msgstr "Tz'ib'aj Silob'anem"
+
+#: templates/expense_form.html:7
+msgid "Métodos de registro"
+msgstr "Rub'anikil tz'ib'anem"
+
+#: templates/expense_form.html:9
+msgid "Subir foto"
+msgstr "Jotob'isaj wachb'äl"
+
+#: templates/expense_form.html:10
+msgid "Grabar audio"
+msgstr "Chapoj ch'ab'äl"
+
+#: templates/expense_form.html:11
+msgid "Escribir manualmente"
+msgstr "Tz'ib'aj rik'in q'ab'aj"
+
+#: templates/expense_form.html:19 templates/expenses.html:8
+msgid ""
+msgstr ""
+
+#: templates/receipt_review.html:13 templates/receipt_review.html:144
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:92
+msgid "Tipo"
+msgstr "Ruwäch"
+
+#: templates/expense_form.html:21 templates/expenses.html:19
+msgid ""
+msgstr ""
+
+#: templates/receipt_review.html:15 templates/receipt_review.html:146
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:106
+msgid "Egreso"
+msgstr "Elen pwaq (Tojb'äl)"
+
+#: templates/expense_form.html:22 templates/expenses.html:19
+msgid ""
+msgstr ""
+
+#: templates/receipt_review.html:16 templates/receipt_review.html:147
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:115
+msgid "Ingreso"
+msgstr "Oken pwaq"
+
+#: templates/expense_form.html:26 templates/expenses.html:9
+msgid ""
+msgstr ""
+
+#: templates/receipt_review.html:20 templates/receipt_review.html:151
+msgid "Monto (Q)"
+msgstr "Rajil (Q)"
+
+#: templates/expense_form.html:30 templates/receipt_review.html:24
+msgid ""
+msgstr ""
+
+#: templates/receipt_review.html:154 templates/voice_review.html:27
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:148
+msgid "Moneda"
+msgstr "Pwaq"
+
+#: templates/expense_form.html:34 templates/receipt_review.html:36
+msgid ""
+msgstr ""
+
+#: templates/receipt_review.html:167 templates/voice_review.html:32
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:200
+msgid "Descripción"
+msgstr "Ruq'alajisaxik"
+
+#: templates/expense_form.html:38 templates/expenses.html:11
+msgid ""
+msgstr ""
+
+#: templates/receipt_review.html:28 templates/receipt_review.html:163
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:28 templates/voice_review.html:165
+msgid "Comercio"
+msgstr "K'ayb'äl"
+
+#: templates/expense_form.html:42 templates/expenses.html:10
+msgid ""
+msgstr ""
+
+#: templates/receipt_review.html:46 templates/receipt_review.html:172
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:30 templates/voice_review.html:219
+msgid "Categoría"
+msgstr "Ruwäch"
+
+#: templates/expense_form.html:50 templates/receipt_review.html:55
+msgid ""
+msgstr ""
+
+#: templates/receipt_review.html:180 templates/voice_review.html:31
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:250
+msgid "Método de pago"
+msgstr "Rub'anikil tojb'äl"
+
+#: templates/expense_form.html:58 templates/expenses.html:12
+msgid ""
+msgstr ""
+
+#: templates/receipt_review.html:32 templates/receipt_review.html:158
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:29 templates/voice_review.html:182
+msgid "Fecha"
+msgstr "Q'ij"
+
+#: templates/expense_form.html:61
+msgid "Guardar"
+msgstr "Yikïk"
+
+#: templates/expenses.html:3
+msgid "Movimientos"
+msgstr "Silob'anem"
+
+#: templates/expenses.html:4
+msgid "Nuevo movimiento"
+msgstr "K'ak'a' silob'anem"
+
+#: templates/expenses.html:25
+msgid "¿Eliminar?"
+msgstr "¿Telesäx?"
+
+#: templates/expenses.html:27
+msgid "Eliminar"
+msgstr "Elesanïk"
+
+#: templates/index.html:4
+msgid "Bienvenido a NexoAI"
+msgstr "Ütz ipetik pa NexoAI"
+
+#: templates/index.html:5
+msgid "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+msgstr "Tatz'ib'aj, tawoxk'aj chuqa' tautziririsaj ri apwaq pa Iximulew (GTQ)."
+
+#: templates/index.html:8
+msgid "Crear cuenta"
+msgstr "Tz'ib'aj ab'i'"
+
+#: templates/login.html:10
+msgid "Usuario"
+msgstr "B'i'aj"
+
+#: templates/login.html:15
+msgid "Correo"
+msgstr "Taqowuj"
+
+#: templates/login.html:19
+msgid "Contraseña"
+msgstr "Ewan tz'ib'"
+
+#: templates/marketnexo.html:6
+msgid "Descubre lo que venden y ofrecen otros usuarios."
+msgstr "Tatz'eta' achike nkik'ayij ch'aqa chik winaqi'."
+
+#: templates/marketnexo.html:8
+msgid "Publicar producto"
+msgstr "K'utunïk k'ayij"
+
+#: templates/marketnexo.html:13
+msgid "Publicaciones de la comunidad"
+msgstr "K'ayij richin ri tinamït"
+
+#: templates/marketnexo.html:23
+msgid "Publicado por:"
+msgstr "Tz'ib'an ruma:"
+
+#: templates/marketnexo.html:24
+msgid "Contacto:"
+msgstr "Oyonib'äl:"
+
+#: templates/marketnexo.html:26
+msgid "Tel."
+msgstr "Oyonib'äl"
+
+#: templates/marketnexo.html:28
+msgid "Redes:"
+msgstr "K'amab'ey:"
+
+#: templates/marketnexo.html:33
+msgid "Aún no hay publicaciones. ¡Sé el primero en publicar!"
+msgstr "Majani k'o k'ayij. ¡Katok nab'ey!"
+
+#: templates/marketnexo.html:39
+msgid "Publicar en MarketNexo"
+msgstr "K'utuj pa MarketNexo"
+
+#: templates/marketnexo.html:40
+msgid "Comparte tu producto o servicio con todos los usuarios."
+msgstr "Takomonij ri ak'ayij rik'in konojel winaqi'."
+
+#: templates/marketnexo.html:44
+msgid "¿Qué vendes? *"
+msgstr "¿Achike nak'ayij? *"
+
+#: templates/marketnexo.html:48
+msgid "Descripción *"
+msgstr "Ruq'alajisaxik *"
+
+#: templates/marketnexo.html:52
+msgid "Correo de contacto *"
+msgstr "Taqowuj richin oyonïk *"
+
+#: templates/marketnexo.html:57
+msgid "Teléfono"
+msgstr "Oyonib'äl"
+
+#: templates/marketnexo.html:66
+msgid "Redes sociales"
+msgstr "K'amab'ey"
+
+#: templates/marketnexo.html:69
+msgid "Publicar"
+msgstr "K'utuj"
+
+#: templates/receipt_review.html:3
+msgid "Revisión de factura/recibo"
+msgstr "Rutz'etik wujil / tojb'äl"
+
+#: templates/receipt_review.html:40
+msgid "Número de factura"
+msgstr "Rajilab'al wujil"
+
+#: templates/receipt_review.html:72
+msgid "Archivo"
+msgstr "Wuj"
+
+#: templates/receipt_review.html:84
+msgid "Elegir archivo"
+msgstr "Tacha' wuj"
+
+#: templates/receipt_review.html:87 templates/receipt_review.html:126
+msgid ""
+msgstr ""
+
+#: templates/voice_review.html:382
+msgid "Ningún archivo seleccionado"
+msgstr "Maj wuj cha'on"
+
+#: templates/receipt_review.html:131 templates/voice_review.html:393
+msgid "Subir y analizar"
+msgstr "Jotob'isaj chuqa' nutz'ët"
+
+#: templates/receipt_review.html:135
+msgid "Registro manual"
+msgstr "Tz'ib'anïk rik'in q'ab'aj"
+
+#: templates/receipt_review.html:188
+msgid "Guardar manualmente"
+msgstr "Yaka' rik'in q'ab'aj"
+
+#: templates/voice_review.html:5
+msgid "Registro por voz"
+msgstr "Tz'ib'aj rik'in ch'ab'äl"
+
+#: templates/voice_review.html:14
+msgid "Gasto detectado"
+msgstr "Tojb'äl xilitäj"
+
+#: templates/voice_review.html:18
+msgid "Transcripción:"
+msgstr "Ruq'ajarik ch'ab'äl:"
+
+#: templates/voice_review.html:26 templates/voice_review.html:128
+msgid "Monto"
+msgstr "Rajil"
+
+#: templates/voice_review.html:334
+msgid "Archivo de audio o grabación del micrófono"
+msgstr "Ch'ab'äl wuj o chapon ch'ab'äl"
+
+#: templates/voice_review.html:345
+msgid "Grabar con micrófono"
+msgstr "Chapaj rik'in q'ajanib'äl"
+
+#: templates/voice_review.html:354
+msgid "Detener"
+msgstr "Pa'e'"
+
+#: templates/voice_review.html:378
+msgid "Elegir archivo de audio"
+msgstr "Tacha' ch'ab'äl wuj"
+
+#: templates/voice_review.html:389
+msgid "Puedes grabar desde el micrófono del dispositivo o subir un archivo de audio."
+msgstr "Yatikïr nachäp ach'ab'äl o najotob'isaj jun wuj."
+
+#: templates/voice_review.html:442
+msgid "Tu navegador no permite acceder al micrófono. Puedes subir un archivo de audio manualmente."
+msgstr "Ri kemokem man nuya' ta q'ij che ri q'ajanib'äl. Yatikïr najotob'isaj jun wuj."
+
+#: templates/voice_review.html:556
+msgid "No se pudo acceder al micrófono. Verifica los permisos del navegador y luego intenta de nuevo."
+msgstr "Man xk'ul ta ri q'ajanib'äl. Tatz'eta' ri ya'on q'ij."
+
+#: templates/voice_review.html:613
+msgid "Analizando audio..."
+msgstr "Tajin nutz'ët ri ch'ab'äl..."
+

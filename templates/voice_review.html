@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h3>Registro por voz</h3>
+<h3>{{ _('Registro por voz') }}</h3>
 
 {% if result %}
 
@@ -11,11 +11,11 @@
   <div class="card shadow-sm mb-4">
     <div class="card-body">
 
-  <h4>Gasto detectado</h4>
+  <h4>{{ _('Gasto detectado') }}</h4>
 
   {% if result.transcript %}
     <div class="alert alert-info">
-      <strong>Transcripción:</strong>
+      <strong>{{ _('Transcripción:') }}</strong>
       <p class="mb-0">{{ result.transcript }}</p>
     </div>
   {% endif %}
@@ -23,13 +23,13 @@
   <div class="row g-3">
 
     {% set fields = [
-      ('Monto', proposal.amount if proposal.get('amount') is not none else None),
-      ('Moneda', proposal.currency or proposal.get('currency') or 'GTQ'),
-      ('Comercio', proposal.merchant or proposal.get('merchant')),
-      ('Fecha', proposal.expense_date or proposal.get('expense_date')),
-      ('Categoría', proposal.category or proposal.get('category')),
-      ('Método de pago', proposal.payment_method or proposal.get('payment_method')),
-      ('Descripción', proposal.description or proposal.get('description'))
+      (_('Monto'), proposal.amount if proposal.get('amount') is not none else None),
+      (_('Moneda'), proposal.currency or proposal.get('currency') or 'GTQ'),
+      (_('Comercio'), proposal.merchant or proposal.get('merchant')),
+      (_('Fecha'), proposal.expense_date or proposal.get('expense_date')),
+      (_('Categoría'), proposal.category or proposal.get('category')),
+      (_('Método de pago'), proposal.payment_method or proposal.get('payment_method')),
+      (_('Descripción'), proposal.description or proposal.get('description'))
     ] %}
 
     {% for label, value in fields %}
@@ -89,7 +89,7 @@
   <div class="col-md-4">
 
     <label class="form-label">
-      Tipo
+      {{ _('Tipo') }}
     </label>
 
     <select
@@ -103,7 +103,7 @@
           selected
         {% endif %}
       >
-        Egreso
+        {{ _('Egreso') }}
       </option>
 
       <option
@@ -112,7 +112,7 @@
           selected
         {% endif %}
       >
-        Ingreso
+        {{ _('Ingreso') }}
       </option>
 
     </select>
@@ -125,7 +125,7 @@
   <div class="col-md-4">
 
     <label class="form-label">
-      Monto
+      {{ _('Monto') }}
     </label>
 
     <input
@@ -145,7 +145,7 @@
   <div class="col-md-4">
 
     <label class="form-label">
-      Moneda
+      {{ _('Moneda') }}
     </label>
 
     <input
@@ -162,7 +162,7 @@
   <div class="col-md-6">
 
     <label class="form-label">
-      Comercio
+      {{ _('Comercio') }}
     </label>
 
     <input
@@ -179,7 +179,7 @@
   <div class="col-md-6">
 
     <label class="form-label">
-      Fecha
+      {{ _('Fecha') }}
     </label>
 
     <input
@@ -197,7 +197,7 @@
   <div class="col-12">
 
     <label class="form-label">
-      Descripción
+      {{ _('Descripción') }}
     </label>
 
     <input
@@ -216,7 +216,7 @@
 <div class="mb-3 mt-3">
 
   <label class="form-label">
-    Categoría
+    {{ _('Categoría') }}
   </label>
 
   <select
@@ -232,7 +232,7 @@
           selected
         {% endif %}
       >
-        {{ c }}
+        {{ _(c) }}
       </option>
 
     {% endfor %}
@@ -247,7 +247,7 @@
 <div class="mb-3">
 
   <label class="form-label">
-    Método de pago
+    {{ _('Método de pago') }}
   </label>
 
   <select
@@ -263,7 +263,7 @@
           selected
         {% endif %}
       >
-        {{ p }}
+        {{ _(p) }}
       </option>
 
     {% endfor %}
@@ -281,21 +281,21 @@
     type="submit"
     class="btn btn-success"
   >
-    Confirmar
+    {{ _('Confirmar') }}
   </button>
 
   <a
     class="btn btn-secondary"
     href="/expenses/new"
   >
-    Editar
+    {{ _('Editar') }}
   </a>
 
   <a
     href="{{ url_for('voice.record_voice') }}"
     class="btn btn-link"
   >
-    Cancelar
+    {{ _('Cancelar') }}
   </a>
 
 </div>
@@ -331,7 +331,7 @@
 <div class="mb-3">
 
   <label class="form-label">
-    Archivo de audio o grabación del micrófono
+    {{ _('Archivo de audio o grabación del micrófono') }}
   </label>
 
 
@@ -342,7 +342,7 @@
     id="start-recording"
     class="btn btn-outline-primary"
   >
-    Grabar con micrófono
+    {{ _('Grabar con micrófono') }}
   </button>
 
   <button
@@ -351,7 +351,7 @@
     class="btn btn-outline-danger"
     disabled
   >
-    Detener
+    {{ _('Detener') }}
   </button>
 
 </div>
@@ -375,23 +375,22 @@
   >
 
   <label for="audio-file" class="btn btn-primary">
-    Elegir archivo de audio
+    {{ _('Elegir archivo de audio') }}
   </label>
 
   <span id="audio-file-name" class="text-muted">
-    Ningún archivo seleccionado
+    {{ _('Ningún archivo seleccionado') }}
   </span>
 
 </div>
 
 
 <small class="text-muted">
-  Puedes grabar desde el micrófono del dispositivo
-  o subir un archivo de audio.
+  {{ _('Puedes grabar desde el micrófono del dispositivo o subir un archivo de audio.') }}
 </small>
 
 
-<button class="btn btn-primary" type="submit" id="analyze-button">Subir y analizar</button>
+<button class="btn btn-primary" type="submit" id="analyze-button">{{ _('Subir y analizar') }}</button>
 
 
   </form>
@@ -440,8 +439,7 @@
       ) {
 
         alert(
-          'Tu navegador no permite acceder al micrófono. ' +
-          'Puedes subir un archivo de audio manualmente.'
+          '{{ _("Tu navegador no permite acceder al micrófono. Puedes subir un archivo de audio manualmente.") }}'
         );
 
         return;
@@ -555,9 +553,7 @@
         );
 
         alert(
-          'No se pudo acceder al micrófono. ' +
-          'Verifica los permisos del navegador ' +
-          'y luego intenta de nuevo.'
+          '{{ _("No se pudo acceder al micrófono. Verifica los permisos del navegador y luego intenta de nuevo.") }}'
         );
 
       }
@@ -609,13 +605,12 @@
         ) {
 
           return;
-
         }
 
         analyzeButton.disabled = true;
 
         analyzeButton.innerText =
-          'Analizando audio...';
+          '{{ _("Analizando audio...") }}';
 
       }
     );

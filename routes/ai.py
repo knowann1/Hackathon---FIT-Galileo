@@ -11,6 +11,7 @@ from flask import (
     url_for,
     flash
 )
+from flask_babel import gettext as _
 
 from flask_login import login_required, current_user
 
@@ -256,7 +257,7 @@ def parse_text_review():
     if not text:
 
         flash(
-            "Texto no proporcionado",
+            _("Texto no proporcionado"),
             "danger"
         )
 
@@ -333,7 +334,7 @@ def confirm_expense():
     ):
 
         flash(
-            "Monto inválido",
+            _("Monto inválido"),
             "danger"
         )
 
@@ -448,7 +449,7 @@ def confirm_expense():
     if amount is None:
 
         flash(
-            "Monto requerido para guardar",
+            _("Monto requerido para guardar"),
             "danger"
         )
 
@@ -461,7 +462,7 @@ def confirm_expense():
     if amount <= 0:
 
         flash(
-            "El monto debe ser mayor que cero",
+            _("El monto debe ser mayor que cero"),
             "danger"
         )
 
@@ -538,7 +539,7 @@ def confirm_expense():
         )
 
         flash(
-            "No se pudo guardar la transacción",
+            _("No se pudo guardar la transacción"),
             "danger"
         )
 
@@ -555,14 +556,14 @@ def confirm_expense():
     if transaction_type == "income":
 
         flash(
-            "Ingreso guardado desde propuesta de IA",
+            _("Ingreso guardado desde propuesta de IA"),
             "success"
         )
 
     else:
 
         flash(
-            "Gasto guardado desde propuesta de IA",
+            _("Gasto guardado desde propuesta de IA"),
             "success"
         )
 

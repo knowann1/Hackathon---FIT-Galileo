@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ current_locale or 'es' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,13 +35,13 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
             {% if current_user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" href="/dashboard">Panel</a>
+                <a class="nav-link" href="/dashboard">{{ _('Panel') }}</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/expenses/">Gastos</a>
+                <a class="nav-link" href="/expenses/">{{ _('Gastos') }}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('marketnexo.index') }}">
@@ -50,12 +50,12 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/receipts/upload">
-                  Subir factura
+                  {{ _('Subir factura') }}
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/voice/record">
-                  Registrar por voz
+                  {{ _('Registrar por voz') }}
                 </a>
               </li>
               <li class="nav-item">
@@ -65,7 +65,7 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('static', filename='que-es-nexoai.html') }}" target="_blank" rel="noopener">
-                  Qué es NexoAI
+                  {{ _('Qué es NexoAI') }}
                 </a>
               </li>
               <li class="nav-item">
@@ -75,26 +75,41 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('auth.logout') }}">
-                  Cerrar sesión
+                  {{ _('Cerrar sesión') }}
                 </a>
               </li>
             {% else %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('static', filename='que-es-nexoai.html') }}" target="_blank" rel="noopener">
-                  Qué es NexoAI
+                  {{ _('Qué es NexoAI') }}
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('auth.register') }}">
-                  Registrarse
+                  {{ _('Registrarse') }}
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('auth.login') }}">
-                  Iniciar sesión
+                  {{ _('Iniciar sesión') }}
                 </a>
               </li>
             {% endif %}
+            <!-- Selector de idioma -->
+            <li class="nav-item dropdown ms-lg-2">
+              <a class="nav-link dropdown-toggle btn btn-sm btn-outline-secondary text-dark" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                🌐 {{ LANGUAGES.get(current_locale, _('Idioma')) }}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                {% for code, name in LANGUAGES.items() %}
+                  <li>
+                    <a class="dropdown-item {% if current_locale == code %}active{% endif %}" href="{{ url_for('set_language', lang=code) }}">
+                      {{ name }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
           </ul>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import os
 from flask import Blueprint, request, render_template, redirect, url_for, flash, current_app, jsonify
+from flask_babel import gettext as _
 from werkzeug.utils import secure_filename
 from services.receipt_service import parse_receipt_image
 from flask_login import login_required, current_user
@@ -20,11 +21,11 @@ def upload_receipt():
     if request.method == 'POST':
         f = request.files.get('receipt')
         if not f:
-            flash('Selecciona un archivo', 'danger')
+            flash(_('Selecciona un archivo'), 'danger')
             return redirect(url_for('receipts.upload_receipt'))
         filename = secure_filename(f.filename)
         if not filename or not _is_allowed_upload(filename):
-            flash('Formato no permitido. Sube una imagen PNG, JPG o PDF.', 'danger')
+            flash(_('Formato no permitido. Sube una imagen PNG, JPG o PDF.'), 'danger')
             return redirect(url_for('receipts.upload_receipt'))
         upload_dir = current_app.config.get('UPLOAD_PATH')
         os.makedirs(upload_dir, exist_ok=True)
@@ -91,7 +92,7 @@ def confirm_receipt():
         ai_confidence = None
 
     if total is None:
-        flash('Total no detectado, no se puede guardar', 'danger')
+        flash(_('Total no detectado, no se puede guardar'), 'danger')
         return redirect(url_for('receipts.upload_receipt'))
 
     if not description:
@@ -124,5 +125,8 @@ def confirm_receipt():
     )
     db.session.add(exp)
     db.session.commit()
-    flash(f'Factura guardada como {"ingreso" if transaction_type=="income" else "gasto"}', 'success')
+    if transaction_type == "income":
+        flash(_('Factura guardada como ingreso'), 'success')
+    else:
+        flash(_('Factura guardada como gasto'), 'success')
     return redirect(url_for('expenses.list_expenses'))
