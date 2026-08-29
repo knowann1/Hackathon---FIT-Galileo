@@ -1,6 +1,5 @@
 import os
 from flask import Flask, render_template, session, g, request
-from flask_babel import Babel, gettext
 from config import Config
 from extensions import db, migrate, login_manager, csrf, babel
 from routes.auth import auth_bp
@@ -11,29 +10,32 @@ from routes.receipts import receipts_bp
 from routes.voice import voice_bp
 from marketnexo import marketnexo_bp
 from flask_login import current_user
+import i18n
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Babel locale selector
-    def get_locale():
-        # First check if user has set language preference in session
-        if 'lang' in session:
-            return session['lang']
-        # Check if user is authenticated and has language preference
-        if current_user.is_authenticated and hasattr(current_user, 'language') and current_user.language:
-            return current_user.language
-        # Fall back to default
-        return app.config['BABEL_DEFAULT_LOCALE']
-
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
     csrf.init_app(app)
-    babel.init_app(app, locale_selector=get_locale)
+    # Flask-Babel is only used for locale-dependent date/number formatting.
+    # It requires CLDR-valid locale codes, so ``babel_locale_selector`` falls
+    # back to the default locale for languages not present in CLDR (e.g.
+    # Kaqchikel/cak, Q'eqchi'/qeq) to avoid raising UnknownLocaleError.
+    babel.init_app(app, locale_selector=i18n.babel_locale_selector)
+
+    # Message translation (`_()`/`ngettext()` in templates) is handled by our
+    # own safe wrappers instead of Flask-Babel's, so every supported
+    # language works even when it is not recognized by Babel/CLDR, and any
+    # missing/invalid locale or catalog safely falls back to the source
+    # string instead of raising a 500 error.
+    app.jinja_env.install_gettext_callables(
+        i18n.gettext, i18n.ngettext, newstyle=True
+    )
 
     # Language selector before request
     @app.before_request
@@ -46,7 +48,10 @@ def create_app():
                 if current_user.is_authenticated and hasattr(current_user, 'language'):
                     current_user.language = lang
                     db.session.commit()
-        g.locale = get_locale()
+            # Invalid/unsupported lang values in the query string are simply
+            # ignored; the existing session/user preference (or the default
+            # locale) keeps being used, so no error is raised.
+        g.locale = i18n.get_locale()
 
     # Create database tables if they don't exist yet (helps for local/dev runs)
     # This uses SQLAlchemy's create_all and runs inside the app context.
@@ -79,7 +84,7 @@ def create_app():
             return dict(
                 csrf_token=generate_csrf,
                 LANGUAGES=app.config['LANGUAGES'],
-                current_locale=get_locale()
+                current_locale=i18n.get_locale()
             )
     except Exception:
         pass

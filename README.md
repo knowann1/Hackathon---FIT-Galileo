@@ -76,6 +76,36 @@ flask run
 - Passwords hasheadas con Werkzeug.
 - CSRF habilitado mediante Flask-WTF.
 
+## Internacionalización (i18n) / Idiomas
+La aplicación soporta varios idiomas seleccionables desde el menú "Idioma" del navbar (visible en todas las páginas, incluido el dashboard).
+
+- Los idiomas disponibles se configuran en `config.py` (`Config.LANGUAGES`) y el idioma por defecto en `Config.BABEL_DEFAULT_LOCALE` (`es`).
+- Los catálogos de traducción viven en `translations/<código_idioma>/LC_MESSAGES/messages.po` (fuente editable) y `messages.mo` (compilado, usado en producción). `translations/messages.pot` es la plantilla con todas las claves.
+- Las cadenas de texto en las plantillas usan `{{ _('Texto en español') }}`; en Python se usa `i18n.gettext('Texto en español')` (ver `routes/expenses.py`).
+- La resolución del idioma actual y la traducción de mensajes las gestiona `i18n.py`, que **nunca lanza una excepción**: si el idioma solicitado no es válido/soportado, o falta una clave de traducción, se hace *fallback* seguro al idioma por defecto o al texto original, evitando un `Internal Server Error`.
+  - Esto es necesario porque algunos idiomas del selector (por ejemplo Kaqchikel `cak` y Q'eqchi' `qeq`) no forman parte de los datos CLDR que usa Babel para `Locale.parse`, y provocarían un error 500 si se dejaran pasar directamente a Flask-Babel.
+- La preferencia de idioma se guarda en la sesión (`session['lang']`) y, si el usuario está autenticado, también en `user.language`, por lo que se mantiene al navegar entre páginas sin necesidad de repetir `?lang=` en cada URL.
+
+### Añadir un nuevo idioma
+1. Agregar el código y nombre del idioma en `Config.LANGUAGES` (`config.py`).
+2. Crear la carpeta `translations/<código>/LC_MESSAGES/` y un archivo `messages.po` con todas las claves de `translations/messages.pot` traducidas (puedes copiar un `.po` existente como base).
+3. Compilar el catálogo a binario (necesario para producción):
+   ```bash
+   pybabel compile -d translations
+   ```
+4. Añadir el enlace correspondiente en el selector de idioma de `templates/base.html` (`?lang=<código>`).
+5. Si agregas nuevas cadenas a las plantillas, actualiza la plantilla `.pot` y los `.po` existentes:
+   ```bash
+   pybabel extract -F babel.cfg -o translations/messages.pot .
+   pybabel update -i translations/messages.pot -d translations
+   ```
+
+## Pruebas
+- Pruebas automatizadas de i18n en `tests/test_i18n.py` (usa `unittest`, sin dependencias adicionales). Ejecutar con:
+  ```bash
+  python -m unittest discover -s tests
+  ```
+
 ## Notas
 - Los servicios que integran OpenAI están contenidos en `services/`.
 - Las llamadas al modelo multimodal y de audio dependen de la versión del SDK; revisar la documentación oficial si hay cambios.

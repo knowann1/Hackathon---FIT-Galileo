@@ -33,7 +33,7 @@ class Config:
     # Multilingual Support
     LANGUAGES = {
         'es': 'Español',
-        'qu': 'Quechua',
+        'qu': "K'iche'",
         'cak': 'Kaqchikel',
         'qeq': "Q'eqchi'"
     }

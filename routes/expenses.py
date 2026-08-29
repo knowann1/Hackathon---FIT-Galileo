@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from extensions import db
 from models import Expense
 from datetime import datetime
+import i18n
 
 expenses_bp = Blueprint('expenses', __name__, template_folder='../templates')
 
@@ -56,7 +57,11 @@ def new_expense():
         )
         db.session.add(exp)
         db.session.commit()
-        flash(f'{"Ingreso" if transaction_type=="income" else "Gasto"} registrado', 'success')
+        flash(
+            i18n.gettext('Ingreso registrado') if transaction_type == 'income'
+            else i18n.gettext('Gasto registrado'),
+            'success'
+        )
         return redirect(url_for('expenses.list_expenses'))
     return render_template('expense_form.html', categories=CATEGORIES, payment_methods=PAYMENT_METHODS)
 
