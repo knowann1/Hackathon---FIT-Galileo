@@ -1,19 +1,42 @@
 import os
 from datetime import timedelta
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'data.db'))
+    # Database
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        'DATABASE_URL',
+        'sqlite:///financial_ai.db'
+    )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Session
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
 
-    # OpenAI
-    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-    OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
+    # Security
+    SECRET_KEY = os.getenv(
+        'SECRET_KEY',
+        'your-secret-key-change-me'
+    )
+    WTF_CSRF_ENABLED = True
 
-    # File upload limits
-    MAX_CONTENT_LENGTH = 6 * 1024 * 1024  # 6 MB
-    UPLOAD_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.pdf', '.wav', '.mp3', '.m4a', '.webm', '.ogg']
-    UPLOAD_PATH = os.path.join(basedir, 'static', 'uploads')
+    # Upload
+    UPLOAD_PATH = os.path.join(
+        os.path.dirname(__file__),
+        'uploads'
+    )
+    UPLOAD_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.pdf', '.mp3', '.wav', '.m4a', '.ogg', '.webm']
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
+
+    # Multilingual Support
+    LANGUAGES = {
+        'es': 'Español',
+        'qu': "K'iche'",
+        'cak': 'Kaqchikel',
+        'qeq': "Q'eqchi'"
+    }
+    BABEL_DEFAULT_LOCALE = 'es'
+    BABEL_DEFAULT_TIMEZONE = 'America/Guatemala'
+    BABEL_TRANSLATION_DIRECTORIES = 'translations'

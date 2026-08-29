@@ -1,0 +1,125 @@
+# Kaqchikel translations for NexoAI.
+# Copyright (C) 2024 NexoAI
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: NexoAI 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: cak\n"
+"Language-Team: Kaqchikel\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+msgid "Idioma"
+msgstr "Riquin tzij"
+
+msgid "Panel"
+msgstr "Samajib'äl"
+
+msgid "Gastos"
+msgstr "Kichoq'om"
+
+msgid "MarketNexo"
+msgstr "MarketNexo"
+
+msgid "Subir factura"
+msgstr "Taqöy ri recepta"
+
+msgid "Registrar por voz"
+msgstr "Titz'ib'äx ruma ri toq'"
+
+msgid "NexoIA"
+msgstr "NexoIA"
+
+msgid "Qué es NexoAI"
+msgstr "¿Jas ri NexoAI?"
+
+msgid "Cerrar sesión"
+msgstr "Tik'apij ri sesión"
+
+msgid "Registrar"
+msgstr "Titz'ib'äx"
+
+msgid "Iniciar sesión"
+msgstr "Tak'apij ri sesión"
+
+msgid "Registrar gasto"
+msgstr "Titz'ib'äx kichoq'om"
+
+msgid "Gasto registrado"
+msgstr "Titz'ib'än kichoq'om"
+
+msgid "Ingreso registrado"
+msgstr "Titz'ib'än kiriquin"
+
+msgid "Resumen"
+msgstr "Xel ri samaj"
+
+msgid "Gastos del mes"
+msgstr "Kichoq'om ri ik'"
+
+msgid "Ingresos del mes"
+msgstr "Kiriquin ri ik'"
+
+msgid "Balance"
+msgstr "Samaj ch'aqa't"
+
+msgid "Mes anterior (gastos)"
+msgstr "Janru ik' (kichoq'om)"
+
+msgid "Gastos por categoría"
+msgstr "Kichoq'om ruma riquin"
+
+msgid "Recomendaciones financieras"
+msgstr "Retol samaj chi kichoq'om"
+
+msgid "Analizar mis finanzas"
+msgstr "Tik'elixin ri nu kichoq'om"
+
+msgid "Movimientos"
+msgstr "Tiquin"
+
+msgid "Nuevo movimiento"
+msgstr "K'ak'a tiquin"
+
+msgid "Tipo"
+msgstr "Ruwäch"
+
+msgid "Monto (Q)"
+msgstr "Kiwäch (Q)"
+
+msgid "Categoría"
+msgstr "Riquin"
+
+msgid "Comercio"
+msgstr "Kich'ojom"
+
+msgid "Fecha"
+msgstr "Q'ijul"
+
+msgid "Eliminar"
+msgstr "Tik'apij"
+
+msgid "Egreso"
+msgstr "Kichoq'om"
+
+msgid "Ingreso"
+msgstr "Kiriquin"
+
+msgid "Asistente financiero IA"
+msgstr "Mowa samaj chik ri kichoq'om"
+
+msgid "Volver al panel"
+msgstr "Tak'alaj chi samajib'äl"
+
+msgid "Haz una pregunta a la IA..."
+msgstr "Tatz'apik samaj chi ri IA..."
+
+msgid "Enviar"
+msgstr "Tataq"

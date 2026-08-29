@@ -1,0 +1,126 @@
+# Spanish translations for NexoAI.
+# Copyright (C) 2024 NexoAI
+# This file is distributed under the same license as the NexoAI project.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: NexoAI 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: Spanish\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+msgid "Idioma"
+msgstr "Idioma"
+
+msgid "Panel"
+msgstr "Panel"
+
+msgid "Gastos"
+msgstr "Gastos"
+
+msgid "MarketNexo"
+msgstr "MarketNexo"
+
+msgid "Subir factura"
+msgstr "Subir factura"
+
+msgid "Registrar por voz"
+msgstr "Registrar por voz"
+
+msgid "NexoIA"
+msgstr "NexoIA"
+
+msgid "Qué es NexoAI"
+msgstr "Qué es NexoAI"
+
+msgid "Cerrar sesión"
+msgstr "Cerrar sesión"
+
+msgid "Registrar"
+msgstr "Registrar"
+
+msgid "Iniciar sesión"
+msgstr "Iniciar sesión"
+
+msgid "Registrar gasto"
+msgstr "Registrar gasto"
+
+msgid "Gasto registrado"
+msgstr "Gasto registrado"
+
+msgid "Ingreso registrado"
+msgstr "Ingreso registrado"
+
+msgid "Resumen"
+msgstr "Resumen"
+
+msgid "Gastos del mes"
+msgstr "Gastos del mes"
+
+msgid "Ingresos del mes"
+msgstr "Ingresos del mes"
+
+msgid "Balance"
+msgstr "Balance"
+
+msgid "Mes anterior (gastos)"
+msgstr "Mes anterior (gastos)"
+
+msgid "Gastos por categoría"
+msgstr "Gastos por categoría"
+
+msgid "Recomendaciones financieras"
+msgstr "Recomendaciones financieras"
+
+msgid "Analizar mis finanzas"
+msgstr "Analizar mis finanzas"
+
+msgid "Movimientos"
+msgstr "Movimientos"
+
+msgid "Nuevo movimiento"
+msgstr "Nuevo movimiento"
+
+msgid "Tipo"
+msgstr "Tipo"
+
+msgid "Monto (Q)"
+msgstr "Monto (Q)"
+
+msgid "Categoría"
+msgstr "Categoría"
+
+msgid "Comercio"
+msgstr "Comercio"
+
+msgid "Fecha"
+msgstr "Fecha"
+
+msgid "Eliminar"
+msgstr "Eliminar"
+
+msgid "Egreso"
+msgstr "Egreso"
+
+msgid "Ingreso"
+msgstr "Ingreso"
+
+msgid "Asistente financiero IA"
+msgstr "Asistente financiero IA"
+
+msgid "Volver al panel"
+msgstr "Volver al panel"
+
+msgid "Haz una pregunta a la IA..."
+msgstr "Haz una pregunta a la IA..."
+
+msgid "Enviar"
+msgstr "Enviar"

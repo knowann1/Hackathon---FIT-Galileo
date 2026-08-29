@@ -1,0 +1,116 @@
+# Translations template for NexoAI.
+# Copyright (C) 2024 NexoAI
+# This file is distributed under the same license as the NexoAI project.
+#
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Idioma"
+msgstr ""
+
+msgid "Panel"
+msgstr ""
+
+msgid "Gastos"
+msgstr ""
+
+msgid "MarketNexo"
+msgstr ""
+
+msgid "Subir factura"
+msgstr ""
+
+msgid "Registrar por voz"
+msgstr ""
+
+msgid "NexoIA"
+msgstr ""
+
+msgid "Qué es NexoAI"
+msgstr ""
+
+msgid "Cerrar sesión"
+msgstr ""
+
+msgid "Registrar"
+msgstr ""
+
+msgid "Iniciar sesión"
+msgstr ""
+
+msgid "Registrar gasto"
+msgstr ""
+
+msgid "Gasto registrado"
+msgstr ""
+
+msgid "Ingreso registrado"
+msgstr ""
+
+msgid "Resumen"
+msgstr ""
+
+msgid "Gastos del mes"
+msgstr ""
+
+msgid "Ingresos del mes"
+msgstr ""
+
+msgid "Balance"
+msgstr ""
+
+msgid "Mes anterior (gastos)"
+msgstr ""
+
+msgid "Gastos por categoría"
+msgstr ""
+
+msgid "Recomendaciones financieras"
+msgstr ""
+
+msgid "Analizar mis finanzas"
+msgstr ""
+
+msgid "Movimientos"
+msgstr ""
+
+msgid "Nuevo movimiento"
+msgstr ""
+
+msgid "Tipo"
+msgstr ""
+
+msgid "Monto (Q)"
+msgstr ""
+
+msgid "Categoría"
+msgstr ""
+
+msgid "Comercio"
+msgstr ""
+
+msgid "Fecha"
+msgstr ""
+
+msgid "Eliminar"
+msgstr ""
+
+msgid "Egreso"
+msgstr ""
+
+msgid "Ingreso"
+msgstr ""
+
+msgid "Asistente financiero IA"
+msgstr ""
+
+msgid "Volver al panel"
+msgstr ""
+
+msgid "Haz una pregunta a la IA..."
+msgstr ""
+
+msgid "Enviar"
+msgstr ""

@@ -1,0 +1,125 @@
+# Q'eqchi' translations for NexoAI.
+# Copyright (C) 2024 NexoAI
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: NexoAI 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: qeq\n"
+"Language-Team: Q'eqchi'\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+msgid "Idioma"
+msgstr "Li tzij li"
+
+msgid "Panel"
+msgstr "Li xbasreba"
+
+msgid "Gastos"
+msgstr "Li xqui"
+
+msgid "MarketNexo"
+msgstr "MarketNexo"
+
+msgid "Subir factura"
+msgstr "Taxtakla li recepta"
+
+msgid "Registrar por voz"
+msgstr "Taxyebal ruma li saq"
+
+msgid "NexoIA"
+msgstr "NexoIA"
+
+msgid "Qué es NexoAI"
+msgstr "¿Jas li NexoAI?"
+
+msgid "Cerrar sesión"
+msgstr "Taxjela li sesión"
+
+msgid "Registrar"
+msgstr "Taxyebal"
+
+msgid "Iniciar sesión"
+msgstr "Taxtakla li sesión"
+
+msgid "Registrar gasto"
+msgstr "Taxyebal li xqui"
+
+msgid "Gasto registrado"
+msgstr "Li xqui xyebal"
+
+msgid "Ingreso registrado"
+msgstr "Li xriquin xyebal"
+
+msgid "Resumen"
+msgstr "Li xel sa li xbasreba"
+
+msgid "Gastos del mes"
+msgstr "Li xqui sa li po"
+
+msgid "Ingresos del mes"
+msgstr "Li xriquin sa li po"
+
+msgid "Balance"
+msgstr "Li xbasreba"
+
+msgid "Mes anterior (gastos)"
+msgstr "Li naqwan po (li xqui)"
+
+msgid "Gastos por categoría"
+msgstr "Li xqui ruma li tzij"
+
+msgid "Recomendaciones financieras"
+msgstr "Li tzolob sa li xbasreba"
+
+msgid "Analizar mis finanzas"
+msgstr "Taxila li sa xbasreba"
+
+msgid "Movimientos"
+msgstr "Li xqui"
+
+msgid "Nuevo movimiento"
+msgstr "Li k'ak'a xqui"
+
+msgid "Tipo"
+msgstr "Li ruwäch"
+
+msgid "Monto (Q)"
+msgstr "Li xkantidad (Q)"
+
+msgid "Categoría"
+msgstr "Li tzij"
+
+msgid "Comercio"
+msgstr "Li chi xbasreba"
+
+msgid "Fecha"
+msgstr "Li k'in"
+
+msgid "Eliminar"
+msgstr "Taxjela"
+
+msgid "Egreso"
+msgstr "Li xqui"
+
+msgid "Ingreso"
+msgstr "Li xriquin"
+
+msgid "Asistente financiero IA"
+msgstr "Li mowa sa li xbasreba"
+
+msgid "Volver al panel"
+msgstr "Taxk'alaj chi li xbasreba"
+
+msgid "Haz una pregunta a la IA..."
+msgstr "Taxtzapik li sa IA..."
+
+msgid "Enviar"
+msgstr "Taxtaq"
