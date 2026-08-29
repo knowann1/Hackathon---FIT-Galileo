@@ -161,16 +161,21 @@ REGLAS:
 - Si no aparece un dato utiliza null.
 """
 
-            response = client.responses.create(
+            response = client.chat.completions.create(
 
                 model=OPENAI_MODEL,
 
-                input=prompt
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ]
 
             )
 
             output_text = (
-                response.output_text
+                response.choices[0].message.content
                 or ""
             ).strip()
 
@@ -1186,16 +1191,21 @@ Ordena por importancia.
 No incluyas texto fuera del JSON.
 """
 
-        response = client.responses.create(
+        response = client.chat.completions.create(
 
             model=OPENAI_MODEL,
 
-            input=prompt
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
 
         )
 
         output_text = (
-            response.output_text
+            response.choices[0].message.content
             or ""
         ).strip()
 
@@ -1543,16 +1553,21 @@ Mantén siempre un tono profesional.
 Tu nombre es **NexoAI**.
 """
 
-        response = client.responses.create(
+        response = client.chat.completions.create(
 
             model=OPENAI_MODEL,
 
-            input=prompt
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
 
         )
 
         answer = (
-            response.output_text
+            response.choices[0].message.content
             or ""
         ).strip()
 
@@ -1675,4 +1690,3 @@ def simulate_savings(
         "projections":
             projections
     }
-
