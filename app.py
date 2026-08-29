@@ -59,13 +59,6 @@ def create_app(config_object=Config):
         # 1. URL query parameter
         lang = request.args.get('lang')
         if lang and lang in app.config.get('LANGUAGES', {}):
-            session['lang'] = lang
-            if current_user and current_user.is_authenticated and hasattr(current_user, 'language') and current_user.language != lang:
-                current_user.language = lang
-                try:
-                    db.session.commit()
-                except Exception:
-                    db.session.rollback()
             return safe_locale(lang)
 
         # 2. Session
@@ -74,7 +67,6 @@ def create_app(config_object=Config):
 
         # 3. Authenticated user saved preference
         if current_user and current_user.is_authenticated and hasattr(current_user, 'language') and current_user.language in app.config.get('LANGUAGES', {}):
-            session['lang'] = current_user.language
             return safe_locale(current_user.language)
 
         # 4. Default locale
@@ -164,7 +156,7 @@ def create_app(config_object=Config):
         else:
             session['lang'] = app.config.get('BABEL_DEFAULT_LOCALE', 'es')
         refresh()
-        next_url = request.referrer or request.headers.get('Referer') or url_for('index')
+        next_url = request.referrer or url_for('index')
         return redirect(next_url)
 
     return app
