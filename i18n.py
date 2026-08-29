@@ -27,6 +27,7 @@ To keep those languages fully usable we:
 
 import gettext as gettext_lib
 import os
+import threading
 
 from flask import current_app, session
 from flask_login import current_user
@@ -36,7 +37,10 @@ TRANSLATIONS_DIR = os.path.join(
 )
 
 # Cache of loaded gettext.Translations objects keyed by language code.
+# Guarded by a lock since Flask can serve requests from multiple threads and
+# translation catalogs are loaded lazily on first use of each language.
 _translations_cache = {}
+_translations_cache_lock = threading.Lock()
 
 
 def get_locale():
@@ -96,31 +100,37 @@ def babel_locale_selector():
 
 def _get_translations(lang):
     """Load (and cache) a gettext translation catalog for ``lang``."""
-    app = current_app
-    default_locale = app.config.get('BABEL_DEFAULT_LOCALE', 'es')
-
     cached = _translations_cache.get(lang)
     if cached is not None:
         return cached
 
-    languages = [lang]
-    if lang != default_locale:
-        languages.append(default_locale)
+    with _translations_cache_lock:
+        # Re-check now that we hold the lock in case another thread already
+        # loaded this language while we were waiting for it.
+        cached = _translations_cache.get(lang)
+        if cached is not None:
+            return cached
 
-    try:
-        translations = gettext_lib.translation(
-            'messages',
-            TRANSLATIONS_DIR,
-            languages=languages,
-            fallback=True,
-        )
-    except Exception:
-        # Never let a missing/corrupt catalog break the page. Fall back to
-        # returning the original source strings untranslated.
-        translations = gettext_lib.NullTranslations()
+        app = current_app
+        default_locale = app.config.get('BABEL_DEFAULT_LOCALE', 'es')
+        languages = [lang]
+        if lang != default_locale:
+            languages.append(default_locale)
 
-    _translations_cache[lang] = translations
-    return translations
+        try:
+            translations = gettext_lib.translation(
+                'messages',
+                TRANSLATIONS_DIR,
+                languages=languages,
+                fallback=True,
+            )
+        except Exception:
+            # Never let a missing/corrupt catalog break the page. Fall back
+            # to returning the original source strings untranslated.
+            translations = gettext_lib.NullTranslations()
+
+        _translations_cache[lang] = translations
+        return translations
 
 
 def gettext(string, **variables):
