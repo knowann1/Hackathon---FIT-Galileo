@@ -1,6 +1,9 @@
 import os
+import gettext as stdlib_gettext
+from functools import lru_cache
+from babel import Locale, UnknownLocaleError
 from flask import Flask, render_template, session, g, request
-from flask_babel import Babel, gettext
+from flask_babel import Babel
 from config import Config
 from extensions import db, migrate, login_manager, csrf, babel
 from routes.auth import auth_bp
@@ -28,12 +31,38 @@ def create_app():
         # Fall back to default
         return app.config['BABEL_DEFAULT_LOCALE']
 
+    def get_babel_locale():
+        locale = get_locale()
+        try:
+            Locale.parse(locale)
+            return locale
+        except UnknownLocaleError:
+            return app.config['BABEL_DEFAULT_LOCALE']
+
+    @lru_cache(maxsize=None)
+    def get_translations(locale):
+        return stdlib_gettext.translation(
+            'messages',
+            localedir=os.path.join(app.root_path, 'translations'),
+            languages=[locale],
+            fallback=True
+        )
+
+    def template_gettext(message):
+        return get_translations(get_locale()).gettext(message)
+
+    def template_ngettext(singular, plural, number):
+        return get_translations(get_locale()).ngettext(singular, plural, number)
+
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
     csrf.init_app(app)
-    babel.init_app(app, locale_selector=get_locale)
+    babel.init_app(app, locale_selector=get_babel_locale)
+    app.jinja_env.install_gettext_callables(
+        template_gettext, template_ngettext, newstyle=False
+    )
 
     # Language selector before request
     @app.before_request
