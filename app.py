@@ -119,7 +119,7 @@ def create_app(config_class=None):
                 _=custom_gettext,
                 gettext=custom_gettext,
                 ngettext=custom_ngettext,
-                all_translations=get_all_translations()
+                get_all_translations=get_all_translations
             )
     except Exception:
         pass
@@ -148,7 +148,17 @@ def create_app(config_class=None):
                     db.session.rollback()
         target = request.args.get('next')
         if not target or not is_safe_url(target):
-            target = request.referrer if request.referrer and is_safe_url(request.referrer) else '/'
+            ref = request.referrer
+            if ref:
+                parts = urlsplit(ref)
+                if not parts.netloc or parts.netloc == request.host:
+                    ref_path = parts.path
+                    if parts.query:
+                        ref_path += f"?{parts.query}"
+                    if is_safe_url(ref_path):
+                        target = ref_path
+        if not target or not is_safe_url(target):
+            target = '/'
         return redirect(target)
 
     @app.route("/api/translations")

@@ -119,3 +119,21 @@ def test_set_language_redirect_safety(client):
     response = client.get("/set-language/es?next=/expenses/", follow_redirects=False)
     assert response.status_code == 302
     assert response.headers.get("Location") == "/expenses/"
+
+    # Referrer fallback on same host
+    response = client.get(
+        "/set-language/es",
+        headers={"Referer": "http://localhost/dashboard"},
+        follow_redirects=False
+    )
+    assert response.status_code == 302
+    assert response.headers.get("Location") == "/dashboard"
+
+    # External referrer should fallback to '/'
+    response = client.get(
+        "/set-language/es",
+        headers={"Referer": "http://external-evil.com/dashboard"},
+        follow_redirects=False
+    )
+    assert response.status_code == 302
+    assert response.headers.get("Location") == "/"
