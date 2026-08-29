@@ -1,6 +1,5 @@
 import os
 from flask import Flask, render_template, session, g, request
-from flask_babel import Babel, gettext
 from config import Config
 from extensions import db, migrate, login_manager, csrf, babel
 from routes.auth import auth_bp
@@ -11,29 +10,20 @@ from routes.receipts import receipts_bp
 from routes.voice import voice_bp
 from marketnexo import marketnexo_bp
 from flask_login import current_user
+import i18n
+from i18n import gettext, _
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Babel locale selector
-    def get_locale():
-        # First check if user has set language preference in session
-        if 'lang' in session:
-            return session['lang']
-        # Check if user is authenticated and has language preference
-        if current_user.is_authenticated and hasattr(current_user, 'language') and current_user.language:
-            return current_user.language
-        # Fall back to default
-        return app.config['BABEL_DEFAULT_LOCALE']
-
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
     csrf.init_app(app)
-    babel.init_app(app, locale_selector=get_locale)
+    babel.init_app(app, locale_selector=i18n.babel_locale_selector)
 
     # Language selector before request
     @app.before_request
@@ -45,8 +35,14 @@ def create_app():
                 # Update user's language preference if authenticated
                 if current_user.is_authenticated and hasattr(current_user, 'language'):
                     current_user.language = lang
-                    db.session.commit()
-        g.locale = get_locale()
+                    try:
+                        db.session.commit()
+                    except Exception:
+                        db.session.rollback()
+        g.locale = i18n.get_locale()
+
+    # Install gettext into Jinja globals
+    app.jinja_env.globals.update(_=i18n.gettext, gettext=i18n.gettext)
 
     # Create database tables if they don't exist yet (helps for local/dev runs)
     # This uses SQLAlchemy's create_all and runs inside the app context.
@@ -79,7 +75,7 @@ def create_app():
             return dict(
                 csrf_token=generate_csrf,
                 LANGUAGES=app.config['LANGUAGES'],
-                current_locale=get_locale()
+                current_locale=i18n.get_locale()
             )
     except Exception:
         pass
