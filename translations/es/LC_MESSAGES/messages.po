@@ -124,3 +124,15 @@ msgstr "Haz una pregunta a la IA..."
 
 msgid "Enviar"
 msgstr "Enviar"
+
+msgid "Bienvenido a NexoAI"
+msgstr "Bienvenido a NexoAI"
+
+msgid "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+msgstr "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+
+msgid "Crear cuenta"
+msgstr "Crear cuenta"
+
+msgid "Donar"
+msgstr "Donar"
