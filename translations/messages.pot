@@ -114,3 +114,18 @@ msgstr ""
 
 msgid "Enviar"
 msgstr ""
+
+msgid "Donar"
+msgstr ""
+
+msgid "Donar ahora"
+msgstr ""
+
+msgid "Crear cuenta"
+msgstr ""
+
+msgid "Bienvenido a NexoAI"
+msgstr ""
+
+msgid "Registra, entiende y mejora tus hábitos financieros en Guatemala (GTQ)."
+msgstr ""
