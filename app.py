@@ -41,6 +41,14 @@ def safe_locale(code):
         return CustomLocale(code)
 
 
+def is_safe_url(target):
+    if not target:
+        return False
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
+
+
 def create_app(config_object=Config):
     app = Flask(__name__)
     if isinstance(config_object, dict):
@@ -144,13 +152,6 @@ def create_app(config_object=Config):
         # Renderizar la plantilla index.html como página principal (sin cambiar la URL)
         return render_template('index.html')
 
-    def is_safe_url(target):
-        if not target:
-            return False
-        ref_url = urlparse(request.host_url)
-        test_url = urlparse(urljoin(request.host_url, target))
-        return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
-
     @app.route("/set-language/<lang>")
     def set_language(lang):
         if lang in app.config.get('LANGUAGES', {}):
@@ -166,12 +167,7 @@ def create_app(config_object=Config):
         refresh()
         next_url = request.referrer
         if next_url and is_safe_url(next_url):
-            parsed = urlparse(next_url)
-            target = parsed.path
-            if parsed.query:
-                target = f"{target}?{parsed.query}"
-            if target and target.startswith('/') and not target.startswith('//'):
-                return redirect(target)
+            return redirect(next_url)
         return redirect(url_for('index'))
 
     return app
