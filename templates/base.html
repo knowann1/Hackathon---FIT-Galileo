@@ -68,16 +68,21 @@
                   {{ _('Qué es NexoAI') }}
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://www.paypal.com/paypalme/cft830" target="_blank" rel="noopener noreferrer">
+                  {{ _('Donar') }}
+                </a>
+              </li>
               <!-- LANGUAGE SELECTOR -->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{ _('Idioma') }}
+                  {{ _('Idioma') }}: {{ current_language_name or current_locale|upper }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
-                  <li><a class="dropdown-item" href="?lang=es">Español</a></li>
-                  <li><a class="dropdown-item" href="?lang=qu">K'iche'</a></li>
-                  <li><a class="dropdown-item" href="?lang=cak">Kaqchikel</a></li>
-                  <li><a class="dropdown-item" href="?lang=qeq">Q'eqchi'</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('set_language', lang='es', next=request.full_path) }}">Español</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('set_language', lang='qu', next=request.full_path) }}">K'iche'</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('set_language', lang='cak', next=request.full_path) }}">Kaqchikel</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('set_language', lang='qeq', next=request.full_path) }}">Q'eqchi'</a></li>
                 </ul>
               </li>
               <li class="nav-item">
@@ -96,16 +101,21 @@
                   {{ _('Qué es NexoAI') }}
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://www.paypal.com/paypalme/cft830" target="_blank" rel="noopener noreferrer">
+                  {{ _('Donar') }}
+                </a>
+              </li>
               <!-- LANGUAGE SELECTOR -->
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{ _('Idioma') }}
+                  {{ _('Idioma') }}: {{ current_language_name or current_locale|upper }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
-                  <li><a class="dropdown-item" href="?lang=es">Español</a></li>
-                  <li><a class="dropdown-item" href="?lang=qu">K'iche'</a></li>
-                  <li><a class="dropdown-item" href="?lang=cak">Kaqchikel</a></li>
-                  <li><a class="dropdown-item" href="?lang=qeq">Q'eqchi'</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('set_language', lang='es', next=request.full_path) }}">Español</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('set_language', lang='qu', next=request.full_path) }}">K'iche'</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('set_language', lang='cak', next=request.full_path) }}">Kaqchikel</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('set_language', lang='qeq', next=request.full_path) }}">Q'eqchi'</a></li>
                 </ul>
               </li>
               <li class="nav-item">
