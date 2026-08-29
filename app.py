@@ -17,15 +17,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Initialize extensions
-    db.init_app(app)
-    migrate.init_app(app, db)
-    login_manager.init_app(app)
-    csrf.init_app(app)
-    babel.init_app(app)
-
     # Babel locale selector
-    @babel.localeselector
     def get_locale():
         # First check if user has set language preference in session
         if 'lang' in session:
@@ -35,6 +27,13 @@ def create_app():
             return current_user.language
         # Fall back to default
         return app.config['BABEL_DEFAULT_LOCALE']
+
+    # Initialize extensions
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login_manager.init_app(app)
+    csrf.init_app(app)
+    babel.init_app(app, locale_selector=get_locale)
 
     # Language selector before request
     @app.before_request
