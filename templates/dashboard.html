@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2>Resumen</h2>
+<h2>{{ _('Resumen') }}</h2>
 
 <!-- ============================================================
      RESUMEN FINANCIERO
@@ -14,7 +14,7 @@
 
   <div class="col-md-3">
     <div class="card p-3 h-100">
-      <h6>Gastos del mes</h6>
+      <h6>{{ _('Gastos del mes') }}</h6>
       <h3 id="monthlyExpenses">Q{{ summary.current_month.expenses }}</h3>
     </div>
   </div>
@@ -23,7 +23,7 @@
 
   <div class="col-md-3">
     <div class="card p-3 h-100">
-      <h6>Ingresos del mes</h6>
+      <h6>{{ _('Ingresos del mes') }}</h6>
       <h3 id="monthlyIncomes">Q{{ summary.current_month.income }}</h3>
     </div>
   </div>
@@ -32,7 +32,7 @@
 
   <div class="col-md-3">
     <div class="card p-3 h-100">
-      <h6>Balance</h6>
+      <h6>{{ _('Balance') }}</h6>
       <h3 id="currentBalance">Q{{ summary.current_month.balance }}</h3>
     </div>
   </div>
@@ -41,7 +41,7 @@
 
   <div class="col-md-3">
     <div class="card p-3 h-100">
-      <h6>Mes anterior (gastos)</h6>
+      <h6>{{ _('Mes anterior (gastos)') }}</h6>
       <h3 id="previousMonthExpenses">Q{{ summary.previous_month.expenses }}</h3>
     </div>
   </div>
@@ -63,7 +63,7 @@
 
 <div class="card p-3 h-100">
 
-  <h5>Gastos por categoría</h5>
+  <h5>{{ _('Gastos por categoría') }}</h5>
 
   <div
     style="
@@ -91,7 +91,7 @@
 <div class="card p-3 h-100">
 
   <h5>
-    🤖 Recomendaciones financieras
+    🤖 {{ _('Recomendaciones financieras') }}
   </h5>
 
   <p class="text-muted">
@@ -112,7 +112,7 @@
     type="button"
     class="btn btn-primary w-100"
   >
-    Analizar mis finanzas
+    {{ _('Analizar mis finanzas') }}
   </button>
 
 
@@ -874,7 +874,7 @@ document.addEventListener(
             false;
 
           analyzeBtn.innerHTML =
-            "Analizar mis finanzas";
+            "{{ _('Analizar mis finanzas') }}";
 
         }
 
